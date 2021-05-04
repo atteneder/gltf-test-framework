@@ -1,0 +1,31 @@
+{
+    "name": "glTF-test-framework",
+    "references": [
+        "Unity.Mathematics",
+        "Unity.PerformanceTesting",
+        "UnityEngine.TestTools.Graphics",
+        "glTFast"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.testframework.graphics",
+            "expression": "7.7.0",
+            "define": "GLTFAST_RENDER_TEST"
+        },
+        {
+            "name": "com.unity.modules.physics",
+            "expression": "",
+            "define": "UNITY_PHYSICS"
+        }
+    ],
+    "noEngineReferences": false
+}

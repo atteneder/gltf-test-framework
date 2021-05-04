@@ -1,0 +1,24 @@
+{
+  "name": "com.atteneder.gltf-test-framework",
+  "version": "0.1.0-preview",
+  "displayName": "glTF Test Framework",
+  "description": "Tools for testing glTF capabilities",
+  "unity": "2019.3",
+  "keywords": [
+    "mesh",
+    "gltf",
+    "asset",
+    "format",
+    "draco",
+    "ktx",
+    "basis",
+    "universal",
+    "basisu"
+  ],
+  "author": {
+    "name": "Andreas Atteneder",
+    "email": "andreas.atteneder@gmail.com",
+    "url": "https://pixel.engineer"
+  },
+  "type": "library"
+}
