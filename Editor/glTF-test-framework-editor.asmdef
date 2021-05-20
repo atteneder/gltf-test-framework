@@ -1,7 +1,10 @@
 {
     "name": "glTF-test-framework-editor",
+    "rootNamespace": "",
     "references": [
-        "glTF-test-framework"
+        "glTF-test-framework",
+        "glTFast",
+        "UnityEngine.TestTools.Graphics"
     ],
     "includePlatforms": [
         "Editor"
@@ -12,6 +15,12 @@
     "precompiledReferences": [],
     "autoReferenced": false,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.testframework.graphics",
+            "expression": "7.7.0",
+            "define": "GLTFAST_RENDER_TEST"
+        }
+    ],
     "noEngineReferences": false
 }

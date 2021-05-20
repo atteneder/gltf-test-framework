@@ -22,8 +22,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.AccessControl;
 using GLTFast;
-using GLTFast.Schema;
-using GLTFast.Tests;
 using UnityEditor.SceneManagement;
 #endif
 
