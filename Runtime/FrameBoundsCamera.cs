@@ -51,7 +51,7 @@ namespace GLTFTest {
 
             var centerPosition = boundsTransform.TransformPoint(bounds.center);
             var cameraPos = centerPosition +
-                new Vector3(0, distance * math.sin(angle), -distance * math.cos(angle));
+                new Vector3(0, distance * math.sin(angle), distance * math.cos(angle));
             camera.transform.position = cameraPos;
             camera.transform.LookAt(centerPosition);
 
