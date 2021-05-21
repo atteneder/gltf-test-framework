@@ -69,6 +69,11 @@ namespace GLTFTest
             while (!task.IsCompleted) {
                 yield return null;
             }
+            
+            if (!gltf.currentSceneId.HasValue) {
+                // glTF has no default scene. Fallback to the first scene
+                gltf.InstantiateScene(0);
+            }
 
             // position camera based on AABB
             var cam = cameras.First();
