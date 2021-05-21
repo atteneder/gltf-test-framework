@@ -1,9 +1,8 @@
 {
     "name": "glTF-test-framework",
+    "rootNamespace": "",
     "references": [
         "Unity.Mathematics",
-        "Unity.PerformanceTesting",
-        "UnityEngine.TestTools.Graphics",
         "glTFast"
     ],
     "includePlatforms": [],
@@ -12,9 +11,7 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": false,
-    "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-    ],
+    "defineConstraints": [],
     "versionDefines": [
         {
             "name": "com.unity.testframework.graphics",
