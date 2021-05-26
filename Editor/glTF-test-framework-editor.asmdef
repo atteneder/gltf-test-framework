@@ -1,10 +1,10 @@
 {
     "name": "glTF-test-framework-editor",
-    "rootNamespace": "",
     "references": [
         "glTFast",
         "glTF-test-framework",
         "glTF-test-framework.Tests",
+        "glTF-test-framework.Sample",
         "UnityEngine.TestTools.Graphics"
     ],
     "includePlatforms": [

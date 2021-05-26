@@ -1,9 +1,9 @@
 {
     "name": "glTF-test-framework",
-    "rootNamespace": "",
     "references": [
         "Unity.Mathematics",
-        "glTFast"
+        "glTFast",
+        "glTF-test-framework.Sample"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
