@@ -16,6 +16,7 @@
 #if GLTFAST_RENDER_TEST
         
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using GLTFast;
 using NUnit.Framework;
@@ -56,8 +57,7 @@ namespace GLTFTest
 
             // Always wait one frame for scene load
             yield return null;
-
-            var cameras = GameObject.FindGameObjectsWithTag("MainCamera").Select(x=>x.GetComponent<Camera>());
+            
             var settings = Object.FindObjectOfType<UniversalGraphicsTestSettings>();
             Assert.IsNotNull(settings, "Invalid test scene, couldn't find UniversalGraphicsTestSettings");
 
@@ -69,15 +69,28 @@ namespace GLTFTest
             while (!task.IsCompleted) {
                 yield return null;
             }
+
+            var success = task.Result;
             
-            if (!gltf.currentSceneId.HasValue) {
+            if (success && !gltf.currentSceneId.HasValue) {
                 // glTF has no default scene. Fallback to the first scene
-                gltf.InstantiateScene(0);
+                success = gltf.InstantiateScene(0);
             }
 
-            // position camera based on AABB
-            var cam = cameras.First();
-            FrameBoundsCamera.FrameBounds(cam,gltf.transform,gltf.bounds);
+            IEnumerable<Camera> cameras;
+            if (success && gltf.sceneInstance?.cameras != null && gltf.sceneInstance.cameras.Count > 0) {
+                // Look for glTF cameras
+                cameras = gltf.sceneInstance.cameras;
+                foreach (var camera in cameras) {
+                    camera.backgroundColor = Color.white;
+                    camera.clearFlags = CameraClearFlags.SolidColor;
+                }
+            } else {
+                // position main camera based on AABB
+                cameras = GameObject.FindGameObjectsWithTag("MainCamera").Select(x=>x.GetComponent<Camera>());
+                var cam = cameras.First();
+                FrameBoundsCamera.FrameBounds(cam,gltf.transform,gltf.bounds);
+            }
 
 // #if ENABLE_VR
 //         if (XRGraphicsAutomatedTests.enabled)
