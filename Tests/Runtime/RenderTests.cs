@@ -78,18 +78,22 @@ namespace GLTFTest
             }
 
             IEnumerable<Camera> cameras;
+            Camera testCamera = null;
             if (success && gltf.sceneInstance?.cameras != null && gltf.sceneInstance.cameras.Count > 0) {
                 // Look for glTF cameras
                 cameras = gltf.sceneInstance.cameras;
-                foreach (var camera in cameras) {
-                    camera.backgroundColor = Color.white;
-                    camera.clearFlags = CameraClearFlags.SolidColor;
+                foreach (var cam in cameras) {
+                    if (testCamera == null) {
+                        testCamera = cam;
+                    }
+                    cam.backgroundColor = Color.white;
+                    cam.clearFlags = CameraClearFlags.SolidColor;
                 }
             } else {
                 // position main camera based on AABB
-                cameras = GameObject.FindGameObjectsWithTag("MainCamera").Select(x=>x.GetComponent<Camera>());
-                var cam = cameras.First();
-                FrameBoundsCamera.FrameBounds(cam,gltf.transform,gltf.bounds);
+                cameras = GameObject.FindGameObjectsWithTag("MainCamera").Select(x=>x.GetComponent<Camera>()).Where(x => x != null);
+                testCamera = cameras.First();
+                FrameBoundsCamera.FrameBounds(testCamera,gltf.transform,gltf.bounds);
             }
 
 // #if ENABLE_VR
@@ -132,7 +136,7 @@ namespace GLTFTest
         }
 #endif
 
-            ImageAssert.AreEqual(testCase.ReferenceImage, cameras.Where(x => x != null), settings.ImageComparisonSettings);
+            ImageAssert.AreEqual(testCase.ReferenceImage, testCamera, settings.ImageComparisonSettings);
 
             // Does it allocate memory when it renders what's on the main camera?
             bool allocatesMemory = false;
