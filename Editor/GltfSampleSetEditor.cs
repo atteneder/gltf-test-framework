@@ -67,6 +67,10 @@ namespace GLTFTest.Editor {
                 CreateRenderTestScenes(_sampleSet);
             }
             
+            if (GUILayout.Button("Create single test scene")) {
+                CreateRenderSingleTestScene(_sampleSet);
+            }
+            
             base.OnInspectorGUI();
             
             if (GUI.changed) {
@@ -121,7 +125,39 @@ namespace GLTFTest.Editor {
             AssetDatabase.Refresh();
             EditorBuildSettings.scenes = allScenes.ToArray();
     #else
-            Debug.LogWarning("Please install  the Graphics Test Framework for render tests to work.");
+            Debug.LogWarning("Please install the Graphics Test Framework for render tests to work.");
+    #endif
+        }
+
+        static void CreateRenderSingleTestScene(SampleSet sampleSet)
+        {
+    #if GLTFAST_RENDER_TEST
+            Texture2D dummyReference = null;
+
+            var testScene = EditorSceneManager.OpenScene("Assets/Scenes/TestScene.unity");
+            
+            foreach (var item in sampleSet.GetItems()) {
+                
+                // var settingsGameObject = new GameObject("GraphicsTestSettings");
+                // var graphicsTestSettings = settingsGameObject.AddComponent<UniversalGraphicsTestSettings>();
+
+                var go = new GameObject(item.name);
+                var gltfAsset = go.AddComponent<GltfBoundsAsset>();
+                
+                if(string.IsNullOrEmpty(sampleSet.streamingAssetsPath)) {
+                    gltfAsset.url = Path.Combine(sampleSet.baseLocalPath, item.path);
+                } else {
+                    gltfAsset.url = Path.Combine(sampleSet.streamingAssetsPath, item.path);
+                    gltfAsset.streamingAsset = true;
+                }
+                gltfAsset.loadOnStartup = true;
+                gltfAsset.createBoxCollider = false;
+            }
+            var scenePath = string.Format("Assets/Scenes/{0}.unity", sampleSet.name);
+            EditorSceneManager.SaveScene(testScene,scenePath);
+            AssetDatabase.Refresh();
+    #else
+            Debug.LogWarning("Please install the Graphics Test Framework for render tests to work.");
     #endif
         }
 
