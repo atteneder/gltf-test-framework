@@ -18,6 +18,12 @@
     "defineConstraints": [
         "UNITY_INCLUDE_TESTS"
     ],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.testframework.graphics",
+            "expression": "7.6.0",
+            "define": "GRAPHICS_TESTS"
+        }
+    ],
     "noEngineReferences": false
 }

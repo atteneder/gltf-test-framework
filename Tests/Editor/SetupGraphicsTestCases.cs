@@ -1,4 +1,5 @@
-﻿using UnityEngine.TestTools;
+﻿using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace GLTFTest.Editor {
     
@@ -8,7 +9,11 @@ namespace GLTFTest.Editor {
     public class SetupGraphicsTestCases : IPrebuildSetup
     {
         public void Setup() {
+#if GRAPHICS_TESTS
             UnityEditor.TestTools.Graphics.SetupGraphicsTestCases.Setup(RenderTests.universalPackagePath);
+#else
+            Debug.LogWarning("Graphics Tests Framework not installed!");
+#endif
         }
     }
 }
