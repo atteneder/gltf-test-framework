@@ -34,7 +34,7 @@ namespace GLTFTest {
     public class SampleModelsTest {
         const int k_Repetitions = 10;
         
-        const string glTFSampleSetAssetPath = "Assets/SampleSets/glTF-Sample-Models.asset";
+        const string glTFSampleSetAssetPath = "Packages/com.atteneder.gltf-demo/Runtime/SampleSets/glTF-Sample-Models.asset";
         const string glTFSampleSetJsonPath = "glTF-Sample-Models.json";
         const string glTFSampleSetBinaryJsonPath = "glTF-Sample-Models-glb.json";
 
@@ -43,7 +43,7 @@ namespace GLTFTest {
         {
 #if UNITY_EDITOR
             var sampleSet = AssetDatabase.LoadAssetAtPath<SampleSet>(glTFSampleSetAssetPath);
-            Assert.AreEqual(196, sampleSet.itemCount);
+            Assert.IsNotNull(sampleSet,"SampleSet not found");
 
             foreach (var item in sampleSet.GetItemsPrefixed()) {
                 CheckFileExists(item.path);
