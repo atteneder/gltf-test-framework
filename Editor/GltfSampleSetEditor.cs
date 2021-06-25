@@ -63,6 +63,10 @@ namespace GLTFTest.Editor {
                 CreateJSON(_sampleSet,target);
             }
             
+            if (GUILayout.Button("Create list file")) {
+                CreateListFile(_sampleSet,target);
+            }
+            
             if (GUILayout.Button("Create render test scenes")) {
                 CreateRenderTestScenes(_sampleSet);
             }
@@ -166,6 +170,20 @@ namespace GLTFTest.Editor {
             Debug.Log(jsonPathAbsolute);
             var json = JsonUtility.ToJson(sampleSet);
             File.WriteAllText(jsonPathAbsolute,json);
+        }
+        
+        public static void CreateListFile(SampleSet sampleSet, Object target) {
+            var name = sampleSet.name.Replace("-Sample-Models-", "_");
+            name = name.Replace("-Sample-Models", "");
+            var jsonPathAbsolute = Path.Combine( Application.streamingAssetsPath, $"{name}.txt");
+            Debug.Log(jsonPathAbsolute);
+            using( var fs = new StreamWriter(jsonPathAbsolute) )
+            {
+                fs.Write($"# All files from set {sampleSet.name}\n\n");
+                foreach (var setItem in sampleSet.GetItems()) {
+                    fs.WriteLine(setItem.path);
+                }
+            }
         }
 
         private static string CertifyDirectory(string[] directoryParts, string directoyPath)
