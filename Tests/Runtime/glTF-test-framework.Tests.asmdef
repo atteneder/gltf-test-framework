@@ -1,16 +1,16 @@
 {
     "name": "glTF-test-framework.Tests",
-    "rootNamespace": "",
     "references": [
         "glTFast",
         "glTF-test-framework",
         "glTF-test-framework.Sample",
+        "Unity.Mathematics",
         "Unity.PerformanceTesting",
         "UnityEngine.TestTools.Graphics"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
