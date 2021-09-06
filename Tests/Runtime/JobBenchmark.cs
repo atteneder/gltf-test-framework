@@ -191,8 +191,8 @@ namespace GLTFTest.Jobs {
         [Test, Performance]
         public unsafe void ConvertVector3FloatToFloatJob() {
             var job = new GLTFast.Jobs.ConvertVector3FloatToFloatJob {
-                input = (float*)m_Input.GetUnsafeReadOnlyPtr(),
-                result = (float*)m_Output.GetUnsafePtr()
+                input = (float3*)m_Input.GetUnsafeReadOnlyPtr(),
+                result = (float3*)m_Output.GetUnsafePtr()
             };
             Measure.Method(() => job.Run(m_Input.Length))
                 .WarmupCount(1)
@@ -1295,7 +1295,7 @@ namespace GLTFTest.Jobs {
             Assert.IsTrue( m_IndexOutput.Length % 3 == 0 );
             var job = new GLTFast.Jobs.ConvertIndicesUInt8ToInt32FlippedJob {
                 input = (byte*)m_InputUInt8.GetUnsafeReadOnlyPtr(),
-                result = (int*)m_IndexOutput.GetUnsafePtr()
+                result = (int3*)m_IndexOutput.GetUnsafePtr()
             };
             Measure.Method(() => job.Run(m_IndexOutput.Length/3))
                 .WarmupCount(1)
