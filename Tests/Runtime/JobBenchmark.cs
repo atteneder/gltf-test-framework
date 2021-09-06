@@ -275,80 +275,80 @@ namespace GLTFTest.Jobs {
             m_UVOutput.Dispose();
         }
         
-        [Test, Performance]
-        public unsafe void ConvertUVsUInt8ToFloatJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertUVsUInt8ToFloatJob {
-                        input = (byte*)m_UVInput.GetUnsafeReadOnlyPtr(),
-                        result = (Vector2*)m_UVOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_UVOutput.Length);
-                })
-                .WarmupCount(1)
-                .MeasurementCount(Constants.measureCount)
-                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
-                .Run();
-        }
-        
-        [Test, Performance]
-        public unsafe void ConvertUVsUInt8ToFloatNormalizedJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertUVsUInt8ToFloatNormalizedJob {
-                        input = (byte*)m_UVInput.GetUnsafeReadOnlyPtr(),
-                        result = (Vector2*)m_UVOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_UVOutput.Length);
-                })
-                .WarmupCount(1)
-                .MeasurementCount(Constants.measureCount)
-                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
-                .Run();
-        }
-        
-        [Test, Performance]
-        public unsafe void ConvertUVsUInt16ToFloatNormalizedJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertUVsUInt16ToFloatNormalizedJob {
-                        input = (ushort*)m_UVInput.GetUnsafeReadOnlyPtr(),
-                        result = (Vector2*)m_UVOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_UVOutput.Length);
-                })
-                .WarmupCount(1)
-                .MeasurementCount(Constants.measureCount)
-                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
-                .Run();
-        }
-        
-        [Test, Performance]
-        public unsafe void ConvertUVsUInt16ToFloatJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertUVsUInt16ToFloatJob {
-                        input = (ushort*)m_UVInput.GetUnsafeReadOnlyPtr(),
-                        result = (Vector2*)m_UVOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_UVOutput.Length);
-                })
-                .WarmupCount(1)
-                .MeasurementCount(Constants.measureCount)
-                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
-                .Run();
-        }
-        
-        [Test, Performance]
-        public unsafe void ConvertUVsFloatToFloatJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertUVsFloatToFloatJob {
-                        input = (float*)m_UVInput.GetUnsafeReadOnlyPtr(),
-                        result = (Vector2*)m_UVOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_UVOutput.Length);
-                })
-                .WarmupCount(1)
-                .MeasurementCount(Constants.measureCount)
-                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
-                .Run();
-        }
+        // [Test, Performance]
+        // public unsafe void ConvertUVsUInt8ToFloatJob() {
+        //     Measure.Method(() => {
+        //             var job = new GLTFast.Jobs.ConvertUVsUInt8ToFloatJob {
+        //                 input = (byte*)m_UVInput.GetUnsafeReadOnlyPtr(),
+        //                 result = (Vector2*)m_UVOutput.GetUnsafePtr()
+        //             };
+        //             job.Run(m_UVOutput.Length);
+        //         })
+        //         .WarmupCount(1)
+        //         .MeasurementCount(Constants.measureCount)
+        //         .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
+        //         .Run();
+        // }
+        //
+        // [Test, Performance]
+        // public unsafe void ConvertUVsUInt8ToFloatNormalizedJob() {
+        //     Measure.Method(() => {
+        //             var job = new GLTFast.Jobs.ConvertUVsUInt8ToFloatNormalizedJob {
+        //                 input = (byte*)m_UVInput.GetUnsafeReadOnlyPtr(),
+        //                 result = (Vector2*)m_UVOutput.GetUnsafePtr()
+        //             };
+        //             job.Run(m_UVOutput.Length);
+        //         })
+        //         .WarmupCount(1)
+        //         .MeasurementCount(Constants.measureCount)
+        //         .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
+        //         .Run();
+        // }
+        //
+        // [Test, Performance]
+        // public unsafe void ConvertUVsUInt16ToFloatNormalizedJob() {
+        //     Measure.Method(() => {
+        //             var job = new GLTFast.Jobs.ConvertUVsUInt16ToFloatNormalizedJob {
+        //                 input = (ushort*)m_UVInput.GetUnsafeReadOnlyPtr(),
+        //                 result = (Vector2*)m_UVOutput.GetUnsafePtr()
+        //             };
+        //             job.Run(m_UVOutput.Length);
+        //         })
+        //         .WarmupCount(1)
+        //         .MeasurementCount(Constants.measureCount)
+        //         .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
+        //         .Run();
+        // }
+        //
+        // [Test, Performance]
+        // public unsafe void ConvertUVsUInt16ToFloatJob() {
+        //     Measure.Method(() => {
+        //             var job = new GLTFast.Jobs.ConvertUVsUInt16ToFloatJob {
+        //                 input = (ushort*)m_UVInput.GetUnsafeReadOnlyPtr(),
+        //                 result = (Vector2*)m_UVOutput.GetUnsafePtr()
+        //             };
+        //             job.Run(m_UVOutput.Length);
+        //         })
+        //         .WarmupCount(1)
+        //         .MeasurementCount(Constants.measureCount)
+        //         .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
+        //         .Run();
+        // }
+        //
+        // [Test, Performance]
+        // public unsafe void ConvertUVsFloatToFloatJob() {
+        //     Measure.Method(() => {
+        //             var job = new GLTFast.Jobs.ConvertUVsFloatToFloatJob {
+        //                 input = (float*)m_UVInput.GetUnsafeReadOnlyPtr(),
+        //                 result = (Vector2*)m_UVOutput.GetUnsafePtr()
+        //             };
+        //             job.Run(m_UVOutput.Length);
+        //         })
+        //         .WarmupCount(1)
+        //         .MeasurementCount(Constants.measureCount)
+        //         .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
+        //         .Run();
+        // }
         
         [Test, Performance]
         public unsafe void ConvertUVsUInt8ToFloatInterleavedJob() {
