@@ -2,9 +2,11 @@
     "name": "glTF-test-framework.Tests",
     "references": [
         "glTFast",
+        "glTFastSchema",
         "glTF-test-framework",
         "glTF-test-framework.Sample",
         "Unity.Mathematics",
+        "Unity.Burst",
         "Unity.PerformanceTesting",
         "UnityEngine.TestTools.Graphics"
     ],

@@ -13,6 +13,7 @@
 // limitations under the License.
 //
 
+using GLTFast.Schema;
 using NUnit.Framework;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Collections;
@@ -219,44 +220,61 @@ namespace GLTFTest.Jobs {
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
         }
-        
-        
-        
-        
-        
-        // unsafe struct GetPositionsSparseJob : IJobParallelFor {
-        //
-        //     [ReadOnly]
-        //     [NativeDisableUnsafePtrRestriction]
-        //     public void* indexBuffer;
-        //     
-        //     public FunctionPointer<CachedFunction.GetIndexDelegate> indexConverter;
-        //
-        //     [ReadOnly]
-        //     public int inputByteStride;
-        //     
-        //     [ReadOnly]
-        //     [NativeDisableUnsafePtrRestriction]
-        //     public void* input;
-        //     
-        //     public FunctionPointer<CachedFunction.GetFloat3Delegate> valueConverter;
-        //     
-        //     [ReadOnly]
-        //     public int outputByteStride;
-        //
-        //     [ReadOnly]
-        //     [NativeDisableUnsafePtrRestriction]
-        //     public Vector3* result;
-        //
-        //     public void Execute(int i) {
-        //         var index = indexConverter.Invoke(indexBuffer,i);
-        //         var resultV = (float3*) (((byte*)result) + (index*outputByteStride));
-        //         valueConverter.Invoke(resultV, (byte*)input + i*inputByteStride);
-        //     }
-        // }
-        //
     }
-    
+
+    [TestFixture]
+    public class PositionSparseJobs {
+        
+        const int k_Length = 5_000;
+        
+        NativeArray<int> m_Indices;
+        NativeArray<float3> m_Input;
+        NativeArray<float3> m_Output;
+
+        [SetUp]
+        public void SetUpTest() {
+            m_Indices = new NativeArray<int>(k_Length, Allocator.Persistent);
+            m_Input = new NativeArray<float3>(k_Length, Allocator.Persistent);
+            m_Output = new NativeArray<float3>(k_Length*2, Allocator.Persistent);
+
+            for (int i = 0; i < k_Length; i++) {
+                m_Indices[i] = i*2;
+                m_Input[i] = new float3(i, k_Length-1, 42);
+            }
+        }
+
+        [TearDown]
+        public void Cleanup() {
+            m_Input.Dispose();
+            m_Output.Dispose();
+            m_Indices.Dispose();
+        }
+        
+        [Test, Performance]
+        public unsafe void ConvertPositionsSparseJob() {
+            Measure.Method(() => {
+                    const GLTFComponentType indexType = GLTFComponentType.UnsignedInt;
+                    const GLTFComponentType valueType = GLTFComponentType.Float;
+                    const bool normalized = false;
+
+                    var job = new GLTFast.Jobs.ConvertPositionsSparseJob {
+                        indexBuffer = m_Indices.GetUnsafeReadOnlyPtr(),
+                        indexConverter = GLTFast.Jobs.CachedFunction.GetIndexConverter(indexType),
+                        inputByteStride = 3*Accessor.GetComponentTypeSize(valueType),
+                        input = m_Input.GetUnsafeReadOnlyPtr(),
+                        valueConverter = GLTFast.Jobs.CachedFunction.GetPositionConverter(valueType,normalized),
+                        outputByteStride = 12,
+                        result = (Vector3*) m_Output.GetUnsafePtr(),
+                    };
+                    job.Run(m_Indices.Length);
+                })
+                .WarmupCount(1)
+                .MeasurementCount(Constants.measureCount)
+                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
+                .Run();
+        }
+    }
+
     [TestFixture]
     public class UVJobs {
         const int k_UVLength = 10_000_000;
