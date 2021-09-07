@@ -190,7 +190,7 @@ namespace GLTFTest.Jobs {
         [Test, Performance]
         public unsafe void ConvertPositionsByteToFloatInterleavedJob() {
             Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertPositionsByteToFloatInterleavedJob {
+                    var job = new GLTFast.Jobs.ConvertPositionsUInt8ToFloatInterleavedJob {
                         input = (byte*)m_Input.GetUnsafeReadOnlyPtr(),
                         inputByteStride = 12,
                         result = (Vector3*)m_Output.GetUnsafePtr(),
