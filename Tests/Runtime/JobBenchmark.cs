@@ -154,9 +154,9 @@ namespace GLTFTest.Jobs {
         }
         
         [Test, Performance]
-        public unsafe void ConvertPositionsSByteToFloatInterleavedJob() {
+        public unsafe void ConvertPositionsInt8ToFloatInterleavedJob() {
             Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertPositionsSByteToFloatInterleavedJob {
+                    var job = new GLTFast.Jobs.ConvertPositionsInt8ToFloatInterleavedJob {
                         input = (sbyte*)m_Input.GetUnsafeReadOnlyPtr(),
                         inputByteStride = 12,
                         result = (Vector3*)m_Output.GetUnsafePtr(),
@@ -171,9 +171,9 @@ namespace GLTFTest.Jobs {
         }
         
         [Test, Performance]
-        public unsafe void ConvertNormalsSByteToFloatInterleavedNormalizedJob() {
+        public unsafe void ConvertNormalsInt8ToFloatInterleavedNormalizedJob() {
             Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertNormalsSByteToFloatInterleavedNormalizedJob {
+                    var job = new GLTFast.Jobs.ConvertNormalsInt8ToFloatInterleavedNormalizedJob {
                         input = (sbyte*)m_Input.GetUnsafeReadOnlyPtr(),
                         inputByteStride = 12,
                         result = (Vector3*)m_Output.GetUnsafePtr(),
@@ -205,9 +205,9 @@ namespace GLTFTest.Jobs {
         }
         
         [Test, Performance]
-        public unsafe void ConvertNormalsByteToFloatInterleavedNormalizedJob() {
+        public unsafe void ConvertNormalsUInt8ToFloatInterleavedNormalizedJob() {
             Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertNormalsByteToFloatInterleavedNormalizedJob {
+                    var job = new GLTFast.Jobs.ConvertNormalsUInt8ToFloatInterleavedNormalizedJob {
                         input = (byte*)m_Input.GetUnsafeReadOnlyPtr(),
                         inputByteStride = 12,
                         result = (Vector3*)m_Output.GetUnsafePtr(),
