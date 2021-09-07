@@ -572,9 +572,14 @@ namespace GLTFTest.Jobs {
         
         [Test, Performance]
         public unsafe void ConvertRotationsInt8ToFloatJob() {
+            var ptr = (sbyte*)m_RotInput.GetUnsafeReadOnlyPtr();
+            ptr[0] = sbyte.MinValue;
+            ptr[1] = -64;
+            ptr[2] = 64;
+            ptr[3] = sbyte.MaxValue;
             Measure.Method(() => {
                     var job = new GLTFast.Jobs.ConvertRotationsInt8ToFloatJob {
-                        input = (byte*)m_RotInput.GetUnsafeReadOnlyPtr(),
+                        input = (sbyte*)m_RotInput.GetUnsafeReadOnlyPtr(),
                         result = (float*)m_RotOutput.GetUnsafePtr()
                     };
                     job.Run(m_RotOutput.Length);
@@ -583,6 +588,8 @@ namespace GLTFTest.Jobs {
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            
+            Assert.AreEqual( new quaternion(-1,.503937f,-.503937f,1), m_RotOutput[0] );
         }
         
         [Test, Performance]
