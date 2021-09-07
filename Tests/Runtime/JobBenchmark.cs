@@ -840,7 +840,7 @@ namespace GLTFTest.Jobs {
         public unsafe void ConvertRotationsInt16ToFloatJob() {
             var job = new GLTFast.Jobs.ConvertRotationsInt16ToFloatJob {
                 input = (short*)m_InputInt16.GetUnsafeReadOnlyPtr(),
-                result = (float4*)m_RotOutput.GetUnsafePtr()
+                result = (float*)m_RotOutput.GetUnsafePtr()
             };
             Measure.Method(() => job.Run(m_RotOutput.Length))
                 .WarmupCount(1)
@@ -860,7 +860,7 @@ namespace GLTFTest.Jobs {
 
             var job = new GLTFast.Jobs.ConvertRotationsInt8ToFloatJob {
                 input = (sbyte*)m_InputInt8.GetUnsafeReadOnlyPtr(),
-                result = (float4*)m_RotOutput.GetUnsafePtr()
+                result = (float*)m_RotOutput.GetUnsafePtr()
             };
             Measure.Method(() => job.Run(m_RotOutput.Length))
                 .WarmupCount(1)
