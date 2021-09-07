@@ -186,7 +186,13 @@ namespace GLTFTest.Jobs {
                 outputByteStride = 12,
                 result = (float3*)m_Output.GetUnsafePtr()
             };
-            Measure.Method(() => job.Run(m_Input.Length))
+            Measure.Method(() => 
+#if UNITY_JOBS
+                job.RunBatch(m_Input.Length)
+#else
+                job.Run(m_Input.Length)
+#endif
+                )
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -220,7 +226,13 @@ namespace GLTFTest.Jobs {
                 result = (float3*)m_Output.GetUnsafePtr(),
                 outputByteStride = 12
             };
-            Measure.Method(() => job.Run(m_Output.Length))
+            Measure.Method(() => 
+#if UNITY_JOBS
+                job.RunBatch(m_Output.Length)
+#else
+                job.Run(m_Output.Length)
+#endif
+                )
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -237,7 +249,13 @@ namespace GLTFTest.Jobs {
                 result = (float3*)m_Output.GetUnsafePtr(),
                 outputByteStride = 12
             };
-            Measure.Method(() => job.Run(m_Output.Length))
+            Measure.Method(() => 
+#if UNITY_JOBS
+                job.RunBatch(m_Output.Length)
+#else
+                            job.Run(m_Output.Length)
+#endif
+                )
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -254,7 +272,13 @@ namespace GLTFTest.Jobs {
                 result = (float3*)m_Output.GetUnsafePtr(),
                 outputByteStride = 12
             };
-            Measure.Method(() => job.Run(m_Output.Length))
+            Measure.Method(() => 
+#if UNITY_JOBS
+                job.RunBatch(m_Output.Length)
+#else
+                job.Run(m_Output.Length)
+#endif
+                )
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -271,7 +295,13 @@ namespace GLTFTest.Jobs {
                 result = (float3*)m_Output.GetUnsafePtr(),
                 outputByteStride = 12
             };
-            Measure.Method(() => job.Run(m_Output.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                job.RunBatch(m_Output.Length)
+#else
+                job.Run(m_Output.Length)
+#endif
+                )
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -288,7 +318,13 @@ namespace GLTFTest.Jobs {
                 result = (float3*)m_Output.GetUnsafePtr(),
                 outputByteStride = 12
             };
-            Measure.Method(() => job.Run(m_Output.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                job.RunBatch(m_Output.Length)
+#else
+                job.Run(m_Output.Length)
+#endif
+                )
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -305,7 +341,13 @@ namespace GLTFTest.Jobs {
                 result = (float3*)m_Output.GetUnsafePtr(),
                 outputByteStride = 12
             };
-            Measure.Method(() => job.Run(m_Output.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                job.RunBatch(m_Output.Length)
+#else
+                job.Run(m_Output.Length)
+#endif
+                )
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -322,7 +364,13 @@ namespace GLTFTest.Jobs {
                 result = (float3*)m_Output.GetUnsafePtr(),
                 outputByteStride = 12
             };
-            Measure.Method(() => job.Run(m_Output.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                job.RunBatch(m_Output.Length)
+#else
+                job.Run(m_Output.Length)
+#endif
+                )
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -339,7 +387,13 @@ namespace GLTFTest.Jobs {
                 result = (float3*)m_Output.GetUnsafePtr(),
                 outputByteStride = 12
             };
-            Measure.Method(() => job.Run(m_Output.Length))
+            Measure.Method(() => 
+#if UNITY_JOBS
+                job.RunBatch(m_Output.Length)
+#else
+                job.Run(m_Output.Length)
+#endif
+                )
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -569,7 +623,12 @@ namespace GLTFTest.Jobs {
                 result = (float2*)m_UVOutput.GetUnsafePtr(),
                 outputByteStride = 8
             };
-            Measure.Method(() => job.Run(m_UVOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_UVOutput.Length))
+#else
+                    job.Run(m_UVOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -603,7 +662,12 @@ namespace GLTFTest.Jobs {
                 result = (float2*)m_UVOutput.GetUnsafePtr(),
                 outputByteStride = 8
             };
-            Measure.Method(() => job.Run(m_UVOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_UVOutput.Length))
+#else
+                    job.Run(m_UVOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -637,7 +701,12 @@ namespace GLTFTest.Jobs {
                 result = (float2*)m_UVOutput.GetUnsafePtr(),
                 outputByteStride = 8
             };
-            Measure.Method(() => job.Run(m_UVOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_UVOutput.Length))
+#else
+                    job.Run(m_UVOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -654,7 +723,12 @@ namespace GLTFTest.Jobs {
                 result = (float2*)m_UVOutput.GetUnsafePtr(),
                 outputByteStride = 8
             };
-            Measure.Method(() => job.Run(m_UVOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_UVOutput.Length))
+#else
+                    job.Run(m_UVOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -671,7 +745,12 @@ namespace GLTFTest.Jobs {
                 result = (float2*)m_UVOutput.GetUnsafePtr(),
                 outputByteStride = 8
             };
-            Measure.Method(() => job.Run(m_UVOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_UVOutput.Length))
+#else
+                    job.Run(m_UVOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -688,7 +767,12 @@ namespace GLTFTest.Jobs {
                 result = (float2*)m_UVOutput.GetUnsafePtr(),
                 outputByteStride = 8
             };
-            Measure.Method(() => job.Run(m_UVOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_UVOutput.Length))
+#else
+                    job.Run(m_UVOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -705,7 +789,12 @@ namespace GLTFTest.Jobs {
                 result = (float2*)m_UVOutput.GetUnsafePtr(),
                 outputByteStride = 8
             };
-            Measure.Method(() => job.Run(m_UVOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_UVOutput.Length))
+#else
+                    job.Run(m_UVOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -888,7 +977,12 @@ namespace GLTFTest.Jobs {
                 result = (float4*)m_RotOutput.GetUnsafePtr(),
                 outputByteStride = 16
             };
-            Measure.Method(() => job.Run(m_RotOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_RotOutput.Length))
+#else
+                    job.Run(m_RotOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -905,7 +999,12 @@ namespace GLTFTest.Jobs {
                 result = (float4*)m_RotOutput.GetUnsafePtr(),
                 outputByteStride = 16
             };
-            Measure.Method(() => job.Run(m_RotOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_RotOutput.Length))
+#else
+                    job.Run(m_RotOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -921,7 +1020,12 @@ namespace GLTFTest.Jobs {
                 result = (float4*)m_RotOutput.GetUnsafePtr(),
                 outputByteStride = 16
             };
-            Measure.Method(() => job.Run(m_RotOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_RotOutput.Length))
+#else
+                    job.Run(m_RotOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -938,7 +1042,12 @@ namespace GLTFTest.Jobs {
                 result = (float4*)m_RotOutput.GetUnsafePtr(),
                 outputByteStride = 16
             };
-            Measure.Method(() => job.Run(m_RotOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_RotOutput.Length))
+#else
+                    job.Run(m_RotOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -1047,7 +1156,6 @@ namespace GLTFTest.Jobs {
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
-            
             CheckResultRGB(Constants.epsilonUInt16);
         }
         
@@ -1058,7 +1166,12 @@ namespace GLTFTest.Jobs {
                 inputByteStride = 8,
                 result = (float4*)m_ColorOutput.GetUnsafePtr()
             };
-            Measure.Method(() => job.Run(m_ColorOutput.Length))
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_ColorOutput.Length))
+#else
+                    job.Run(m_ColorOutput.Length))
+#endif
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
