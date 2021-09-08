@@ -68,6 +68,13 @@ namespace GLTFTest.Jobs {
                 epsilon
                 );
         }
+        
+        public static void AssertNearOrEqual(uint4 reference, uint4 value) {
+            var b = reference != value;
+            if (b.x || b.y || b.z || b.w) {
+                throw new AssertionException($"float4 not equal. expected {reference} got {value}");
+            }
+        }
     }
     
     [TestFixture]
@@ -1084,59 +1091,84 @@ namespace GLTFTest.Jobs {
     [TestFixture]
     public class BoneIndexJobs {
         const int k_BoneIndexLength = 2_000_000;
-        NativeArray<uint4> m_BoneIndexInput;
+        uint4 m_Reference = new uint4(2, 3, 4, 5);
+        NativeArray<byte> m_InputUInt8;
+        NativeArray<ushort> m_InputUInt16;
         NativeArray<uint4> m_BoneIndexOutput;
 
         [OneTimeSetUp]
         public void SetUpTest() {
-            m_BoneIndexInput = new NativeArray<uint4>(k_BoneIndexLength, Allocator.Persistent);
+            m_InputUInt8 = new NativeArray<byte>(k_BoneIndexLength*4, Allocator.Persistent);
+            m_InputUInt16 = new NativeArray<ushort>(k_BoneIndexLength*4, Allocator.Persistent);
             m_BoneIndexOutput = new NativeArray<uint4>(k_BoneIndexLength, Allocator.Persistent);
+
+            m_InputUInt8[4] = (byte)m_Reference.x;
+            m_InputUInt8[5] = (byte)m_Reference.y;
+            m_InputUInt8[6] = (byte)m_Reference.z;
+            m_InputUInt8[7] = (byte)m_Reference.w;
+            
+            m_InputUInt16[4] = (ushort)m_Reference.x;
+            m_InputUInt16[5] = (ushort)m_Reference.y;
+            m_InputUInt16[6] = (ushort)m_Reference.z;
+            m_InputUInt16[7] = (ushort)m_Reference.w;
         }
 
         [OneTimeTearDown]
         public void Cleanup() {
-            m_BoneIndexInput.Dispose();
+            m_InputUInt16.Dispose();
+            m_InputUInt8.Dispose();
             m_BoneIndexOutput.Dispose();
         }
         
+        void CheckResult() {
+            const int i = 1;
+            Utils.AssertNearOrEqual(m_Reference, m_BoneIndexOutput[i]);
+        }
+
         [Test, Performance]
         public unsafe void ConvertBoneJointsUInt8ToUInt32Job() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertBoneJointsUInt8ToUInt32Job {
-                        input = (byte*)m_BoneIndexInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 16,
-                        result = (uint*)m_BoneIndexOutput.GetUnsafePtr(),
-                        outputByteStride = 16
-                    };
-                    job.Run(m_BoneIndexOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertBoneJointsUInt8ToUInt32Job {
+                input = (byte*)m_InputUInt8.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 4,
+                result = (uint*)m_BoneIndexOutput.GetUnsafePtr(),
+                outputByteStride = 16
+            };
+            Measure.Method(() => job.Run(m_BoneIndexOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckResult();
         }
         
         [Test, Performance]
         public unsafe void ConvertBoneJointsUInt16ToUInt32Job() {
+            var job = new GLTFast.Jobs.ConvertBoneJointsUInt16ToUInt32Job {
+                input = (byte*)m_InputUInt16.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 8,
+                result = (uint*)m_BoneIndexOutput.GetUnsafePtr(),
+                outputByteStride = 16
+            };
             Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertBoneJointsUInt16ToUInt32Job {
-                        input = (byte*)m_BoneIndexInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 16,
-                        result = (uint*)m_BoneIndexOutput.GetUnsafePtr(),
-                        outputByteStride = 16
-                    };
                     job.Run(m_BoneIndexOutput.Length);
                 })
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckResult();
         }
     }
     
     [TestFixture]
     public class MatrixJobs {
         const int k_MatrixLength = 800_000;
+        static readonly Matrix4x4 m_Reference = new Matrix4x4(
+            new Vector4(1,-5,-9,13),
+            new Vector4(-2,6,10,14),
+            new Vector4(-3,7,11,15),
+            new Vector4(-4,8,12,16)
+        );
         NativeArray<float4x4> m_MatrixInput;
         NativeArray<Matrix4x4> m_MatrixOutput;
 
@@ -1144,6 +1176,13 @@ namespace GLTFTest.Jobs {
         public void SetUpTest() {
             m_MatrixInput = new NativeArray<float4x4>(k_MatrixLength, Allocator.Persistent);
             m_MatrixOutput = new NativeArray<Matrix4x4>(k_MatrixLength, Allocator.Persistent);
+
+            m_MatrixInput[1] = new float4x4(
+                1,2,3,4,
+                5,6,7,8,
+                9,10,11,12,
+                13,14,15,16
+                );
         }
 
         [OneTimeTearDown]
@@ -1154,17 +1193,17 @@ namespace GLTFTest.Jobs {
         
         [Test, Performance]
         public unsafe void ConvertMatricesJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertMatricesJob {
-                        input = (Matrix4x4*)m_MatrixInput.GetUnsafeReadOnlyPtr(),
-                        result = m_MatrixOutput,
-                    };
-                    job.Run(m_MatrixOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertMatricesJob {
+                input = (Matrix4x4*)m_MatrixInput.GetUnsafeReadOnlyPtr(),
+                result = m_MatrixOutput,
+            };
+            Measure.Method(() => job.Run(m_MatrixOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+
+            Assert.AreEqual(m_Reference, m_MatrixOutput[1]);
         }
     }
     
