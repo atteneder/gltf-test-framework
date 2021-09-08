@@ -28,6 +28,21 @@ namespace GLTFTest.Jobs {
     static class Constants {
         public const int measureCount = 10;
         public const int iterationsPerMeasurement = 5;
+
+        public const float epsilonUInt8 = .001f;
+        public const float epsilonInt8 = .005f;
+        public const float epsilonUInt16 = .00001f;
+        public const float epsilonInt16 = .000002f;
+    }
+
+    static class Utils {
+        public static void AssertFloat3NearOrEqual(float3 reference, float3 value, float epsilon) {
+            var delta = math.abs(reference - value);
+            var maxDelta = math.max(delta.x, math.max(delta.y, delta.z));
+            if (maxDelta > epsilon) {
+                throw new AssertionException($"float3 not equal. expected {reference} got {value} (delta {maxDelta})");
+            }
+        }
     }
     
     [TestFixture]
@@ -106,23 +121,14 @@ namespace GLTFTest.Jobs {
             m_Output.Dispose();
         }
 
-        void AssertFloat3NearOrEqual(float3 reference, float3 value, float epsilon) {
-            const int i = 1;
-            var delta = math.abs(reference - value);
-            var maxDelta = math.max(delta.x, math.max(delta.y, delta.z));
-            if (maxDelta > epsilon) {
-                throw new AssertionException($"float3 not equal. expected {reference} got {value} (delta {maxDelta})");
-            }
-        }
-        
         void CheckResult1(float epsilon = float.Epsilon) {
             const int i = 1;
-            AssertFloat3NearOrEqual(m_Reference, m_Output[i], epsilon);
+            Utils.AssertFloat3NearOrEqual(m_Reference, m_Output[i], epsilon);
         }
         
-        void CheckResult2(float epsilon = .001f) {
+        void CheckResult2(float epsilon = float.Epsilon) {
             const int i = 2;
-            AssertFloat3NearOrEqual(m_Reference2, m_Output[i], epsilon);
+            Utils.AssertFloat3NearOrEqual(m_Reference2, m_Output[i], epsilon);
         }
         
         [Test, Performance]
@@ -190,7 +196,7 @@ namespace GLTFTest.Jobs {
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
             
-            CheckResult1(.00001f);
+            CheckResult1(Constants.epsilonUInt16);
         }
         
         [Test, Performance]
@@ -224,7 +230,7 @@ namespace GLTFTest.Jobs {
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
             
-            CheckResult1(.000002f);
+            CheckResult1(Constants.epsilonInt16);
         }
         
         [Test, Performance]
@@ -258,7 +264,7 @@ namespace GLTFTest.Jobs {
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
             
-            CheckResult1(0.005f);
+            CheckResult1(Constants.epsilonInt8);
         }
         
         [Test, Performance]
@@ -292,7 +298,7 @@ namespace GLTFTest.Jobs {
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
             
-            CheckResult1(.001f);
+            CheckResult1(Constants.epsilonUInt8);
         }
     }
 
