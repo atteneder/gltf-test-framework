@@ -36,6 +36,15 @@ namespace GLTFTest.Jobs {
     }
 
     static class Utils {
+        
+        public static void AssertNearOrEqual(float4 reference, float4 value, float epsilon = float.Epsilon) {
+            var delta = math.abs(reference - value);
+            var maxDelta = math.max(delta.x, math.max(delta.y, math.max(delta.z,delta.w)));
+            if (maxDelta > epsilon) {
+                throw new AssertionException($"float4 not equal. expected {reference} got {value} (delta {maxDelta})");
+            }
+        }
+        
         public static void AssertNearOrEqual(float3 reference, float3 value, float epsilon = float.Epsilon) {
             var delta = math.abs(reference - value);
             var maxDelta = math.max(delta.x, math.max(delta.y, delta.z));
@@ -680,139 +689,232 @@ namespace GLTFTest.Jobs {
     [TestFixture]
     public class Vector4Jobs {
         const int k_RotationLength = 5_000_000;
-        NativeArray<quaternion> m_RotInput;
-        NativeArray<quaternion> m_RotOutput;
+        float4 m_NormalizedReference = new float4(0.844623f, -0.191342f,-0.46194f,0.191342f);
+        float4 m_NormalizedTangentReference = new float4(0.844623f, 0.191342f,-0.46194f,0.191342f);
+        float4 m_RotationReference = new float4(2, -13, -42, 1);
+        float4 m_TangentReference = new float4(2, 13, -42, 1);
+        float4 m_Reference = new float4(2, 13, 42, 1);
+
+        NativeArray<float4> m_RotInput;
+        NativeArray<ushort> m_InputUInt16;
+        NativeArray<short> m_InputInt16;
+        NativeArray<byte> m_InputUInt8;
+        NativeArray<sbyte> m_InputInt8;
+        NativeArray<float4> m_RotOutput;
 
         [OneTimeSetUp]
         public void SetUpTest() {
-            m_RotInput = new NativeArray<quaternion>(k_RotationLength, Allocator.Persistent);
-            m_RotOutput = new NativeArray<quaternion>(k_RotationLength, Allocator.Persistent);
+            m_RotInput = new NativeArray<float4>(k_RotationLength, Allocator.Persistent);
+            m_InputUInt16 = new NativeArray<ushort>(k_RotationLength*4, Allocator.Persistent);
+            m_InputInt16 = new NativeArray<short>(k_RotationLength*4, Allocator.Persistent);
+            m_InputUInt8 = new NativeArray<byte>(k_RotationLength*4, Allocator.Persistent);
+            m_InputInt8 = new NativeArray<sbyte>(k_RotationLength*4, Allocator.Persistent);
+            m_RotOutput = new NativeArray<float4>(k_RotationLength, Allocator.Persistent);
+            
+            var i = 1;
+            {
+                var tmp = new float4(0.844623f, 0.191342f,0.46194f,0.191342f);
+                m_RotInput[i] = tmp; 
+
+                m_InputUInt8[i*4] = (byte) (byte.MaxValue*tmp.x);
+                m_InputUInt8[i*4+1] = (byte) (byte.MaxValue*tmp.y);
+                m_InputUInt8[i*4+2] = (byte) (byte.MaxValue*tmp.z);
+                m_InputUInt8[i*4+3] = (byte) (byte.MaxValue*tmp.w);
+                
+                m_InputInt8[i*4] = (sbyte) (sbyte.MaxValue*tmp.x);
+                m_InputInt8[i*4+1] = (sbyte) (sbyte.MaxValue*tmp.y);
+                m_InputInt8[i*4+2] = (sbyte) (sbyte.MaxValue*tmp.z);
+                m_InputInt8[i*4+3] = (sbyte) (sbyte.MaxValue*tmp.w);
+                
+                m_InputUInt16[i*4] = (ushort) (ushort.MaxValue*tmp.x);
+                m_InputUInt16[i*4+1] = (ushort) (ushort.MaxValue*tmp.y);
+                m_InputUInt16[i*4+2] = (ushort) (ushort.MaxValue*tmp.z);
+                m_InputUInt16[i*4+3] = (ushort) (ushort.MaxValue*tmp.w);
+                
+                m_InputInt16[i*4] = (short) (short.MaxValue*tmp.x);
+                m_InputInt16[i*4+1] = (short) (short.MaxValue*tmp.y);
+                m_InputInt16[i*4+2] = (short) (short.MaxValue*tmp.z);
+                m_InputInt16[i*4+3] = (short) (short.MaxValue*tmp.w);
+            }
+
+            i = 2;
+            {
+                m_RotInput[i] = new float4(2, 13, 42, 1);
+
+                m_InputUInt8[i*4] = 2;
+                m_InputUInt8[i*4+1] = 13;
+                m_InputUInt8[i*4+2] = 42;
+                m_InputUInt8[i*4+3] = 1;
+                
+                m_InputInt8[i*4] = 2;
+                m_InputInt8[i*4+1] = 13;
+                m_InputInt8[i*4+2] = 42;
+                m_InputInt8[i*4+3] = 1;
+                
+                m_InputUInt16[i*4] = 2;
+                m_InputUInt16[i*4+1] = 13;
+                m_InputUInt16[i*4+2] = 42;
+                m_InputUInt16[i*4+3] = 1;
+                
+                m_InputInt16[i*4] = 2;
+                m_InputInt16[i*4+1] = 13;
+                m_InputInt16[i*4+2] = 42;
+                m_InputInt16[i*4+3] = 1;
+            }
         }
 
         [OneTimeTearDown]
         public void Cleanup() {
             m_RotInput.Dispose();
+            m_InputUInt16.Dispose();
+            m_InputInt16.Dispose();
+            m_InputUInt8.Dispose();
+            m_InputInt8.Dispose();
             m_RotOutput.Dispose();
         }
+
+        void CheckNormalizedResult(float epsilon = float.Epsilon) {
+            const int i = 1;
+            Utils.AssertNearOrEqual(m_NormalizedReference, m_RotOutput[i], epsilon);
+        }
         
+        void CheckNormalizedTangentResult(float epsilon = float.Epsilon) {
+            const int i = 1;
+            Utils.AssertNearOrEqual(m_NormalizedTangentReference, m_RotOutput[i], epsilon);
+        }
+        
+        void CheckResult(float epsilon = float.Epsilon) {
+            const int i = 2;
+            Utils.AssertNearOrEqual(m_RotationReference, m_RotOutput[i], epsilon);
+        }
+        
+        void CheckTangentResult(float epsilon = float.Epsilon) {
+            const int i = 2;
+            Utils.AssertNearOrEqual(m_TangentReference, m_RotOutput[i], epsilon);
+        }
+        
+        void CheckBoneWeightResult(float epsilon = float.Epsilon) {
+            const int i = 2;
+            Utils.AssertNearOrEqual(m_Reference, m_RotOutput[i], epsilon);
+        }
+
         [Test, Performance]
         public unsafe void ConvertRotationsFloatToFloatJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertRotationsFloatToFloatJob {
-                        input = (float*)m_RotInput.GetUnsafeReadOnlyPtr(),
-                        result = (float*)m_RotOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_RotOutput.Length);
-                })
-                .WarmupCount(1)
-                .MeasurementCount(Constants.measureCount)
-                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
-                .Run();
-        }
-        
-        [Test, Performance]
-        public unsafe void ConvertRotationsInt16ToFloatJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertRotationsInt16ToFloatJob {
-                        input = (short*)m_RotInput.GetUnsafeReadOnlyPtr(),
-                        result = (float*)m_RotOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_RotOutput.Length);
-                })
-                .WarmupCount(1)
-                .MeasurementCount(Constants.measureCount)
-                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
-                .Run();
-        }
-        
-        [Test, Performance]
-        public unsafe void ConvertRotationsInt8ToFloatJob() {
-            var ptr = (sbyte*)m_RotInput.GetUnsafeReadOnlyPtr();
-            ptr[0] = sbyte.MinValue;
-            ptr[1] = -64;
-            ptr[2] = 64;
-            ptr[3] = sbyte.MaxValue;
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertRotationsInt8ToFloatJob {
-                        input = (sbyte*)m_RotInput.GetUnsafeReadOnlyPtr(),
-                        result = (float*)m_RotOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_RotOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertRotationsFloatToFloatJob {
+                input = (float*)m_RotInput.GetUnsafeReadOnlyPtr(),
+                result = (float*)m_RotOutput.GetUnsafePtr()
+            };
+            Measure.Method(() => job.Run(m_RotOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
             
-            Assert.AreEqual( new quaternion(-1,.503937f,-.503937f,1), m_RotOutput[0] );
+            CheckNormalizedResult();
+            CheckResult();
+        }
+        
+        [Test, Performance]
+        public unsafe void ConvertRotationsInt16ToFloatJob() {
+            var job = new GLTFast.Jobs.ConvertRotationsInt16ToFloatJob {
+                input = (short*)m_InputInt16.GetUnsafeReadOnlyPtr(),
+                result = (float*)m_RotOutput.GetUnsafePtr()
+            };
+            Measure.Method(() => job.Run(m_RotOutput.Length))
+                .WarmupCount(1)
+                .MeasurementCount(Constants.measureCount)
+                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
+                .Run();
+            
+            CheckNormalizedResult(Constants.epsilonInt16);
+        }
+        
+        [Test, Performance]
+        public unsafe void ConvertRotationsInt8ToFloatJob() {
+            m_InputInt8[0] = sbyte.MinValue;
+            m_InputInt8[1] = -64;
+            m_InputInt8[2] = 64;
+            m_InputInt8[3] = sbyte.MaxValue;
+
+            var job = new GLTFast.Jobs.ConvertRotationsInt8ToFloatJob {
+                input = (sbyte*)m_InputInt8.GetUnsafeReadOnlyPtr(),
+                result = (float*)m_RotOutput.GetUnsafePtr()
+            };
+            Measure.Method(() => job.Run(m_RotOutput.Length))
+                .WarmupCount(1)
+                .MeasurementCount(Constants.measureCount)
+                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
+                .Run();
+            
+            Utils.AssertNearOrEqual(new float4(-1,.5f,-.5f,1), m_RotOutput[0],Constants.epsilonInt8);
+            CheckNormalizedResult(Constants.epsilonInt8);
         }
         
         [Test, Performance]
         public unsafe void ConvertTangentsFloatToFloatInterleavedJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertTangentsFloatToFloatInterleavedJob {
-                        input = (byte*)m_RotInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 16,
-                        result = (Vector4*)m_RotOutput.GetUnsafePtr(),
-                        outputByteStride = 16
-                    };
-                    job.Run(m_RotOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertTangentsFloatToFloatInterleavedJob {
+                input = (byte*)m_RotInput.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 16,
+                result = (Vector4*)m_RotOutput.GetUnsafePtr(),
+                outputByteStride = 16
+            };
+            Measure.Method(() => job.Run(m_RotOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            
+            CheckTangentResult();
         }
         
         [Test, Performance]
         public unsafe void ConvertBoneWeightsFloatToFloatInterleavedJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertBoneWeightsFloatToFloatInterleavedJob {
-                        input = (byte*)m_RotInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 16,
-                        result = (Vector4*)m_RotOutput.GetUnsafePtr(),
-                        outputByteStride = 16
-                    };
-                    job.Run(m_RotOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertBoneWeightsFloatToFloatInterleavedJob {
+                input = (byte*)m_RotInput.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 16,
+                result = (Vector4*)m_RotOutput.GetUnsafePtr(),
+                outputByteStride = 16
+            };
+            Measure.Method(() => job.Run(m_RotOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckBoneWeightResult();
         }
         
         [Test, Performance]
         public unsafe void ConvertTangentsInt16ToFloatInterleavedNormalizedJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertTangentsInt16ToFloatInterleavedNormalizedJob {
-                        input = (short*)m_RotInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 16,
-                        result = (Vector4*)m_RotOutput.GetUnsafePtr(),
-                        outputByteStride = 16
-                    };
-                    job.Run(m_RotOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertTangentsInt16ToFloatInterleavedNormalizedJob {
+                input = (short*)m_InputInt16.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 8,
+                result = (Vector4*)m_RotOutput.GetUnsafePtr(),
+                outputByteStride = 16
+            };
+            Measure.Method(() => job.Run(m_RotOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            
+            CheckNormalizedTangentResult(Constants.epsilonInt16);
         }
         
         [Test, Performance]
         public unsafe void ConvertTangentsInt8ToFloatInterleavedNormalizedJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertTangentsInt8ToFloatInterleavedNormalizedJob {
-                        input = (sbyte*)m_RotInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 16,
-                        result = (Vector4*)m_RotOutput.GetUnsafePtr(),
-                        outputByteStride = 16
-                    };
-                    job.Run(m_RotOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertTangentsInt8ToFloatInterleavedNormalizedJob {
+                input = (sbyte*)m_InputInt8.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 4,
+                result = (Vector4*)m_RotOutput.GetUnsafePtr(),
+                outputByteStride = 16
+            };
+            Measure.Method(() => job.Run(m_RotOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            
+            CheckNormalizedTangentResult(Constants.epsilonInt8);
         }
     }
     
