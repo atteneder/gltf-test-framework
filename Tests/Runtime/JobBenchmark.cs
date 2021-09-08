@@ -1207,145 +1207,171 @@ namespace GLTFTest.Jobs {
     [TestFixture]
     public class IndexJobs {
         const int k_IndexLength = 24_000_000; // multiple of 3!
-        NativeArray<int> m_IndexInput;
+        NativeArray<byte> m_InputUInt8;
+        NativeArray<ushort> m_InputUInt16;
+        NativeArray<uint> m_InputUInt32;
         NativeArray<int> m_IndexOutput;
 
         [OneTimeSetUp]
         public void SetUpTest() {
-            m_IndexInput = new NativeArray<int>(k_IndexLength, Allocator.Persistent);
+            m_InputUInt8 = new NativeArray<byte>(k_IndexLength, Allocator.Persistent);
+            m_InputUInt16 = new NativeArray<ushort>(k_IndexLength, Allocator.Persistent);
+            m_InputUInt32 = new NativeArray<uint>(k_IndexLength, Allocator.Persistent);
             m_IndexOutput = new NativeArray<int>(k_IndexLength, Allocator.Persistent);
+
+            for (int i = 0; i < 6; i++) {
+                m_InputUInt8[i] = (byte)i;
+                m_InputUInt16[i] = (ushort)i;
+                m_InputUInt32[i] = (uint)i;
+            }
         }
 
         [OneTimeTearDown]
         public void Cleanup() {
-            m_IndexInput.Dispose();
+            m_InputUInt8.Dispose();
+            m_InputUInt16.Dispose();
+            m_InputUInt32.Dispose();
             m_IndexOutput.Dispose();
+        }
+
+        void CheckResult() {
+            for (int i = 0; i < 6; i++) {
+                Assert.AreEqual(i,m_IndexOutput[i]);
+            }
+        }
+        
+        void CheckResultFlipped() {
+            Assert.AreEqual(0,m_IndexOutput[0]);
+            Assert.AreEqual(2,m_IndexOutput[1]);
+            Assert.AreEqual(1,m_IndexOutput[2]);
+            Assert.AreEqual(3,m_IndexOutput[3]);
+            Assert.AreEqual(5,m_IndexOutput[4]);
+            Assert.AreEqual(4,m_IndexOutput[5]);
         }
         
         [Test, Performance]
         public unsafe void CreateIndicesInt32Job() {
             Assert.IsTrue( m_IndexOutput.Length % 3 == 0 );
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.CreateIndicesInt32Job {
-                        result = (int*)m_IndexOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_IndexOutput.Length/3);
-                })
+            var job = new GLTFast.Jobs.CreateIndicesInt32Job {
+                result = (int*)m_IndexOutput.GetUnsafePtr()
+            };
+            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+
+            CheckResult();
         }
         
         [Test, Performance]
         public unsafe void CreateIndicesInt32FlippedJob() {
             Assert.IsTrue( m_IndexOutput.Length % 3 == 0 );
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.CreateIndicesInt32FlippedJob {
-                        result = (int*)m_IndexOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_IndexOutput.Length/3);
-                })
+            var job = new GLTFast.Jobs.CreateIndicesInt32FlippedJob {
+                result = (int*)m_IndexOutput.GetUnsafePtr()
+            };
+            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+
+            Assert.AreEqual(2,m_IndexOutput[0]);
+            Assert.AreEqual(1,m_IndexOutput[1]);
+            Assert.AreEqual(0,m_IndexOutput[2]);
+            Assert.AreEqual(5,m_IndexOutput[3]);
+            Assert.AreEqual(4,m_IndexOutput[4]);
+            Assert.AreEqual(3,m_IndexOutput[5]);
         }
         
         [Test, Performance]
         public unsafe void ConvertIndicesUInt8ToInt32Job() {
             Assert.IsTrue( m_IndexOutput.Length % 3 == 0 );
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertIndicesUInt8ToInt32Job {
-                        input = (byte*)m_IndexInput.GetUnsafeReadOnlyPtr(),
-                        result = (int*)m_IndexOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_IndexOutput.Length/3);
-                })
+            var job = new GLTFast.Jobs.ConvertIndicesUInt8ToInt32Job {
+                input = (byte*)m_InputUInt8.GetUnsafeReadOnlyPtr(),
+                result = (int*)m_IndexOutput.GetUnsafePtr()
+            };
+            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckResult();
         }
         
         [Test, Performance]
         public unsafe void ConvertIndicesUInt8ToInt32FlippedJob() {
             Assert.IsTrue( m_IndexOutput.Length % 3 == 0 );
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertIndicesUInt8ToInt32FlippedJob {
-                        input = (byte*)m_IndexInput.GetUnsafeReadOnlyPtr(),
-                        result = (int*)m_IndexOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_IndexOutput.Length/3);
-                })
+            var job = new GLTFast.Jobs.ConvertIndicesUInt8ToInt32FlippedJob {
+                input = (byte*)m_InputUInt8.GetUnsafeReadOnlyPtr(),
+                result = (int*)m_IndexOutput.GetUnsafePtr()
+            };
+            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckResultFlipped();
         }
         
         [Test, Performance]
         public unsafe void ConvertIndicesUInt16ToInt32FlippedJob() {
             Assert.IsTrue( m_IndexOutput.Length % 3 == 0 );
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertIndicesUInt16ToInt32FlippedJob {
-                        input = (ushort*)m_IndexInput.GetUnsafeReadOnlyPtr(),
-                        result = (int*)m_IndexOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_IndexOutput.Length/3);
-                })
+            var job = new GLTFast.Jobs.ConvertIndicesUInt16ToInt32FlippedJob {
+                input = (ushort*)m_InputUInt16.GetUnsafeReadOnlyPtr(),
+                result = (int*)m_IndexOutput.GetUnsafePtr()
+            };
+            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckResultFlipped();
         }
         
         [Test, Performance]
         public unsafe void ConvertIndicesUInt16ToInt32Job() {
             Assert.IsTrue( m_IndexOutput.Length % 3 == 0 );
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertIndicesUInt16ToInt32Job {
-                        input = (ushort*)m_IndexInput.GetUnsafeReadOnlyPtr(),
-                        result = (int*)m_IndexOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_IndexOutput.Length/3);
-                })
+            var job = new GLTFast.Jobs.ConvertIndicesUInt16ToInt32Job {
+                input = (ushort*)m_InputUInt16.GetUnsafeReadOnlyPtr(),
+                result = (int*)m_IndexOutput.GetUnsafePtr()
+            };
+            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckResult();
         }
         
         [Test, Performance]
         public unsafe void ConvertIndicesUInt32ToInt32Job() {
             Assert.IsTrue( m_IndexOutput.Length % 3 == 0 );
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertIndicesUInt32ToInt32Job {
-                        input = (uint*)m_IndexInput.GetUnsafeReadOnlyPtr(),
-                        result = (int*)m_IndexOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_IndexOutput.Length/3);
-                })
+            var job = new GLTFast.Jobs.ConvertIndicesUInt32ToInt32Job {
+                input = (uint*)m_InputUInt32.GetUnsafeReadOnlyPtr(),
+                result = (int*)m_IndexOutput.GetUnsafePtr()
+            };
+            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckResult();
         }
         
         [Test, Performance]
         public unsafe void ConvertIndicesUInt32ToInt32FlippedJob() {
             Assert.IsTrue( m_IndexOutput.Length % 3 == 0 );
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertIndicesUInt32ToInt32FlippedJob {
-                        input = (uint*)m_IndexInput.GetUnsafeReadOnlyPtr(),
-                        result = (int*)m_IndexOutput.GetUnsafePtr()
-                    };
-                    job.Run(m_IndexOutput.Length/3);
-                })
+            var job = new GLTFast.Jobs.ConvertIndicesUInt32ToInt32FlippedJob {
+                input = (uint*)m_InputUInt32.GetUnsafeReadOnlyPtr(),
+                result = (int*)m_IndexOutput.GetUnsafePtr()
+            };
+            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckResultFlipped();
         }
     }
     
