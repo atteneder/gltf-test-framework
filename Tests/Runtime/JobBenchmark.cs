@@ -60,6 +60,14 @@ namespace GLTFTest.Jobs {
                 throw new AssertionException($"float2 not equal. expected {reference} got {value} (delta {maxDelta})");
             }
         }
+        
+        public static void AssertNearOrEqual(Color reference, Color value, float epsilon = float.Epsilon) {
+            AssertNearOrEqual(
+                new float4(reference.r,reference.g,reference.b,reference.a),
+                new float4(value.r,value.g,value.b,value.a),
+                epsilon
+                );
+        }
     }
     
     [TestFixture]
@@ -921,115 +929,155 @@ namespace GLTFTest.Jobs {
     [TestFixture]
     public class ColorJobs {
         const int k_ColorLength = 3_000_000;
-        NativeArray<Color> m_ColorInput;
+        Color m_ReferenceRGB = new Color(.13f,.42f,.95f,1f);
+        Color m_ReferenceRGBA = new Color(.42f,.95f,.5f,.24f);
+
+        NativeArray<float> m_ColorInput;
+        NativeArray<ushort> m_InputUInt16;
+        NativeArray<byte> m_InputUInt8;
         NativeArray<Color> m_ColorOutput;
 
         [OneTimeSetUp]
         public void SetUpTest() {
-            m_ColorInput = new NativeArray<Color>(k_ColorLength, Allocator.Persistent);
+            m_ColorInput = new NativeArray<float>(k_ColorLength, Allocator.Persistent);
+            m_InputUInt16 = new NativeArray<ushort>(k_ColorLength, Allocator.Persistent);
+            m_InputUInt8 = new NativeArray<byte>(k_ColorLength, Allocator.Persistent);
             m_ColorOutput = new NativeArray<Color>(k_ColorLength, Allocator.Persistent);
+            
+            var i = 1;
+            {
+                m_ColorInput[3] = m_ReferenceRGB.r;
+                m_ColorInput[4] = m_ReferenceRGB.g;
+                m_ColorInput[5] = m_ReferenceRGB.b;
+                m_ColorInput[6] = m_ReferenceRGBA.b;
+                m_ColorInput[7] = m_ReferenceRGBA.a;
+
+                m_InputUInt8[3] = (byte) (byte.MaxValue*m_ReferenceRGB.r);
+                m_InputUInt8[4] = (byte) (byte.MaxValue*m_ReferenceRGB.g);
+                m_InputUInt8[5] = (byte) (byte.MaxValue*m_ReferenceRGB.b);
+                m_InputUInt8[6] = (byte) (byte.MaxValue*m_ReferenceRGBA.b);
+                m_InputUInt8[7] = (byte) (byte.MaxValue*m_ReferenceRGBA.a);
+                
+                m_InputUInt16[3] = (ushort) (ushort.MaxValue*m_ReferenceRGB.r);
+                m_InputUInt16[4] = (ushort) (ushort.MaxValue*m_ReferenceRGB.g);
+                m_InputUInt16[5] = (ushort) (ushort.MaxValue*m_ReferenceRGB.b);
+                m_InputUInt16[6] = (ushort) (ushort.MaxValue*m_ReferenceRGBA.b);
+                m_InputUInt16[7] = (ushort) (ushort.MaxValue*m_ReferenceRGBA.a);
+            }
         }
 
         [OneTimeTearDown]
         public void Cleanup() {
             m_ColorInput.Dispose();
+            m_InputUInt8.Dispose();
+            m_InputUInt16.Dispose();
             m_ColorOutput.Dispose();
+        }
+
+        void CheckResultRGB(float epsilon = float.Epsilon) {
+            const int i = 1;
+            Utils.AssertNearOrEqual(m_ReferenceRGB, m_ColorOutput[i], epsilon);
+        }
+        
+        void CheckResultRGBA(float epsilon = float.Epsilon) {
+            const int i = 1;
+            Utils.AssertNearOrEqual(m_ReferenceRGBA, m_ColorOutput[i], epsilon);
         }
         
         [Test, Performance]
         public unsafe void ConvertColorsRGBFloatToRGBAFloatJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertColorsRGBFloatToRGBAFloatJob {
-                        input = (float*)m_ColorInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 8,
-                        result = m_ColorOutput
-                    };
-                    job.Run(m_ColorOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertColorsRGBFloatToRGBAFloatJob {
+                input = (float*)m_ColorInput.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 12,
+                result = m_ColorOutput
+            };
+            Measure.Method(() => job.Run(m_ColorOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+
+            CheckResultRGB();
         }
         
         [Test, Performance]
         public unsafe void ConvertColorsRGBUInt8ToRGBAFloatJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertColorsRGBUInt8ToRGBAFloatJob {
-                        input = (byte*)m_ColorInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 8,
-                        result = m_ColorOutput
-                    };
-                    job.Run(m_ColorOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertColorsRGBUInt8ToRGBAFloatJob {
+                input = (byte*)m_InputUInt8.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 3,
+                result = m_ColorOutput
+            };
+            Measure.Method(() => job.Run(m_ColorOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            
+            CheckResultRGB(Constants.epsilonUInt8);
         }
         
         [Test, Performance]
         public unsafe void ConvertColorsRGBUInt16ToRGBAFloatJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertColorsRGBUInt16ToRGBAFloatJob {
-                        input = (ushort*)m_ColorInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 8,
-                        result = m_ColorOutput
-                    };
-                    job.Run(m_ColorOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertColorsRGBUInt16ToRGBAFloatJob {
+                input = (ushort*)m_InputUInt16.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 6,
+                result = m_ColorOutput
+            };
+            Measure.Method(() => job.Run(m_ColorOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            
+            CheckResultRGB(Constants.epsilonUInt16);
         }
         
         [Test, Performance]
         public unsafe void ConvertColorsInterleavedRGBAFloatToRGBAFloatJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertColorsInterleavedRGBAFloatToRGBAFloatJob {
-                        input = (float*)m_ColorInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 16,
-                        result = m_ColorOutput
-                    };
-                    job.Run(m_ColorOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertColorsInterleavedRGBAFloatToRGBAFloatJob {
+                input = (float*)m_ColorInput.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 16,
+                result = m_ColorOutput
+            };
+            Measure.Method(() => job.Run(m_ColorOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            
+            CheckResultRGBA();
         }
         
         [Test, Performance]
         public unsafe void ConvertColorsInterleavedRGBAUInt16ToRGBAFloatJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertColorsInterleavedRGBAUInt16ToRGBAFloatJob {
-                        input = (ushort*)m_ColorInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 8,
-                        result = m_ColorOutput
-                    };
-                    job.Run(m_ColorOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertColorsInterleavedRGBAUInt16ToRGBAFloatJob {
+                input = (ushort*)m_InputUInt16.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 8,
+                result = m_ColorOutput
+            };
+            Measure.Method(() => job.Run(m_ColorOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            
+            CheckResultRGBA(Constants.epsilonUInt16);
         }
         
         [Test, Performance]
         public unsafe void ConvertColorsRGBAUInt8ToRGBAFloatJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertColorsRGBAUInt8ToRGBAFloatJob {
-                        input = (byte*)m_ColorInput.GetUnsafeReadOnlyPtr(),
-                        inputByteStride = 8,
-                        result = m_ColorOutput
-                    };
-                    job.Run(m_ColorOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertColorsRGBAUInt8ToRGBAFloatJob {
+                input = (byte*)m_InputUInt8.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 4,
+                result = m_ColorOutput
+            };
+            Measure.Method(() => job.Run(m_ColorOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            
+            CheckResultRGBA(Constants.epsilonUInt8);
         }
     }
     
