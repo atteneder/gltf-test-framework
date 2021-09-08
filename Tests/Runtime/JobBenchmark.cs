@@ -29,10 +29,10 @@ namespace GLTFTest.Jobs {
         public const int measureCount = 10;
         public const int iterationsPerMeasurement = 5;
 
-        public const float epsilonUInt8 = .002f;
-        public const float epsilonInt8 = .005f;
-        public const float epsilonUInt16 = .00001f;
-        public const float epsilonInt16 = .00002f;
+        public const float epsilonUInt8 = .004f;
+        public const float epsilonInt8 = .008f;
+        public const float epsilonUInt16 = .000016f;
+        public const float epsilonInt16 = .000031f;
     }
 
     static class Utils {
