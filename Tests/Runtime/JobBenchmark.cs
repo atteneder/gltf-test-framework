@@ -951,26 +951,23 @@ namespace GLTFTest.Jobs {
             m_InputUInt8 = new NativeArray<byte>(k_ColorLength, Allocator.Persistent);
             m_ColorOutput = new NativeArray<Color>(k_ColorLength, Allocator.Persistent);
             
-            var i = 1;
-            {
-                m_ColorInput[3] = m_ReferenceRGB.r;
-                m_ColorInput[4] = m_ReferenceRGB.g;
-                m_ColorInput[5] = m_ReferenceRGB.b;
-                m_ColorInput[6] = m_ReferenceRGBA.b;
-                m_ColorInput[7] = m_ReferenceRGBA.a;
+            m_ColorInput[3] = m_ReferenceRGB.r;
+            m_ColorInput[4] = m_ReferenceRGB.g;
+            m_ColorInput[5] = m_ReferenceRGB.b;
+            m_ColorInput[6] = m_ReferenceRGBA.b;
+            m_ColorInput[7] = m_ReferenceRGBA.a;
 
-                m_InputUInt8[3] = (byte) (byte.MaxValue*m_ReferenceRGB.r);
-                m_InputUInt8[4] = (byte) (byte.MaxValue*m_ReferenceRGB.g);
-                m_InputUInt8[5] = (byte) (byte.MaxValue*m_ReferenceRGB.b);
-                m_InputUInt8[6] = (byte) (byte.MaxValue*m_ReferenceRGBA.b);
-                m_InputUInt8[7] = (byte) (byte.MaxValue*m_ReferenceRGBA.a);
-                
-                m_InputUInt16[3] = (ushort) (ushort.MaxValue*m_ReferenceRGB.r);
-                m_InputUInt16[4] = (ushort) (ushort.MaxValue*m_ReferenceRGB.g);
-                m_InputUInt16[5] = (ushort) (ushort.MaxValue*m_ReferenceRGB.b);
-                m_InputUInt16[6] = (ushort) (ushort.MaxValue*m_ReferenceRGBA.b);
-                m_InputUInt16[7] = (ushort) (ushort.MaxValue*m_ReferenceRGBA.a);
-            }
+            m_InputUInt8[3] = (byte) (byte.MaxValue*m_ReferenceRGB.r);
+            m_InputUInt8[4] = (byte) (byte.MaxValue*m_ReferenceRGB.g);
+            m_InputUInt8[5] = (byte) (byte.MaxValue*m_ReferenceRGB.b);
+            m_InputUInt8[6] = (byte) (byte.MaxValue*m_ReferenceRGBA.b);
+            m_InputUInt8[7] = (byte) (byte.MaxValue*m_ReferenceRGBA.a);
+            
+            m_InputUInt16[3] = (ushort) (ushort.MaxValue*m_ReferenceRGB.r);
+            m_InputUInt16[4] = (ushort) (ushort.MaxValue*m_ReferenceRGB.g);
+            m_InputUInt16[5] = (ushort) (ushort.MaxValue*m_ReferenceRGB.b);
+            m_InputUInt16[6] = (ushort) (ushort.MaxValue*m_ReferenceRGBA.b);
+            m_InputUInt16[7] = (ushort) (ushort.MaxValue*m_ReferenceRGBA.a);
         }
 
         [OneTimeTearDown]
