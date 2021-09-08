@@ -44,7 +44,7 @@ namespace GLTFTest.Jobs {
         NativeArray<sbyte> m_InputInt8;
         NativeArray<float3> m_Output;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUpTest() {
             m_Input = new NativeArray<float3>(k_Length, Allocator.Persistent);
             m_InputUInt16 = new NativeArray<ushort>(k_Length*3, Allocator.Persistent);
@@ -96,7 +96,7 @@ namespace GLTFTest.Jobs {
             }
         }
         
-        [TearDown]
+        [OneTimeTearDown]
         public void Cleanup() {
             m_Input.Dispose();
             m_InputUInt16.Dispose();
@@ -305,7 +305,7 @@ namespace GLTFTest.Jobs {
         NativeArray<float3> m_Input;
         NativeArray<float3> m_Output;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUpTest() {
             m_Indices = new NativeArray<int>(k_Length, Allocator.Persistent);
             m_Input = new NativeArray<float3>(k_Length, Allocator.Persistent);
@@ -317,7 +317,7 @@ namespace GLTFTest.Jobs {
             }
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void Cleanup() {
             m_Input.Dispose();
             m_Output.Dispose();
@@ -355,13 +355,13 @@ namespace GLTFTest.Jobs {
         NativeArray<float2> m_UVInput;
         NativeArray<float2> m_UVOutput;
         
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUpTest() {
             m_UVInput = new NativeArray<float2>(k_UVLength, Allocator.Persistent);
             m_UVOutput = new NativeArray<float2>(k_UVLength, Allocator.Persistent);
         }
         
-        [TearDown]
+        [OneTimeTearDown]
         public void Cleanup() {
             m_UVInput.Dispose();
             m_UVOutput.Dispose();
@@ -602,13 +602,13 @@ namespace GLTFTest.Jobs {
         NativeArray<quaternion> m_RotInput;
         NativeArray<quaternion> m_RotOutput;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUpTest() {
             m_RotInput = new NativeArray<quaternion>(k_RotationLength, Allocator.Persistent);
             m_RotOutput = new NativeArray<quaternion>(k_RotationLength, Allocator.Persistent);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void Cleanup() {
             m_RotInput.Dispose();
             m_RotOutput.Dispose();
@@ -741,13 +741,13 @@ namespace GLTFTest.Jobs {
         NativeArray<Color> m_ColorInput;
         NativeArray<Color> m_ColorOutput;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUpTest() {
             m_ColorInput = new NativeArray<Color>(k_ColorLength, Allocator.Persistent);
             m_ColorOutput = new NativeArray<Color>(k_ColorLength, Allocator.Persistent);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void Cleanup() {
             m_ColorInput.Dispose();
             m_ColorOutput.Dispose();
@@ -856,13 +856,13 @@ namespace GLTFTest.Jobs {
         NativeArray<uint4> m_BoneIndexInput;
         NativeArray<uint4> m_BoneIndexOutput;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUpTest() {
             m_BoneIndexInput = new NativeArray<uint4>(k_BoneIndexLength, Allocator.Persistent);
             m_BoneIndexOutput = new NativeArray<uint4>(k_BoneIndexLength, Allocator.Persistent);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void Cleanup() {
             m_BoneIndexInput.Dispose();
             m_BoneIndexOutput.Dispose();
@@ -909,13 +909,13 @@ namespace GLTFTest.Jobs {
         NativeArray<float4x4> m_MatrixInput;
         NativeArray<Matrix4x4> m_MatrixOutput;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUpTest() {
             m_MatrixInput = new NativeArray<float4x4>(k_MatrixLength, Allocator.Persistent);
             m_MatrixOutput = new NativeArray<Matrix4x4>(k_MatrixLength, Allocator.Persistent);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void Cleanup() {
             m_MatrixInput.Dispose();
             m_MatrixOutput.Dispose();
@@ -943,13 +943,13 @@ namespace GLTFTest.Jobs {
         NativeArray<int> m_IndexInput;
         NativeArray<int> m_IndexOutput;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUpTest() {
             m_IndexInput = new NativeArray<int>(k_IndexLength, Allocator.Persistent);
             m_IndexOutput = new NativeArray<int>(k_IndexLength, Allocator.Persistent);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void Cleanup() {
             m_IndexInput.Dispose();
             m_IndexOutput.Dispose();
@@ -1088,13 +1088,13 @@ namespace GLTFTest.Jobs {
         NativeArray<float> m_ScalarInput;
         NativeArray<float> m_ScalarOutput;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUpTest() {
             m_ScalarInput = new NativeArray<float>(k_ScalarLength, Allocator.Persistent);
             m_ScalarOutput = new NativeArray<float>(k_ScalarLength, Allocator.Persistent);
         }
         
-        [TearDown]
+        [OneTimeTearDown]
         public void Cleanup() {
             m_ScalarInput.Dispose();
             m_ScalarOutput.Dispose();
