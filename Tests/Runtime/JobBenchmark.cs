@@ -61,6 +61,13 @@ namespace GLTFTest.Jobs {
             }
         }
         
+        public static void AssertNearOrEqual(float reference, float value, float epsilon = float.Epsilon) {
+            var delta = math.abs(reference - value);
+            if (delta > epsilon) {
+                throw new AssertionException($"float not equal. expected {reference} got {value} (delta {delta})");
+            }
+        }
+        
         public static void AssertNearOrEqual(Color reference, Color value, float epsilon = float.Epsilon) {
             AssertNearOrEqual(
                 new float4(reference.r,reference.g,reference.b,reference.a),
@@ -1378,79 +1385,118 @@ namespace GLTFTest.Jobs {
     [TestFixture]
     public class ScalarJobs {
         const int k_ScalarLength = 5_000_000;
-        NativeArray<float> m_ScalarInput;
+        NativeArray<sbyte> m_InputInt8;
+        NativeArray<byte> m_InputUInt8;
+        NativeArray<short> m_InputInt16;
+        NativeArray<ushort> m_InputUInt16;
         NativeArray<float> m_ScalarOutput;
 
         [OneTimeSetUp]
         public void SetUpTest() {
-            m_ScalarInput = new NativeArray<float>(k_ScalarLength, Allocator.Persistent);
+            m_InputInt8 = new NativeArray<sbyte>(k_ScalarLength, Allocator.Persistent);
+            m_InputUInt8 = new NativeArray<byte>(k_ScalarLength, Allocator.Persistent);
+            m_InputInt16 = new NativeArray<short>(k_ScalarLength, Allocator.Persistent);
+            m_InputUInt16 = new NativeArray<ushort>(k_ScalarLength, Allocator.Persistent);
             m_ScalarOutput = new NativeArray<float>(k_ScalarLength, Allocator.Persistent);
+
+            m_InputInt8[0] = sbyte.MaxValue;
+            m_InputUInt8[0] = byte.MaxValue;
+            m_InputInt16[0] = short.MaxValue;
+            m_InputUInt16[0] = ushort.MaxValue;
+            
+            m_InputInt8[1] = 0;
+            m_InputUInt8[1] = 0;
+            m_InputInt16[1] = 0;
+            m_InputUInt16[1] = 0;
+            
+            m_InputInt8[2] = sbyte.MinValue;
+            m_InputUInt8[2] = byte.MinValue;
+            m_InputInt16[2] = short.MinValue;
+            m_InputUInt16[2] = ushort.MinValue;
+            
+            m_InputInt8[3] = sbyte.MaxValue / 2;
+            m_InputUInt8[3] = byte.MaxValue / 2;
+            m_InputInt16[3] = short.MaxValue / 2;
+            m_InputUInt16[3] = ushort.MaxValue / 2;
         }
         
         [OneTimeTearDown]
         public void Cleanup() {
-            m_ScalarInput.Dispose();
+            m_InputInt8.Dispose();
+            m_InputUInt8.Dispose();
+            m_InputInt16.Dispose();
+            m_InputUInt16.Dispose();
             m_ScalarOutput.Dispose();
+        }
+
+        void CheckResult(float epsilon = float.Epsilon) {
+            Utils.AssertNearOrEqual(1,m_ScalarOutput[0],epsilon);
+            Utils.AssertNearOrEqual(0,m_ScalarOutput[1],epsilon);
+            Utils.AssertNearOrEqual(0,m_ScalarOutput[2],epsilon);
+            Utils.AssertNearOrEqual(.5f,m_ScalarOutput[3],epsilon);
+        }
+        
+        void CheckSignedResult(float epsilon = float.Epsilon) {
+            Utils.AssertNearOrEqual(1,m_ScalarOutput[0],epsilon);
+            Utils.AssertNearOrEqual(0,m_ScalarOutput[1],epsilon);
+            Utils.AssertNearOrEqual(-1,m_ScalarOutput[2],epsilon);
+            Utils.AssertNearOrEqual(.5f,m_ScalarOutput[3],epsilon);
         }
         
         [Test, Performance]
         public unsafe void ConvertScalarInt8ToFloatNormalizedJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertScalarInt8ToFloatNormalizedJob {
-                        input = (sbyte*)m_ScalarInput.GetUnsafeReadOnlyPtr(),
-                        result = m_ScalarOutput,
-                    };
-                    job.Run(m_ScalarOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertScalarInt8ToFloatNormalizedJob {
+                input = (sbyte*)m_InputInt8.GetUnsafeReadOnlyPtr(),
+                result = m_ScalarOutput,
+            };
+            Measure.Method(() => job.Run(m_ScalarOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckSignedResult(Constants.epsilonInt8);
         }
         
         [Test, Performance]
         public unsafe void ConvertScalarUInt8ToFloatNormalizedJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertScalarUInt8ToFloatNormalizedJob {
-                        input = (byte*)m_ScalarInput.GetUnsafeReadOnlyPtr(),
-                        result = m_ScalarOutput,
-                    };
-                    job.Run(m_ScalarOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertScalarUInt8ToFloatNormalizedJob {
+                input = (byte*)m_InputUInt8.GetUnsafeReadOnlyPtr(),
+                result = m_ScalarOutput,
+            };
+            Measure.Method(() => job.Run(m_ScalarOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckResult(Constants.epsilonUInt8);
         }
         
         [Test, Performance]
         public unsafe void ConvertScalarInt16ToFloatNormalizedJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertScalarInt16ToFloatNormalizedJob {
-                        input = (short*)m_ScalarInput.GetUnsafeReadOnlyPtr(),
-                        result = m_ScalarOutput,
-                    };
-                    job.Run(m_ScalarOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertScalarInt16ToFloatNormalizedJob {
+                input = (short*)m_InputInt16.GetUnsafeReadOnlyPtr(),
+                result = m_ScalarOutput,
+            };
+            Measure.Method(() => job.Run(m_ScalarOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckSignedResult(Constants.epsilonInt16);
         }
         
         [Test, Performance]
         public unsafe void ConvertScalarUInt16ToFloatNormalizedJob() {
-            Measure.Method(() => {
-                    var job = new GLTFast.Jobs.ConvertScalarUInt16ToFloatNormalizedJob {
-                        input = (ushort*)m_ScalarInput.GetUnsafeReadOnlyPtr(),
-                        result = m_ScalarOutput,
-                    };
-                    job.Run(m_ScalarOutput.Length);
-                })
+            var job = new GLTFast.Jobs.ConvertScalarUInt16ToFloatNormalizedJob {
+                input = (ushort*)m_InputUInt16.GetUnsafeReadOnlyPtr(),
+                result = m_ScalarOutput,
+            };
+            Measure.Method(() => job.Run(m_ScalarOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
+            CheckResult(Constants.epsilonUInt16);
         }
     }
 }
