@@ -942,9 +942,7 @@ namespace GLTFTest.Jobs {
     
     [TestFixture]
     public class ColorJobs {
-        // TODO: Tests break at a k_ColorLength of ~1_016_000 or higher
-        // Not sure why :/
-        const int k_ColorLength = 1_000_000;
+        const int k_ColorLength = 3_000_000;
         Color m_ReferenceRGB = new Color(.13f,.42f,.95f,1f);
         Color m_ReferenceRGBA = new Color(.42f,.95f,.5f,.24f);
 
@@ -955,9 +953,9 @@ namespace GLTFTest.Jobs {
 
         [OneTimeSetUp]
         public void SetUpTest() {
-            m_ColorInput = new NativeArray<float>(k_ColorLength, Allocator.Persistent);
-            m_InputUInt16 = new NativeArray<ushort>(k_ColorLength, Allocator.Persistent);
-            m_InputUInt8 = new NativeArray<byte>(k_ColorLength, Allocator.Persistent);
+            m_ColorInput = new NativeArray<float>(k_ColorLength*4, Allocator.Persistent);
+            m_InputUInt16 = new NativeArray<ushort>(k_ColorLength*4, Allocator.Persistent);
+            m_InputUInt8 = new NativeArray<byte>(k_ColorLength*4, Allocator.Persistent);
             m_ColorOutput = new NativeArray<Color>(k_ColorLength, Allocator.Persistent);
             
             m_ColorInput[3] = m_ReferenceRGB.r;
