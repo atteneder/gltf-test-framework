@@ -7,6 +7,8 @@
         "glTF-test-framework.Sample",
         "Unity.Mathematics",
         "Unity.Burst",
+        "Unity.Collections",
+        "Unity.Jobs",
         "Unity.PerformanceTesting",
         "UnityEngine.TestTools.Graphics"
     ],
@@ -24,6 +26,11 @@
             "name": "com.unity.testframework.graphics",
             "expression": "7.7.0",
             "define": "GLTFAST_RENDER_TEST"
+        },
+        {
+            "name": "com.unity.jobs",
+            "expression": "0.2.0",
+            "define": "UNITY_JOBS"
         }
     ],
     "noEngineReferences": false
