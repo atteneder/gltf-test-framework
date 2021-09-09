@@ -75,7 +75,15 @@ namespace GLTFTest.Jobs {
                 epsilon
                 );
         }
-        
+
+        public static void AssertNearOrEqual(Color reference, float4 value, float epsilon = float.Epsilon) {
+            AssertNearOrEqual(
+                new float4(reference.r,reference.g,reference.b,reference.a),
+                value,
+                epsilon
+            );
+        }
+
         public static void AssertNearOrEqual(uint4 reference, uint4 value) {
             var b = reference != value;
             if (b.x || b.y || b.z || b.w) {
@@ -998,7 +1006,7 @@ namespace GLTFTest.Jobs {
         [Test, Performance]
         public unsafe void ConvertColorsRGBFloatToRGBAFloatJob() {
             var job = new GLTFast.Jobs.ConvertColorsRGBFloatToRGBAFloatJob {
-                input = (float*)m_ColorInput.GetUnsafeReadOnlyPtr(),
+                input = (byte*)m_ColorInput.GetUnsafeReadOnlyPtr(),
                 inputByteStride = 12,
                 result = (float4*)m_ColorOutput.GetUnsafePtr()
             };
