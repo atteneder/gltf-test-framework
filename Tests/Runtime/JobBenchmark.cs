@@ -403,7 +403,7 @@ namespace GLTFTest.Jobs {
 
     [TestFixture]
     public class UVJobs {
-        const int k_UVLength = 100;
+        const int k_UVLength = 10_000_000;
         float2 m_NormalizedReference = new float2(.5f, 0f);
         float2 m_Reference = new float2(13, -41);
 
