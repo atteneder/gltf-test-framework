@@ -1044,22 +1044,6 @@ namespace GLTFTest.Jobs {
         }
         
         [Test, Performance]
-        public unsafe void ConvertColorsInterleavedRGBAFloatToRGBAFloatJob() {
-            var job = new GLTFast.Jobs.ConvertColorsInterleavedRGBAFloatToRGBAFloatJob {
-                input = (float*)m_ColorInput.GetUnsafeReadOnlyPtr(),
-                inputByteStride = 16,
-                result = m_ColorOutput
-            };
-            Measure.Method(() => job.Run(m_ColorOutput.Length))
-                .WarmupCount(1)
-                .MeasurementCount(Constants.measureCount)
-                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
-                .Run();
-            
-            CheckResultRGBA();
-        }
-        
-        [Test, Performance]
         public unsafe void ConvertColorsInterleavedRGBAUInt16ToRGBAFloatJob() {
             var job = new GLTFast.Jobs.ConvertColorsInterleavedRGBAUInt16ToRGBAFloatJob {
                 input = (ushort*)m_InputUInt16.GetUnsafeReadOnlyPtr(),
