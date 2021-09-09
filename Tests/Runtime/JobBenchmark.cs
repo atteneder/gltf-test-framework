@@ -344,7 +344,7 @@ namespace GLTFTest.Jobs {
     [TestFixture]
     public class PositionSparseJobs {
         
-        const int k_Length = 5_000;
+        const int k_Length = 100_000;
         
         NativeArray<int> m_Indices;
         NativeArray<float3> m_Input;
