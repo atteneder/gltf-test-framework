@@ -38,6 +38,8 @@ namespace GLTFTest {
         const string glTFSampleSetJsonPath = "glTF-Sample-Models.json";
         const string glTFSampleSetBinaryJsonPath = "glTF-Sample-Models-glb.json";
 
+        // const string localSampleSetJsonPath = "local.json";
+        
         [Test]
         public void CheckFiles()
         {
@@ -89,8 +91,18 @@ namespace GLTFTest {
         [UnityTest]
         [UseGltfSampleSetTestCase(glTFSampleSetJsonPath)]
         [Performance]
-        public IEnumerator UninterruptedLoading(SampleSetItem testCase)
-        {
+        public IEnumerator UninterruptedLoading(SampleSetItem testCase) {
+            yield return UninterruptedLoadingTemplate(testCase);
+        }
+        
+        // [UnityTest]
+        // [UseGltfSampleSetTestCase(localSampleSetJsonPath)]
+        // [Performance]
+        // public IEnumerator UninterruptedLoadingLocal(SampleSetItem testCase) {
+        //     yield return UninterruptedLoadingTemplate(testCase);
+        // }
+
+        IEnumerator UninterruptedLoadingTemplate(SampleSetItem testCase) {
             Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
