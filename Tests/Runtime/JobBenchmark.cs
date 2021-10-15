@@ -1058,6 +1058,9 @@ namespace GLTFTest.Jobs {
             CheckBoneWeightResult();
         }
         
+        // TODO: Test ConvertBoneWeightsUInt8ToFloatInterleavedJob
+        // TODO: Test ConvertBoneWeightsUInt16ToFloatInterleavedJob
+
         [Test, Performance]
         public unsafe void ConvertTangentsInt16ToFloatInterleavedNormalizedJob() {
             var job = new GLTFast.Jobs.ConvertTangentsInt16ToFloatInterleavedNormalizedJob {
