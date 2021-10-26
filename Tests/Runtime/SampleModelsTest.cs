@@ -26,7 +26,6 @@ using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 using GLTFast;
 using GLTFast.Utils;
-using GLTFast.Tests;
 
 namespace GLTFTest {
 
