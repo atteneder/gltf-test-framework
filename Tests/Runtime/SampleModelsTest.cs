@@ -26,6 +26,7 @@ using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 using GLTFast;
 using GLTFast.Utils;
+using GLTFast.Tests;
 
 namespace GLTFTest {
 
@@ -81,7 +82,7 @@ namespace GLTFTest {
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
             var task = LoadGltfSampleSetItem(testCase, go, deferAgent);
-            yield return WaitForTask(task);
+            yield return Utils.WaitForTask(task);
             Object.Destroy(go);
 #else
             yield break;            
@@ -109,11 +110,11 @@ namespace GLTFTest {
             SampleGroup loadTime = new SampleGroup("LoadTime", SampleUnit.Millisecond);
             // First time without measuring
             var task = LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
-            yield return WaitForTask(task);
+            yield return Utils.WaitForTask(task);
             using (Measure.Frames().Scope()) {
                 for (int i = 0; i < k_Repetitions; i++) {
                     task = LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
-                    yield return WaitForTask(task);
+                    yield return Utils.WaitForTask(task);
                 }
             }
             
@@ -131,11 +132,11 @@ namespace GLTFTest {
             SampleGroup loadTime = new SampleGroup("LoadTime", SampleUnit.Millisecond);
             // First time without measuring
             var task = LoadGltfSampleSetItem(testCase, go, deferAgent);
-            yield return WaitForTask(task);
+            yield return Utils.WaitForTask(task);
             using (Measure.Frames().Scope()) {
                 for (int i = 0; i < k_Repetitions; i++) {
                     task = LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
-                    yield return WaitForTask(task);
+                    yield return Utils.WaitForTask(task);
                     // Wait one more frame. Usually some more action happens in this one.
                     yield return null;
                 }
@@ -157,7 +158,7 @@ namespace GLTFTest {
             var logger = new ConsoleLogger();
             var gltf = new GltfImport(deferAgent:deferAgent,logger:logger);
             var task = gltf.LoadGltfBinary(data, new Uri(testCase.path));
-            yield return WaitForTask(task);
+            yield return Utils.WaitForTask(task);
             var success = task.Result;
             Assert.IsTrue(success);
             var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
@@ -192,16 +193,6 @@ namespace GLTFTest {
             if (loadTime != null) {
                 Measure.Custom(loadTime, stopWatch.lastDuration);
             }
-        }
-        
-        static IEnumerator WaitForTask(Task task) {
-            while(!task.IsCompleted) {
-                if (task.Exception != null)
-                    throw task.Exception;
-                yield return null;
-            }
-            if (task.Exception != null)
-                throw task.Exception;
         }
     }
 }
