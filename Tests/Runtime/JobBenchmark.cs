@@ -1209,10 +1209,31 @@ namespace GLTFTest.Jobs {
         }
         
         [Test, Performance]
-        public unsafe void ConvertColorsInterleavedRGBAUInt16ToRGBAFloatJob() {
-            var job = new GLTFast.Jobs.ConvertColorsInterleavedRGBAUInt16ToRGBAFloatJob {
+        public unsafe void ConvertColorsRGBAUInt16ToRGBAFloatJob() {
+            var job = new GLTFast.Jobs.ConvertColorsRGBAUInt16ToRGBAFloatJob {
                 input = (ushort*)m_InputUInt16.GetUnsafeReadOnlyPtr(),
                 inputByteStride = 8,
+                result = (float4*)m_ColorOutput.GetUnsafePtr()
+            };
+            Measure.Method(() =>
+#if UNITY_JOBS
+                    job.RunBatch(m_ColorOutput.Length))
+#else
+                    job.Run(m_ColorOutput.Length))
+#endif
+                .WarmupCount(1)
+                .MeasurementCount(Constants.measureCount)
+                .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
+                .Run();
+            
+            CheckResultRGBA(Constants.epsilonUInt16);
+        }
+        
+        [Test, Performance]
+        public unsafe void ConvertColorsRGBAFloatToRGBAFloatJob() {
+            var job = new GLTFast.Jobs.ConvertColorsRGBAFloatToRGBAFloatJob {
+                input = (byte*)m_ColorInput.GetUnsafeReadOnlyPtr(),
+                inputByteStride = 16,
                 result = (float4*)m_ColorOutput.GetUnsafePtr()
             };
             Measure.Method(() =>
