@@ -1437,7 +1437,7 @@ namespace GLTFTest.Jobs {
             var job = new GLTFast.Jobs.CreateIndicesInt32Job {
                 result = (int*)m_IndexOutput.GetUnsafePtr()
             };
-            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
+            Measure.Method(() => job.Run(m_IndexOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -1452,7 +1452,7 @@ namespace GLTFTest.Jobs {
             var job = new GLTFast.Jobs.CreateIndicesInt32FlippedJob {
                 result = (int*)m_IndexOutput.GetUnsafePtr()
             };
-            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
+            Measure.Method(() => job.Run(m_IndexOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -1473,7 +1473,7 @@ namespace GLTFTest.Jobs {
                 input = (byte*)m_InputUInt8.GetUnsafeReadOnlyPtr(),
                 result = (int*)m_IndexOutput.GetUnsafePtr()
             };
-            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
+            Measure.Method(() => job.Run(m_IndexOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -1518,7 +1518,7 @@ namespace GLTFTest.Jobs {
                 input = (ushort*)m_InputUInt16.GetUnsafeReadOnlyPtr(),
                 result = (int*)m_IndexOutput.GetUnsafePtr()
             };
-            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
+            Measure.Method(() => job.Run(m_IndexOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
@@ -1533,7 +1533,7 @@ namespace GLTFTest.Jobs {
                 input = (uint*)m_InputUInt32.GetUnsafeReadOnlyPtr(),
                 result = (int*)m_IndexOutput.GetUnsafePtr()
             };
-            Measure.Method(() => job.Run(m_IndexOutput.Length/3))
+            Measure.Method(() => job.Run(m_IndexOutput.Length))
                 .WarmupCount(1)
                 .MeasurementCount(Constants.measureCount)
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
