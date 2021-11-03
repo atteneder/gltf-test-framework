@@ -138,7 +138,7 @@ namespace GLTFTest.Jobs {
 
             i = 2;
             {
-                m_Input[i] = new float3(1, 13, 42);;
+                m_Input[i] = new float3(1, 13, 42);
 
                 m_InputUInt8[i*3] = 1;
                 m_InputUInt8[i*3+1] = 13;
@@ -1342,7 +1342,7 @@ namespace GLTFTest.Jobs {
     [TestFixture]
     public class MatrixJobs {
         const int k_MatrixLength = 800_000;
-        static readonly Matrix4x4 m_Reference = new Matrix4x4(
+        static readonly Matrix4x4 k_Reference = new Matrix4x4(
             new Vector4(1,-5,-9,13),
             new Vector4(-2,6,10,14),
             new Vector4(-3,7,11,15),
@@ -1382,7 +1382,7 @@ namespace GLTFTest.Jobs {
                 .IterationsPerMeasurement(Constants.iterationsPerMeasurement)
                 .Run();
 
-            Assert.AreEqual(m_Reference, m_MatrixOutput[1]);
+            Assert.AreEqual(k_Reference, m_MatrixOutput[1]);
         }
     }
     
