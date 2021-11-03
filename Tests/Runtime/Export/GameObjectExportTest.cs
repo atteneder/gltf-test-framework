@@ -31,7 +31,7 @@ using Unity.glTF.Validator;
 
 namespace GLTFTest {
     
-    [TestFixture]
+    [TestFixture, Category("Export")]
     public class GameObjectExportTest {
 
         [OneTimeSetUp]

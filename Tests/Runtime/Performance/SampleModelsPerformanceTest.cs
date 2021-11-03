@@ -15,22 +15,18 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using NUnit.Framework;
 using Unity.PerformanceTesting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 using GLTFast;
-using GLTFast.Utils;
+using NUnit.Framework;
 
 namespace GLTFTest.Performance {
 
     using Sample;
     
+    [Category("Performance")]
     public class SampleModelsPerformanceTest {
         const int k_Repetitions = 10;
 

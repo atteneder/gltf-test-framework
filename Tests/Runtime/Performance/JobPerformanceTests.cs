@@ -30,7 +30,7 @@ namespace GLTFTest.Performance.Jobs {
         public const int iterationsPerMeasurement = 5;
     }
     
-    [TestFixture]
+    [TestFixture, Category("Performance")]
     public class Vector3Jobs {
 
         const int k_Length = 10_000_000;
@@ -319,7 +319,7 @@ namespace GLTFTest.Performance.Jobs {
         }
     }
 
-    [TestFixture]
+    [TestFixture, Category("Performance")]
     public class PositionSparseJobs {
         
         const int k_Length = 100_000;
@@ -371,7 +371,7 @@ namespace GLTFTest.Performance.Jobs {
         }
     }
 
-    [TestFixture]
+    [TestFixture, Category("Performance")]
     public class UVJobs {
         const int k_UVLength = 10_000_000;
 
@@ -656,7 +656,7 @@ namespace GLTFTest.Performance.Jobs {
         }
     }
     
-    [TestFixture]
+    [TestFixture, Category("Performance")]
     public class Vector4Jobs {
         const int k_RotationLength = 5_000_000;
 
@@ -818,7 +818,7 @@ namespace GLTFTest.Performance.Jobs {
         }
     }
     
-    [TestFixture]
+    [TestFixture, Category("Performance")]
     public class ColorJobs {
         const int k_ColorLength = 3_000_000;
         Color m_ReferenceRGB = new Color(.13f,.42f,.95f,1f);
@@ -961,7 +961,7 @@ namespace GLTFTest.Performance.Jobs {
         }
     }
     
-    [TestFixture]
+    [TestFixture, Category("Performance")]
     public class BoneIndexJobs {
         const int k_BoneIndexLength = 2_000_000;
         uint4 m_Reference = new uint4(2, 3, 4, 5);
@@ -1026,7 +1026,7 @@ namespace GLTFTest.Performance.Jobs {
         }
     }
     
-    [TestFixture]
+    [TestFixture, Category("Performance")]
     public class MatrixJobs {
         const int k_MatrixLength = 800_000;
         static readonly Matrix4x4 k_Reference = new Matrix4x4(
@@ -1073,7 +1073,7 @@ namespace GLTFTest.Performance.Jobs {
         }
     }
     
-    [TestFixture]
+    [TestFixture, Category("Performance")]
     public class IndexJobs {
         const int k_IndexLength = 24_000_000; // multiple of 3!
         NativeArray<byte> m_InputUInt8;
@@ -1222,7 +1222,7 @@ namespace GLTFTest.Performance.Jobs {
         }
     }
     
-    [TestFixture]
+    [TestFixture, Category("Performance")]
     public class ScalarJobs {
         const int k_ScalarLength = 5_000_000;
         NativeArray<sbyte> m_InputInt8;
