@@ -28,12 +28,14 @@ namespace GLTFTest {
 
     public class UseGltfSampleSetTestCaseAttribute : UnityEngine.TestTools.UnityTestAttribute, ITestBuilder {
         SampleSet m_sampleSet = null;
-
+        string m_Suffix = null;
+        
         NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
-        public UseGltfSampleSetTestCaseAttribute(string sampleSetPath) {
+        public UseGltfSampleSetTestCaseAttribute(string sampleSetPath, string suffix = null) {
             var json = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, sampleSetPath));
             m_sampleSet = ScriptableObject.CreateInstance<SampleSet>();
+            m_Suffix = suffix;
             JsonUtility.FromJsonOverwrite(json,m_sampleSet);
         }
 
@@ -57,6 +59,10 @@ namespace GLTFTest {
                     else {
                         name = testCase.name;
                         nameCounts[testCase.name] = 1;
+                    }
+
+                    if (m_Suffix != null) {
+                        name = $"{name}{m_Suffix}";
                     }
 
                     data.SetName(name);

@@ -15,7 +15,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -73,7 +72,7 @@ namespace GLTFTest {
         /// Editor-only test to quickly load all models once
         /// </summary>
         [UnityTest]
-        [UseGltfSampleSetTestCase(glTFSampleSetJsonPath)]
+        [UseGltfSampleSetTestCase(glTFSampleSetJsonPath,"-Quick")]
         public IEnumerator QuickLoad(SampleSetItem testCase)
         {
 #if UNITY_EDITOR
@@ -89,8 +88,7 @@ namespace GLTFTest {
         }
 
         [UnityTest]
-        [UseGltfSampleSetTestCase(glTFSampleSetJsonPath)]
-        [Performance]
+        [UseGltfSampleSetTestCase(glTFSampleSetJsonPath,"-Uninterrupted")]
         public IEnumerator UninterruptedLoading(SampleSetItem testCase) {
             yield return UninterruptedLoadingTemplate(testCase);
         }
@@ -147,7 +145,7 @@ namespace GLTFTest {
         /// Load glTF-binary files from memory
         /// </summary>
         [UnityTest]
-        [UseGltfSampleSetTestCase(glTFSampleSetBinaryJsonPath)]
+        [UseGltfSampleSetTestCase(glTFSampleSetBinaryJsonPath,"-Mem")]
         public IEnumerator LoadGlbFromMemory(SampleSetItem testCase)
         {
             Debug.Log($"Testing {testCase.path}");
