@@ -1,11 +1,9 @@
 {
     "name": "glTF-test-framework.Tests",
-    "rootNamespace": "",
     "references": [
         "glTFast",
         "glTFastSchema",
         "glTFast.Export",
-        "glTFast.Tests",
         "glTF-test-framework",
         "glTF-test-framework.Sample",
         "Unity.Mathematics",
@@ -20,9 +18,9 @@
     "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
+    "autoReferenced": false,
+    "optionalUnityReferences": [
+        "TestAssemblies"
     ],
     "versionDefines": [
         {
