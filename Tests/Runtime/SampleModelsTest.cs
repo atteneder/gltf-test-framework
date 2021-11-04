@@ -67,25 +67,6 @@ namespace GLTFTest {
 #endif
         }
 
-        /// <summary>
-        /// Editor-only test to quickly load all models once
-        /// </summary>
-        [UnityTest]
-        [UseGltfSampleSetTestCase(glTFSampleSetJsonPath,"-Quick")]
-        public IEnumerator QuickLoad(SampleSetItem testCase)
-        {
-#if UNITY_EDITOR
-            Debug.Log($"Testing {testCase.path}");
-            var go = new GameObject();
-            var deferAgent = new UninterruptedDeferAgent();
-            var task = LoadGltfSampleSetItem(testCase, go, deferAgent);
-            yield return Utils.WaitForTask(task);
-            Object.Destroy(go);
-#else
-            yield break;            
-#endif
-        }
-
         [UnityTest]
         [UseGltfSampleSetTestCase(glTFSampleSetJsonPath,"-Uninterrupted")]
         public IEnumerator UninterruptedLoading(SampleSetItem testCase) {
