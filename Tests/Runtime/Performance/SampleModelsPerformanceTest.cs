@@ -44,11 +44,11 @@ namespace GLTFTest.Performance {
         //     yield return UninterruptedLoadingTemplate(testCase);
         // }
 
-        IEnumerator UninterruptedLoadingTemplate(SampleSetItem testCase) {
+        static IEnumerator UninterruptedLoadingTemplate(SampleSetItem testCase) {
             Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
-            SampleGroup loadTime = new SampleGroup("LoadTime", SampleUnit.Millisecond);
+            SampleGroup loadTime = new SampleGroup("LoadTime");
             // First time without measuring
             var task = SampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
             yield return Utils.WaitForTask(task);
@@ -70,7 +70,7 @@ namespace GLTFTest.Performance {
             Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
             var deferAgent = go.AddComponent<TimeBudgetPerFrameDeferAgent>();
-            SampleGroup loadTime = new SampleGroup("LoadTime", SampleUnit.Millisecond);
+            SampleGroup loadTime = new SampleGroup("LoadTime");
             // First time without measuring
             var task = SampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent);
             yield return Utils.WaitForTask(task);
