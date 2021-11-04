@@ -54,7 +54,7 @@ namespace GLTFTest {
 #endif
         }
 
-        void CheckFileExists(string path) {
+        static void CheckFileExists(string path) {
 #if !(UNITY_ANDROID && !UNITY_EDITOR)
             Assert.IsTrue(
                 File.Exists(path)
@@ -99,7 +99,7 @@ namespace GLTFTest {
         //     yield return UninterruptedLoadingTemplate(testCase);
         // }
 
-        IEnumerator UninterruptedLoadingTemplate(SampleSetItem testCase) {
+        static IEnumerator UninterruptedLoadingTemplate(SampleSetItem testCase) {
             Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
@@ -115,7 +115,6 @@ namespace GLTFTest {
             Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
             var deferAgent = go.AddComponent<TimeBudgetPerFrameDeferAgent>();
-            SampleGroup loadTime = new SampleGroup("LoadTime", SampleUnit.Millisecond);
             var task = LoadGltfSampleSetItem(testCase, go, deferAgent);
             yield return Utils.WaitForTask(task);
             Object.Destroy(go);
@@ -146,14 +145,11 @@ namespace GLTFTest {
 
         public static async Task LoadGltfSampleSetItem(SampleSetItem testCase, GameObject go, IDeferAgent deferAgent, SampleGroup loadTime = null)
         {
-            var path = string.Format(
 #if UNITY_ANDROID && !UNITY_EDITOR
-			    "{0}"
+            var path = testCase.path;
 #else
-                "file://{0}"
+            var path = $"file://{testCase.path}";
 #endif
-                ,testCase.path
-            );
 
             // Debug.LogFormat("Testing {0}", path);
             

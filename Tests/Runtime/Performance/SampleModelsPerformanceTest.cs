@@ -48,7 +48,7 @@ namespace GLTFTest.Performance {
             Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
-            SampleGroup loadTime = new SampleGroup("LoadTime");
+            var loadTime = new SampleGroup("LoadTime");
             // First time without measuring
             var task = SampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
             yield return Utils.WaitForTask(task);
