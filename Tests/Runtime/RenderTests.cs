@@ -96,6 +96,16 @@ namespace GLTFTest
                 FrameBoundsCamera.FrameBounds(testCamera,gltf.transform,gltf.bounds);
             }
 
+            if (success) {
+                var animation = gltf.gameObject.transform.GetComponentInChildren<Animation>();
+                if (animation != null && animation.clip!=null) {
+                    animation.Stop();
+                    var clip = animation.clip;
+                    animation.clip.SampleAnimation(animation.gameObject,clip.length *.5f);
+                    // animation.Sample();
+                }
+            }
+
 // #if ENABLE_VR
 //         if (XRGraphicsAutomatedTests.enabled)
 //         {
