@@ -86,7 +86,7 @@ namespace GLTFTest
                     if (testCamera == null) {
                         testCamera = cam;
                     }
-                    cam.backgroundColor = Color.white;
+                    cam.backgroundColor = new Color(1f, 1f, 1f, 0f);
                     cam.clearFlags = CameraClearFlags.SolidColor;
                 }
             } else {
