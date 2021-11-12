@@ -113,8 +113,10 @@ namespace GLTFTest.Editor {
                 EditorSceneManager.SaveScene(testScene,scenePath);
                 allScenes.Add(new EditorBuildSettingsScene(scenePath,true));
 
+                CertifyDirectory(new[] { "ReferenceImages", "Linear", "OSXEditor", "Metal", "None" }, "Assets");
                 var referenceImagePath =
                     Path.Combine(Application.dataPath, "ReferenceImages/Linear/OSXEditor/Metal/None", item.name + ".png");
+                
                 if (!File.Exists(referenceImagePath)) {
                     Debug.LogFormat("Create dummy reference at path {0}", referenceImagePath);
                     dummyReference = dummyReference!=null
@@ -186,8 +188,10 @@ namespace GLTFTest.Editor {
             }
         }
 
-        private static string CertifyDirectory(string[] directoryParts, string directoyPath)
-        {
+        static string CertifyDirectory(string[] directoryParts, string directoyPath) {
+            if (!AssetDatabase.IsValidFolder(directoyPath)) {
+                AssetDatabase.CreateFolder( Path.GetDirectoryName(directoyPath), Path.GetFileName(directoyPath));
+            }
             foreach (var dirPart in directoryParts)
             {
                 var newFolder = Path.Combine(directoyPath, dirPart);
