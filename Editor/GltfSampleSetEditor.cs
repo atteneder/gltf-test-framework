@@ -132,11 +132,11 @@ namespace GLTFTest.Editor {
             }
             AssetDatabase.Refresh();
             EditorBuildSettings.scenes = allScenes.ToArray();
+            
+            Lightmapping.BakeMultipleScenes(allScenePaths.ToArray());
     #else
             Debug.LogWarning("Please install the Graphics Test Framework for render tests to work.");
     #endif
-            
-            Lightmapping.BakeMultipleScenes(allScenePaths.ToArray());
         }
 
         static void CreateRenderSingleTestScene(SampleSet sampleSet)
