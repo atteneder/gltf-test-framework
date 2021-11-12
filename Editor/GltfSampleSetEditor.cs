@@ -86,8 +86,8 @@ namespace GLTFTest.Editor {
         {
     #if GLTFAST_RENDER_TEST
             var allScenes = new List<EditorBuildSettingsScene>();
-            Texture2D dummyReference = null;
             var allScenePaths = new List<string>();
+            // Texture2D dummyReference = null;
 
             foreach (var item in sampleSet.GetItems())
             {
@@ -113,22 +113,22 @@ namespace GLTFTest.Editor {
 
                 EditorSceneManager.SaveScene(testScene,scenePath);
                 allScenes.Add(new EditorBuildSettingsScene(scenePath,true));
-
-                CertifyDirectory(new[] { "ReferenceImages", "Linear", "OSXEditor", "Metal", "None" }, "Assets");
-                var referenceImagePath =
-                    Path.Combine(Application.dataPath, "ReferenceImages/Linear/OSXEditor/Metal/None", item.name + ".png");
                 allScenePaths.Add(scenePath);
                 
-                if (!File.Exists(referenceImagePath)) {
-                    Debug.LogFormat("Create dummy reference at path {0}", referenceImagePath);
-                    dummyReference = dummyReference!=null
-                        ? dummyReference
-                        : new Texture2D(
-                        graphicsTestSettings.ImageComparisonSettings.TargetWidth,
-                        graphicsTestSettings.ImageComparisonSettings.TargetHeight
-                    );
-                    File.WriteAllBytes(referenceImagePath, dummyReference.EncodeToPNG());
-                }
+                // CertifyDirectory(new[] { "ReferenceImages", "Linear", "OSXEditor", "Metal", "None" }, "Assets");
+                // var referenceImagePath =
+                //     Path.Combine(Application.dataPath, "ReferenceImages/Linear/OSXEditor/Metal/None", item.name + ".png");
+                //
+                // if (!File.Exists(referenceImagePath)) {
+                //     Debug.LogFormat("Create dummy reference at path {0}", referenceImagePath);
+                //     dummyReference = dummyReference!=null
+                //         ? dummyReference
+                //         : new Texture2D(
+                //         graphicsTestSettings.ImageComparisonSettings.TargetWidth,
+                //         graphicsTestSettings.ImageComparisonSettings.TargetHeight
+                //     );
+                //     File.WriteAllBytes(referenceImagePath, dummyReference.EncodeToPNG());
+                // }
             }
             AssetDatabase.Refresh();
             EditorBuildSettings.scenes = allScenes.ToArray();
@@ -142,7 +142,7 @@ namespace GLTFTest.Editor {
         static void CreateRenderSingleTestScene(SampleSet sampleSet)
         {
     #if GLTFAST_RENDER_TEST
-            Texture2D dummyReference = null;
+            // Texture2D dummyReference = null;
 
             var testScene = EditorSceneManager.OpenScene("Assets/Scenes/TestScene.unity");
             
