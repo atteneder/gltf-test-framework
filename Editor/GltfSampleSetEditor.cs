@@ -87,6 +87,7 @@ namespace GLTFTest.Editor {
     #if GLTFAST_RENDER_TEST
             var allScenes = new List<EditorBuildSettingsScene>();
             Texture2D dummyReference = null;
+            var allScenePaths = new List<string>();
 
             foreach (var item in sampleSet.GetItems())
             {
@@ -116,6 +117,7 @@ namespace GLTFTest.Editor {
                 CertifyDirectory(new[] { "ReferenceImages", "Linear", "OSXEditor", "Metal", "None" }, "Assets");
                 var referenceImagePath =
                     Path.Combine(Application.dataPath, "ReferenceImages/Linear/OSXEditor/Metal/None", item.name + ".png");
+                allScenePaths.Add(scenePath);
                 
                 if (!File.Exists(referenceImagePath)) {
                     Debug.LogFormat("Create dummy reference at path {0}", referenceImagePath);
@@ -133,6 +135,8 @@ namespace GLTFTest.Editor {
     #else
             Debug.LogWarning("Please install the Graphics Test Framework for render tests to work.");
     #endif
+            
+            Lightmapping.BakeMultipleScenes(allScenePaths.ToArray());
         }
 
         static void CreateRenderSingleTestScene(SampleSet sampleSet)
