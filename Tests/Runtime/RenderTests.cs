@@ -41,7 +41,7 @@ namespace GLTFTest
 #endif
         public const string universalPackagePath = "Assets/ReferenceImages";
 
-        [UnityTest, Category("UniversalRP")]
+        [UnityTest, Category("Graphics")]
         [PrebuildSetup("GLTFTest.Editor.SetupGraphicsTestCases")]
         [UseGraphicsTestCases(universalPackagePath)]
 
