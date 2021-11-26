@@ -21,6 +21,9 @@ using System.Linq;
 using GLTFast;
 using NUnit.Framework;
 using UnityEngine;
+#if USING_HDRP
+using UnityEngine.Rendering.HighDefinition;
+#endif
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.TestTools.Graphics;
@@ -88,6 +91,13 @@ namespace GLTFTest
                     }
                     cam.backgroundColor = new Color(1f, 1f, 1f, 0f);
                     cam.clearFlags = CameraClearFlags.SolidColor;
+#if USING_HDRP
+                    var hdAdd = cam.gameObject.AddComponent<HDAdditionalCameraData>();
+                    if (hdAdd != null) {
+                        hdAdd.clearColorMode = HDAdditionalCameraData.ClearColorMode.Color;
+                        hdAdd.backgroundColorHDR = new Color(1, 1, 1, 0);
+                    }
+#endif
                 }
             } else {
                 // position main camera based on AABB
