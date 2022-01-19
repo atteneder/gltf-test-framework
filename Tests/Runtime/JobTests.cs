@@ -15,6 +15,7 @@
 
 using System;
 using GLTFast.Schema;
+using GLTFast.Vertex;
 using NUnit.Framework;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Collections;
@@ -1014,6 +1015,89 @@ namespace GLTFTest.Jobs {
             };
             job.Run(m_BoneIndexOutput.Length);
             CheckResult();
+        }
+    }
+    
+    [TestFixture]
+    public class SortJointsJobs {
+        
+        const int k_BoneIndexLength = 24;
+        
+        NativeArray<VBones> m_Input;
+        
+        [OneTimeSetUp]
+        public unsafe void SetUpTest() {
+            m_Input = new NativeArray<VBones>(k_BoneIndexLength, Allocator.Persistent);
+            var v = new VBones();
+            var index = 0;
+            foreach( var i in AllFour()) {
+                v.joints[i[0]] = 0;
+                v.joints[i[1]] = 1;
+                v.joints[i[2]] = 2;
+                v.joints[i[3]] = 3;
+                
+                v.weights[i[0]] = .5f;
+                v.weights[i[1]] = .25f;
+                v.weights[i[2]] = .20f;
+                v.weights[i[3]] = .05f;
+                m_Input[index] = v;
+                index++;
+            }
+        }
+
+        [OneTimeTearDown]
+        public void Cleanup() {
+            m_Input.Dispose();
+        }
+        
+        unsafe void CheckResult() {
+            foreach (var v in m_Input) {
+                Assert.AreEqual(0,v.joints[0]);
+                Assert.AreEqual(1,v.joints[1]);
+                Assert.AreEqual(2,v.joints[2]);
+                Assert.AreEqual(3,v.joints[3]);
+                Assert.AreEqual(0.5f,v.weights[0]);
+                Assert.AreEqual(.25f,v.weights[1]);
+                Assert.AreEqual(.2f,v.weights[2]);
+                Assert.AreEqual(.05f,v.weights[3]);
+            }
+        }
+
+        [Test]
+        public unsafe void SortJointsByWeightsJob() {
+            var job = new GLTFast.Jobs.SortJointsByWeightsJob() {
+                bones = m_Input,
+                skinWeights = 4
+            };
+            job.Run(m_Input.Length);
+            CheckResult();
+        }
+        
+        public static System.Collections.Generic.IEnumerable<int[]> AllFour() {
+            yield return new [] {0,1,2,3};
+            yield return new [] {0,1,3,2};
+            yield return new [] {0,2,3,1};
+            yield return new [] {0,2,1,3};
+            yield return new [] {0,3,1,2};
+            yield return new [] {0,3,2,1};
+            yield return new [] {1,3,2,0};
+            yield return new [] {1,3,0,2};
+            yield return new [] {1,2,0,3};
+            yield return new [] {1,2,3,0};
+            yield return new [] {1,0,3,2};
+            yield return new [] {1,0,2,3};
+            yield return new [] {2,0,1,3};
+            yield return new [] {2,0,3,1};
+            yield return new [] {2,1,0,3};
+            yield return new [] {2,1,3,0};
+            yield return new [] {2,3,0,1};
+            yield return new [] {2,3,1,0};
+            yield return new [] {3,0,2,1};
+            yield return new [] {3,0,1,2};
+            yield return new [] {3,2,1,0};
+            yield return new [] {3,2,0,1};
+            yield return new [] {3,1,0,2};
+            yield return new [] {3,1,2,0};
         }
     }
     
