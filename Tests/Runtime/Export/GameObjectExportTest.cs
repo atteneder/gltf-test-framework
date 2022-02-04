@@ -186,7 +186,7 @@ namespace GLTFTest {
 
             var rootObjects = scene.GetRootGameObjects();
 
-            Assert.AreEqual(29,rootObjects.Length);
+            Assert.AreEqual(33,rootObjects.Length);
             foreach (var gameObject in rootObjects) {
                 var logger = new CollectingLogger();
                 var export = new GameObjectExport(
