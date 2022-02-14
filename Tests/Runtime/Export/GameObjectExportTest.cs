@@ -36,7 +36,7 @@ namespace GLTFTest {
 
         [OneTimeSetUp]
         public void SetupTest() {
-            SceneManager.LoadScene("ExportScene", LoadSceneMode.Single);
+            SceneManager.LoadScene( GetExportSceneName(), LoadSceneMode.Single);
         }
 
         [UnityTest]
@@ -186,7 +186,7 @@ namespace GLTFTest {
 
             var rootObjects = scene.GetRootGameObjects();
 
-            Assert.AreEqual(33,rootObjects.Length);
+            Assert.AreEqual(35,rootObjects.Length);
             foreach (var gameObject in rootObjects) {
                 var logger = new CollectingLogger();
                 var export = new GameObjectExport(
@@ -214,7 +214,8 @@ namespace GLTFTest {
         }
 
         async Task ExportSceneAll(bool binary) {
-            SceneManager.LoadScene("ExportScene", LoadSceneMode.Single);
+            var sceneName = GetExportSceneName();
+            SceneManager.LoadScene( sceneName, LoadSceneMode.Single);
 
             var scene = SceneManager.GetActiveScene();
 
@@ -228,7 +229,7 @@ namespace GLTFTest {
                 },
                 logger: logger
             );
-            export.AddScene(rootObjects, "ExportScene");
+            export.AddScene(rootObjects, sceneName);
             var extension = binary ? GltfGlobals.glbExt : GltfGlobals.gltfExt;
             var path = Path.Combine(Application.persistentDataPath, $"ExportScene{extension}");
             var success = await export.SaveToFileAndDispose(path);
@@ -302,5 +303,16 @@ namespace GLTFTest {
             }
         }
 #endif
+
+        static string GetExportSceneName() {
+            switch (RenderPipelineUtils.DetectRenderPipeline()) {
+                case RenderPipeline.HighDefinition:
+                    return "ExportSceneHighDefinition";
+                case RenderPipeline.Universal:
+                    return "ExportSceneUniversal";
+                default:
+                    return "ExportSceneBuiltIn";
+            }
+        }
     }
 }
