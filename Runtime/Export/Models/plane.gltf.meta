@@ -8,6 +8,8 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 715df9372183c47e389bb6e19fbc3b52, type: 3}
+  editorImportSettings:
+    generateSecondaryUVSet: 0
   importSettings:
     nodeNameMethod: 1
     animationMethod: 1
@@ -17,9 +19,9 @@ ScriptedImporter:
     anisotropicFilterLevel: 1
   assetDependencies:
   - type: 0
-    originalUri: Assets/ExportTestData/Models/plane.bin
-    assetPath: Assets/ExportTestData/Models/plane.bin
+    originalUri: Packages/com.atteneder.gltf-test-framework/Runtime/Export/Models/plane.bin
+    assetPath: Packages/com.atteneder.gltf-test-framework/Runtime/Export/Models/plane.bin
   - type: 1
-    originalUri: Assets/ExportTestData/Models/textures/ColorGrid.png
-    assetPath: Assets/ExportTestData/Models/textures/ColorGrid.png
+    originalUri: Packages/com.atteneder.gltf-test-framework/Runtime/Export/Models/textures/ColorGrid.png
+    assetPath: Packages/com.atteneder.gltf-test-framework/Runtime/Export/Models/textures/ColorGrid.png
   reportItems: []
