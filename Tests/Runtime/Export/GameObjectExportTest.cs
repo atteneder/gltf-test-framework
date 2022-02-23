@@ -93,6 +93,20 @@ namespace GLTFTest {
             yield return Utils.WaitForTask(task);
         }
         
+        [UnityTest]
+        public IEnumerator ExportSceneGameObjectsBinaryStream() {
+            yield return null;
+            var task = ExportSceneGameObjects(true, true);
+            yield return Utils.WaitForTask(task);
+        }
+
+        [UnityTest]
+        public IEnumerator ExportSceneAllBinaryStream() {
+            yield return null;
+            var task = ExportSceneAll(true, true);
+            yield return Utils.WaitForTask(task);
+        }
+        
         [Test]
         public void MeshMaterialCombinationTest() {
 
@@ -181,7 +195,7 @@ namespace GLTFTest {
             AssertThrowsAsync<InvalidOperationException>(async () => await export.SaveToFileAndDispose(path));
         }
 
-        async Task ExportSceneGameObjects(bool binary) {
+        async Task ExportSceneGameObjects(bool binary, bool toStream = false) {
             var scene = SceneManager.GetActiveScene();
 
             var rootObjects = scene.GetRootGameObjects();
@@ -199,7 +213,17 @@ namespace GLTFTest {
                 export.AddScene(new []{gameObject}, gameObject.name);
                 var extension = binary ? GltfGlobals.glbExt : GltfGlobals.gltfExt;
                 var path = Path.Combine(Application.persistentDataPath, $"{gameObject.name}{extension}");
-                var success = await export.SaveToFileAndDispose(path);
+
+                bool success;
+                if (toStream) {
+                    var glbStream = new MemoryStream();
+                    success = await export.SaveToStreamAndDispose(glbStream);
+                    Assert.Greater(glbStream.Length,20);
+                    glbStream.Close();
+                }
+                else {
+                    success = await export.SaveToFileAndDispose(path);
+                }
                 Assert.IsTrue(success);
                 AssertLogger(logger);
 #if GLTF_VALIDATOR && UNITY_EDITOR
@@ -213,7 +237,7 @@ namespace GLTFTest {
             }
         }
 
-        async Task ExportSceneAll(bool binary) {
+        async Task ExportSceneAll(bool binary, bool toStream = false) {
             var sceneName = GetExportSceneName();
             SceneManager.LoadScene( sceneName, LoadSceneMode.Single);
 
@@ -232,7 +256,17 @@ namespace GLTFTest {
             export.AddScene(rootObjects, sceneName);
             var extension = binary ? GltfGlobals.glbExt : GltfGlobals.gltfExt;
             var path = Path.Combine(Application.persistentDataPath, $"ExportScene{extension}");
-            var success = await export.SaveToFileAndDispose(path);
+
+            bool success;
+            if (toStream) {
+                var glbStream = new MemoryStream();
+                success = await export.SaveToStreamAndDispose(glbStream);
+                Assert.Greater(glbStream.Length,20);
+                glbStream.Close();
+            }
+            else {
+                success = await export.SaveToFileAndDispose(path);
+            }
             Assert.IsTrue(success);
             AssertLogger(logger);
 #if GLTF_VALIDATOR && UNITY_EDITOR
