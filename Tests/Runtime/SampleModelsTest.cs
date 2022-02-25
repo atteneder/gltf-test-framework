@@ -31,7 +31,7 @@ namespace GLTFTest {
     
     public class SampleModelsTest {
         
-        public const string glTFSampleSetAssetPath = "Packages/com.atteneder.gltf-demo/Runtime/SampleSets/glTF-Sample-Models.asset";
+        public const string glTFSampleSetAssetPath = "Packages/com.atteneder.gltf-tests/Runtime/SampleSets/glTF-Sample-Models.asset";
         public const string glTFSampleSetJsonPath = "glTF-Sample-Models.json";
         public const string glTFSampleSetBinaryJsonPath = "glTF-Sample-Models-glb.json";
 
