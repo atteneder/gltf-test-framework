@@ -17,9 +17,13 @@
 #define LOCAL_LOADING
 #endif
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace GLTFTest.Sample {
 
@@ -130,5 +134,27 @@ namespace GLTFTest.Sample {
                 items[i].active = active;
             }
         }
+#if UNITY_EDITOR
+        public void CreateJSON() {
+            var jsonPathAbsolute = Path.Combine( Application.streamingAssetsPath, $"{name}.json");
+            Debug.Log(jsonPathAbsolute);
+            var json = JsonUtility.ToJson(this);
+            File.WriteAllText(jsonPathAbsolute,json);
+        }
+        
+        public void CreateListFile() {
+            var newName = name.Replace("-Sample-Models-", "_");
+            newName = newName.Replace("-Sample-Models", "");
+            var jsonPathAbsolute = Path.Combine( Application.streamingAssetsPath, $"{newName}.txt");
+            Debug.Log(jsonPathAbsolute);
+            using( var fs = new StreamWriter(jsonPathAbsolute) )
+            {
+                fs.Write($"# All files from set {newName}\n\n");
+                foreach (var setItem in GetItems()) {
+                    fs.WriteLine(setItem.path);
+                }
+            }
+        }
+#endif
     }
 }

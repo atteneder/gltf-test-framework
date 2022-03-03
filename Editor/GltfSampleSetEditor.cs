@@ -173,25 +173,12 @@ namespace GLTFTest.Editor {
     #endif
         }
 
-        public static void CreateJSON(SampleSet sampleSet, Object target) {
-            var jsonPathAbsolute = Path.Combine( Application.streamingAssetsPath, $"{sampleSet.name}.json");
-            Debug.Log(jsonPathAbsolute);
-            var json = JsonUtility.ToJson(sampleSet);
-            File.WriteAllText(jsonPathAbsolute,json);
+        static void CreateJSON(SampleSet sampleSet, Object target) {
+            sampleSet.CreateJSON();
         }
-        
-        public static void CreateListFile(SampleSet sampleSet, Object target) {
-            var name = sampleSet.name.Replace("-Sample-Models-", "_");
-            name = name.Replace("-Sample-Models", "");
-            var jsonPathAbsolute = Path.Combine( Application.streamingAssetsPath, $"{name}.txt");
-            Debug.Log(jsonPathAbsolute);
-            using( var fs = new StreamWriter(jsonPathAbsolute) )
-            {
-                fs.Write($"# All files from set {sampleSet.name}\n\n");
-                foreach (var setItem in sampleSet.GetItems()) {
-                    fs.WriteLine(setItem.path);
-                }
-            }
+
+        static void CreateListFile(SampleSet sampleSet, Object target) {
+            sampleSet.CreateListFile();
         }
 
         static string CertifyDirectory(string[] directoryParts, string directoyPath) {
