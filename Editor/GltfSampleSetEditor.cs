@@ -67,6 +67,7 @@ namespace GLTFTest.Editor {
                 CreateListFile(_sampleSet,target);
             }
             
+            GUILayout.BeginHorizontal();
             if (GUILayout.Button("Create render test scenes")) {
                 CreateRenderTestScenes(_sampleSet);
             }
@@ -74,6 +75,7 @@ namespace GLTFTest.Editor {
             if (GUILayout.Button("Create single test scene")) {
                 CreateRenderSingleTestScene(_sampleSet);
             }
+            GUILayout.EndHorizontal();
             
             base.OnInspectorGUI();
             
