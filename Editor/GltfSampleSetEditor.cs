@@ -77,6 +77,10 @@ namespace GLTFTest.Editor {
             }
             GUILayout.EndHorizontal();
             
+            if (GUILayout.Button("Copy to StreamingAssets")) {
+                _sampleSet.CopyToStreamingAssets();
+            }
+            
             base.OnInspectorGUI();
             
             if (GUI.changed) {

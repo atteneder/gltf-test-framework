@@ -44,7 +44,7 @@ namespace GLTFTest.Sample {
             get {
                 string path;
                 if (string.IsNullOrEmpty(streamingAssetsPath)) {
-                    path = baseLocalPath;
+                    path = GetLocalPathAbsolute();
                 }
                 else {
                     path = Path.Combine(Application.streamingAssetsPath, streamingAssetsPath);
@@ -107,11 +107,7 @@ namespace GLTFTest.Sample {
         }
 
         public void LoadItemsFromPath(string searchPattern) {
-            var basePath = string.IsNullOrEmpty(streamingAssetsPath)
-                ? baseLocalPath
-                : Path.Combine(Application.streamingAssetsPath, streamingAssetsPath);
-
-            var dir = new DirectoryInfo(basePath);
+            var dir = new DirectoryInfo(localFilePath);
             var dirLength = dir.FullName.Length + 1;
 
             var newItems = new List<SampleSetItemEntry>();
@@ -134,7 +130,53 @@ namespace GLTFTest.Sample {
                 items[i].active = active;
             }
         }
+
+        static string GetProjectPath() {
+            var parent =  new DirectoryInfo(Application.dataPath); // Assets
+            parent = parent.Parent; // Project dir
+            parent = parent?.Parent; // "projects" dir
+            return parent?.FullName;
+        }
+
+        string GetLocalPathAbsolute() {
+            var uri = new Uri(baseLocalPath,UriKind.RelativeOrAbsolute);
+            return uri.IsAbsoluteUri ? baseLocalPath : Path.GetFullPath(Path.Combine(GetProjectPath(), baseLocalPath));
+        }
+
 #if UNITY_EDITOR
+        public void CopyToStreamingAssets(bool force = false) {
+            var srcPath = GetLocalPathAbsolute();
+            if (string.IsNullOrEmpty(srcPath) || !Directory.Exists(srcPath)) {
+                Debug.LogError($"Invalid baseLocalPath: \"{baseLocalPath}\"");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(streamingAssetsPath)) {
+                Debug.LogError($"Invalid streamingAssetsPath: \"{streamingAssetsPath}\"");
+                return;
+            }
+            var dstPath = Path.Combine(Application.streamingAssetsPath, streamingAssetsPath);
+
+            if (Directory.Exists(dstPath)) {
+                if (force) {
+                    Directory.Delete(dstPath);
+                }
+                else {
+                    return;
+                }
+            }
+            else {
+                var parent = Directory.GetParent(dstPath).FullName;
+                if (!Directory.Exists(parent)) {
+                    Directory.CreateDirectory(parent);
+                }
+            }
+            
+            FileUtil.CopyFileOrDirectory(srcPath,dstPath);
+            
+            AssetDatabase.Refresh();
+        }
+        
         public void CreateJSON() {
             var jsonPathAbsolute = Path.Combine( Application.streamingAssetsPath, $"{name}.json");
             Debug.Log(jsonPathAbsolute);
