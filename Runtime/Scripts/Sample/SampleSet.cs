@@ -140,6 +140,9 @@ namespace GLTFTest.Sample {
         }
 
         string GetLocalPathAbsolute() {
+            if (string.IsNullOrEmpty(baseLocalPath)) {
+                return null;
+            }
             var uri = new Uri(baseLocalPath,UriKind.RelativeOrAbsolute);
             return uri.IsAbsoluteUri ? baseLocalPath : Path.GetFullPath(Path.Combine(GetProjectPath(), baseLocalPath));
         }
