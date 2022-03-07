@@ -41,7 +41,12 @@ public class TestAssetBundler : IPreprocessBuildWithReport {
         };
 
         foreach (var setName in sampleSetNames) {
-            var sampleSet = AssetDatabase.LoadAssetAtPath<SampleSet>( $"Packages/com.atteneder.gltf-tests/Runtime/SampleSets/{setName}.asset");
+            var samplePath = $"Packages/com.atteneder.gltf-test-framework/Runtime/SampleSets/{setName}.asset";
+            var sampleSet = AssetDatabase.LoadAssetAtPath<SampleSet>(samplePath);
+            if (!sampleSet) {
+                Debug.LogWarning($"Expected SampleSet at {samplePath} doesn't exist.");
+                continue;
+            }
             sampleSet.CreateJSON();
             sampleSet.CopyToStreamingAssets();
         }
