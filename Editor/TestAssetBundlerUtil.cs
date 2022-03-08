@@ -13,35 +13,16 @@
 // limitations under the License.
 //
 
+using System.Collections.Generic;
 using GLTFTest.Sample;
 using UnityEditor;
-using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
-public class TestAssetBundler : IPreprocessBuildWithReport {
-    
-    public int callbackOrder => 0;
+public class TestAssetBundlerUtil {
 
-    public void OnPreprocessBuild(BuildReport target) {
-        SyncAssets();
-    }
+    public static void SyncAssets(IEnumerable<string> samplePaths) {
 
-    [MenuItem("Tools/Sync glTF Test Assets")]
-    public static void SyncAssetsMenu() {
-        SyncAssets();
-    }
-
-    static void SyncAssets() {
-        var sampleSetNames = new[] {
-            "glTF-Sample-Models",
-            "glTF-Sample-Models-glb",
-            "glTF-Sample-Models-gltf",
-        };
-
-        foreach (var setName in sampleSetNames) {
-            var samplePath = $"Packages/com.atteneder.gltf-test-framework/Runtime/SampleSets/{setName}.asset";
+        foreach (var samplePath in samplePaths) {
             var sampleSet = AssetDatabase.LoadAssetAtPath<SampleSet>(samplePath);
             if (!sampleSet) {
                 Debug.LogWarning($"Expected SampleSet at {samplePath} doesn't exist.");
