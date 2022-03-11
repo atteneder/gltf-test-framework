@@ -155,7 +155,7 @@ namespace GLTFTest.Sample {
         public void CopyToStreamingAssets(bool force = false) {
             var srcPath = GetLocalPathAbsolute();
             if (string.IsNullOrEmpty(srcPath) || !Directory.Exists(srcPath)) {
-                Debug.LogError($"Invalid baseLocalPath: \"{baseLocalPath}\"");
+                Debug.LogError($"Invalid LocalPathAbsolute: \"{srcPath}\" from \"{GetProjectPath()}\" and \"{baseLocalPath}\"");
                 return;
             }
 
