@@ -132,6 +132,11 @@ namespace GLTFTest.Sample {
         }
 
         static string GetProjectPath() {
+            var repoRootPath = Environment.GetEnvironmentVariable("GLTF_TEST_SOURCE_DIR");
+            if (!string.IsNullOrEmpty(repoRootPath) && Directory.Exists(repoRootPath)) {
+                Debug.LogWarning($"GLTF_TEST_SOURCE_DIR {repoRootPath}");
+                return repoRootPath;
+            }
             var parent =  new DirectoryInfo(Application.dataPath); // Assets
             parent = parent.Parent; // Project dir
             parent = parent?.Parent; // "projects" dir
