@@ -31,9 +31,15 @@ namespace GLTFTest.Sample {
     public class SampleSet : ScriptableObject {
 
         /// <summary>
-        /// Local file path. Can be relative to project.
+        /// Local file path
         /// </summary>
         public string baseLocalPath = "";
+        
+        /// <summary>
+        /// Path relative to "assets", a folder at root level of the glTF Test repository.
+        /// Can be overriden.
+        /// </summary>
+        public string assetRelativePath;
         
         /// <summary>
         /// Path relative to "Assets/StreamingAssets" folder
@@ -55,18 +61,54 @@ namespace GLTFTest.Sample {
 
         public int itemCount => items.Length;
 
+        /// <summary>
+        /// Resolves to the absolute path in this order
+        /// 1. StreamingAssets
+        /// 2. Assets
+        /// 3. Absolute Path
+        /// </summary>
         public string localFilePath {
             get {
                 string path;
-                if (string.IsNullOrEmpty(streamingAssetsPath)) {
-                    path = GetLocalPathAbsolute();
-                }
-                else {
+                
+                if (!string.IsNullOrEmpty(streamingAssetsPath)) {
                     path = Path.Combine(Application.streamingAssetsPath, streamingAssetsPath);
+                    if (Directory.Exists(path)) {
+                        return path;
+                    }
                 }
 
+                return GetSourcePath();
+            }
+        }
+
+        /// <summary>
+        /// Gives the absolute path to "assets", null otherwise
+        /// </summary>
+        string assetAbsolutePath {
+            get {
+                if(!string.IsNullOrEmpty(assetRelativePath)) {
+                    var path = Path.Combine(GetAssetsPath(), assetRelativePath);
+                    if (Directory.Exists(path)) {
+                        return path;
+                    }
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Source directory
+        /// </summary>
+        /// <returns>Absolute path to source directory, either within "assets" or absolute baseLocalPath</returns>
+        string GetSourcePath() {
+            var path = assetAbsolutePath;
+            if(!string.IsNullOrEmpty(path) && Directory.Exists(path)) {
                 return path;
             }
+
+            return baseLocalPath;
         }
 
         private string remoteUri {
@@ -163,20 +205,36 @@ namespace GLTFTest.Sample {
             parent = parent.Parent; // Project dir
             return parent?.FullName;
         }
-
-        string GetLocalPathAbsolute() {
-            if (string.IsNullOrEmpty(baseLocalPath)) {
-                return null;
+        
+        /// <summary>
+        /// Get assets path from the root level of the glTF Test repository
+        /// Can be overriden via GLTF_TEST_ASSET_DIR environment variable
+        /// </summary>
+        /// <returns></returns>
+        static string GetAssetsPath() {
+            var assetDir = Environment.GetEnvironmentVariable("GLTF_TEST_ASSET_DIR");
+            if (!string.IsNullOrEmpty(assetDir) && Directory.Exists(assetDir)) {
+                return assetDir;
             }
-            var uri = new Uri(baseLocalPath,UriKind.RelativeOrAbsolute);
-            return uri.IsAbsoluteUri ? baseLocalPath : Path.GetFullPath(Path.Combine(GetProjectPath(), baseLocalPath));
+            var dir =  new DirectoryInfo(Application.dataPath); // Assets
+            dir = dir.Parent; // Project dir
+            dir = dir?.Parent; // projects dir
+            dir = dir?.Parent; // root dir
+            if (dir != null) {
+                var path = Path.Combine(dir.FullName,"assets");
+                if (Directory.Exists(path)) {
+                    return path;
+                }
+            }
+
+            return null;
         }
 
 #if UNITY_EDITOR
         public void CopyToStreamingAssets(bool force = false) {
-            var srcPath = GetLocalPathAbsolute();
+            var srcPath = GetSourcePath();
             if (string.IsNullOrEmpty(srcPath) || !Directory.Exists(srcPath)) {
-                Debug.LogError($"Invalid LocalPathAbsolute: \"{srcPath}\" from \"{GetProjectPath()}\" and \"{baseLocalPath}\"");
+                Debug.LogError($"Invalid source path: \"{srcPath}\"");
                 return;
             }
 

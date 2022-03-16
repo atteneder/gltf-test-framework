@@ -20,7 +20,7 @@ using UnityEngine;
 
 public class TestAssetBundlerUtil {
 
-    public static void SyncAssets(IEnumerable<string> samplePaths) {
+    public static void SyncAssets(IEnumerable<string> samplePaths, bool forceStreamingAssets = false) {
 
         foreach (var samplePath in samplePaths) {
             var sampleSet = AssetDatabase.LoadAssetAtPath<SampleSet>(samplePath);
@@ -28,8 +28,11 @@ public class TestAssetBundlerUtil {
                 Debug.LogWarning($"Expected SampleSet at {samplePath} doesn't exist.");
                 continue;
             }
+
+            if (forceStreamingAssets) {
+                sampleSet.CopyToStreamingAssets();
+            }
             sampleSet.CreateJSON();
-            sampleSet.CopyToStreamingAssets();
         }
         AssetDatabase.Refresh();
     }
