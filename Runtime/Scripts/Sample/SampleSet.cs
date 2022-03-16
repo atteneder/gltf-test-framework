@@ -30,9 +30,24 @@ namespace GLTFTest.Sample {
     [CreateAssetMenu(fileName = "glTF-SampleSet", menuName = "ScriptableObjects/glTFast SampleSet", order = 1)]
     public class SampleSet : ScriptableObject {
 
+        /// <summary>
+        /// Local file path. Can be relative to project.
+        /// </summary>
         public string baseLocalPath = "";
-        public string streamingAssetsPath = "glTF-Sample-Models/2.0";
+        
+        /// <summary>
+        /// Path relative to "Assets/StreamingAssets" folder
+        /// </summary>
+        public string streamingAssetsPath = "glTF-Sample-Models";
+        
+        /// <summary>
+        /// Base URI for loading via HTTP
+        /// </summary>
         public string baseUrlWeb = "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/";
+        
+        /// <summary>
+        /// Base URI for loading via HTTP from local server
+        /// </summary>
         public string baseUrlLocal = "http://localhost:8080/glTF-Sample-Models/2.0/";
 
         [SerializeField]
