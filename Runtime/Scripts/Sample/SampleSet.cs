@@ -131,19 +131,21 @@ namespace GLTFTest.Sample {
             }
         }
 
+        /// <summary>
+        /// Get the project's path
+        /// Can be overriden by the GLTF_TEST_PROJECT_DIR environment variable
+        /// </summary>
+        /// <returns>Project file path</returns>
         static string GetProjectPath() {
-            var repoRootPath = Environment.GetEnvironmentVariable("GLTF_TEST_SOURCE_DIR");
-            if (!string.IsNullOrEmpty(repoRootPath) && Directory.Exists(repoRootPath)) {
-                Debug.LogWarning($"GLTF_TEST_SOURCE_DIR {repoRootPath}");
-                var projectsPath = Path.Combine(repoRootPath, "projects");
-                if (!string.IsNullOrEmpty(projectsPath) && Directory.Exists(projectsPath)) {
-                    Debug.LogWarning($"projectsPath {projectsPath}");
-                    return projectsPath;
+            var projectPath = Environment.GetEnvironmentVariable("GLTF_TEST_PROJECT_DIR");
+            if (!string.IsNullOrEmpty(projectPath) && Directory.Exists(projectPath)) {
+                Debug.LogWarning($"GLTF_TEST_PROJECT_DIR {projectPath}");
+                if (!string.IsNullOrEmpty(projectPath) && Directory.Exists(projectPath)) {
+                    return projectPath;
                 }
             }
             var parent =  new DirectoryInfo(Application.dataPath); // Assets
             parent = parent.Parent; // Project dir
-            parent = parent?.Parent; // "projects" dir
             return parent?.FullName;
         }
 
