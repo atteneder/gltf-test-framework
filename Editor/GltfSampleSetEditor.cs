@@ -60,7 +60,7 @@ namespace GLTFTest.Editor {
             GUILayout.EndHorizontal();
             
             if (GUILayout.Button("Create JSONs")) {
-                CreateJSON(_sampleSet,target);
+                CreateJson(_sampleSet,target);
             }
             
             if (GUILayout.Button("Create list file")) {
@@ -88,7 +88,7 @@ namespace GLTFTest.Editor {
             }
         }
         
-        static void CreateJSON(SampleSet sampleSet, Object target) {
+        static void CreateJson(SampleSet sampleSet, Object target) {
             sampleSet.CreateJSON();
         }
 
