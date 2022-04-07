@@ -88,7 +88,11 @@ namespace GLTFTest.Sample {
         string assetAbsolutePath {
             get {
                 if(!string.IsNullOrEmpty(assetRelativePath)) {
-                    var path = Path.Combine(GetAssetsPath(), assetRelativePath);
+                    var assetsPath = GetAssetsPath();
+                    if (assetsPath == null) {
+                        return null;
+                    }
+                    var path = Path.Combine(assetsPath, assetRelativePath);
                     if (Directory.Exists(path)) {
                         return path;
                     }
