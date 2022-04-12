@@ -18,6 +18,8 @@ namespace GLTFTest.Editor {
             var allScenePaths = new List<string>();
             // Texture2D dummyReference = null;
             var setName = sampleSet.name;
+
+            var renderPipeline = RenderPipelineUtils.DetectRenderPipeline();
             
             foreach (var item in sampleSet.GetItems())
             {
@@ -25,6 +27,7 @@ namespace GLTFTest.Editor {
                 
                 var settingsGameObject = new GameObject("GraphicsTestSettings");
                 var graphicsTestSettings = settingsGameObject.AddComponent<UniversalGraphicsTestSettings>();
+                graphicsTestSettings.WaitFrames = renderPipeline== RenderPipeline.HighDefinition ? 2 : 0;
 
                 var go = new GameObject(item.name);
                 var gltfAsset = go.AddComponent<GltfBoundsAsset>();
