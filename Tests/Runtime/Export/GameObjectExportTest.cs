@@ -20,6 +20,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GLTFast;
 using GLTFast.Export;
+using GLTFast.Logging;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -282,8 +283,8 @@ namespace GLTFTest {
 
         void AssertLogger(CollectingLogger logger) {
             logger.LogAll();
-            if (logger.items != null) {
-                foreach (var item in logger.items) {
+            if (logger.Count > 0) {
+                foreach (var item in logger.Items) {
                     Assert.AreEqual(LogType.Log, item.type, item.ToString());
                 }
             }
