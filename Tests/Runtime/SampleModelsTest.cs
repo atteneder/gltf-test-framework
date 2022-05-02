@@ -97,7 +97,7 @@ namespace GLTFTest {
             var go = new GameObject();
             var deferAgent = go.AddComponent<TimeBudgetPerFrameDeferAgent>();
             var task = LoadGltfSampleSetItem(testCase, go, deferAgent);
-            yield return Utils.WaitForTask(task);
+            yield return Utils.WaitForTask(task, 60 );
             Object.Destroy(go);
         }
         
