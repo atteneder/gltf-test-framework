@@ -23,14 +23,30 @@ namespace GLTFTest {
     
     public static class Utils {
         
-        public static IEnumerator WaitForTask(Task task) {
-            while(!task.IsCompleted) {
+        /// <summary>
+        /// Wraps a <see cref="Task"/> in an <see cref="IEnumerator"/>.
+        /// </summary>
+        /// <param name="task">The async Task to wait form</param>
+        /// <param name="timeout">Optional timeout in seconds</param>
+        /// <returns>IEnumerator</returns>
+        /// <exception cref="AggregateException"></exception>
+        /// <exception cref="TimeoutException">Thrown when a timout was set and the task took too long</exception>
+        public static IEnumerator WaitForTask(Task task, float timeout = -1) {
+            var startTime = Time.realtimeSinceStartup;
+
+            void CheckExceptionAndTimeout() {
                 if (task.Exception != null)
                     throw task.Exception;
+                if (timeout > 0 && Time.realtimeSinceStartup - startTime > timeout) {
+                    throw new System.TimeoutException();
+                }
+            }
+            while(!task.IsCompleted) {
+                CheckExceptionAndTimeout();
                 yield return null;
             }
-            if (task.Exception != null)
-                throw task.Exception;
+            
+            CheckExceptionAndTimeout();
         }
         
         public static void AssertNearOrEqual(float4 reference, float4 value, float epsilon = float.Epsilon) {
