@@ -1064,8 +1064,8 @@ namespace GLTFTest.Jobs {
         }
 
         [Test]
-        public unsafe void SortJointsByWeightsJob() {
-            var job = new GLTFast.Jobs.SortJointsByWeightsJob() {
+        public unsafe void SortAndRenormalizeBoneWeightsJob() {
+            var job = new GLTFast.Jobs.SortAndRenormalizeBoneWeightsJob() {
                 bones = m_Input,
                 skinWeights = 4
             };
