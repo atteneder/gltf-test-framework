@@ -339,7 +339,7 @@ namespace GLTFTest {
 #endif
 
         static string GetExportSceneName() {
-            switch (RenderPipelineUtils.DetectRenderPipeline()) {
+            switch (RenderPipelineUtils.renderPipeline) {
                 case RenderPipeline.HighDefinition:
                     return "ExportSceneHighDefinition";
                 case RenderPipeline.Universal:

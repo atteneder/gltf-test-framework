@@ -19,7 +19,7 @@ namespace GLTFTest.Editor {
             // Texture2D dummyReference = null;
             var setName = sampleSet.name;
 
-            var renderPipeline = RenderPipelineUtils.DetectRenderPipeline();
+            var renderPipeline = RenderPipelineUtils.renderPipeline;
             
             foreach (var item in sampleSet.GetItems())
             {
