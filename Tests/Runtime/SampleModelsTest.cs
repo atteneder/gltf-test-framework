@@ -53,7 +53,7 @@ namespace GLTFTest {
 #endif
         }
 
-        static void CheckFileExists(string path) {
+        internal static void CheckFileExists(string path) {
 #if !(UNITY_ANDROID && !UNITY_EDITOR)
             Assert.IsTrue(
                 File.Exists(path)
@@ -79,7 +79,7 @@ namespace GLTFTest {
         //     yield return UninterruptedLoadingTemplate(testCase);
         // }
 
-        static IEnumerator UninterruptedLoadingTemplate(SampleSetItem testCase) {
+        internal static IEnumerator UninterruptedLoadingTemplate(SampleSetItem testCase) {
             Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
