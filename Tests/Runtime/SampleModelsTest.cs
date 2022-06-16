@@ -75,29 +75,6 @@ namespace GLTFTest {
             yield return Utils.WaitForTask(task);
             Object.Destroy(go);
         }
-        
-        /// <summary>
-        /// Load glTF-binary files from memory
-        /// </summary>
-        [UnityTest]
-        [UseGltfSampleSetTestCase(glTFSampleSetBinaryJsonPath,"-Mem")]
-        public IEnumerator LoadGlbFromMemory(SampleSetItem testCase)
-        {
-            Debug.Log($"Testing {testCase.path}");
-            var data = File.ReadAllBytes(testCase.path);
-            var go = new GameObject();
-            var deferAgent = new UninterruptedDeferAgent();
-            var logger = new ConsoleLogger();
-            var gltf = new GltfImport(deferAgent:deferAgent,logger:logger);
-            var task = gltf.LoadGltfBinary(data, new Uri(testCase.path));
-            yield return Utils.WaitForTask(task);
-            var success = task.Result;
-            Assert.IsTrue(success);
-            var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-            success = gltf.InstantiateMainScene(instantiator);
-            Assert.IsTrue(success);
-            Object.Destroy(go);
-        }
 
         public static async Task LoadGltfSampleSetItem(SampleSetItem testCase, GameObject go, IDeferAgent deferAgent, SampleGroup loadTime = null)
         {
