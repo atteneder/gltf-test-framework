@@ -16,7 +16,6 @@
 using System;
 using System.Collections;
 using NUnit.Framework;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -30,19 +29,8 @@ namespace GLTFTest {
         const string k_JsonPath = "glTF-test-models.json";
 
         [Test]
-        public void CheckFiles()
-        {
-#if UNITY_EDITOR
-            var sampleSet = AssetDatabase.LoadAssetAtPath<SampleSet>(k_AssetPath);
-            Assert.IsNotNull(sampleSet,"SampleSet not found");
-            Assert.AreEqual(7, sampleSet.itemCount);
-
-            foreach (var item in sampleSet.GetItemsPrefixed()) {
-                SampleModelsTest.CheckFileExists(item.path);
-            }
-#else
-            Debug.Log("Editor only test");
-#endif
+        public void CheckFiles() {
+            Utils.CheckFiles(k_AssetPath, 9);
         }
 
         [UnityTest]

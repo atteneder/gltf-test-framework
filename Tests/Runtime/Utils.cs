@@ -13,15 +13,18 @@
 // limitations under the License.
 //
 
+using System;
 using System.Collections;
+using System.IO;
 using System.Threading.Tasks;
+using GLTFTest.Sample;
 using NUnit.Framework;
 using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
 
 namespace GLTFTest {
-    
-    public static class Utils {
+    static class Utils {
         
         /// <summary>
         /// Wraps a <see cref="Task"/> in an <see cref="IEnumerator"/>.
@@ -101,6 +104,40 @@ namespace GLTFTest {
             if (b.x || b.y || b.z || b.w) {
                 throw new AssertionException($"float4 not equal. expected {reference} got {value}");
             }
+        }
+        
+        /// <summary>
+        /// Checks if all files of a <see cref="SampleSet"/> are present and
+        /// accessible.
+        /// </summary>
+        /// <param name="sampleSetAssetPath">Asset path of the <see cref="SampleSet"/>.</param>
+        /// <param name="count">Expected number of files.</param>
+        public static void CheckFiles(string sampleSetAssetPath, int count)
+        {
+#if UNITY_EDITOR
+            var sampleSet = AssetDatabase.LoadAssetAtPath<SampleSet>(sampleSetAssetPath);
+            Assert.IsNotNull(sampleSet,"SampleSet not found");
+            Assert.AreEqual(count, sampleSet.itemCount);
+
+            foreach (var item in sampleSet.GetItemsPrefixed()) {
+                CheckFileExists(item.path);
+            }
+#else
+            Assert.Ignore( "Editor only test. Skipping" );
+#endif
+        }
+
+        static void CheckFileExists(string path) {
+#if !(UNITY_ANDROID && !UNITY_EDITOR)
+            Assert.IsTrue(
+                File.Exists(path)
+                , "file {0} not found"
+                , path
+            );
+#else
+		    // See https://docs.unity3d.com/Manual/StreamingAssets.html
+            Assert.Ignore("File access doesn't work on Android");
+#endif
         }
     }
 }

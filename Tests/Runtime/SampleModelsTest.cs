@@ -24,13 +24,12 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 using GLTFast;
-using GLTFast.Logging;
 
 namespace GLTFTest {
 
     using Sample;
     
-    public class SampleModelsTest {
+    class SampleModelsTest {
         
         public const string glTFSampleSetAssetPath = "Packages/com.atteneder.gltf-tests/Runtime/SampleSets/glTF-Sample-Models.asset";
         public const string glTFSampleSetJsonPath = "glTF-Sample-Models.json";
@@ -39,32 +38,8 @@ namespace GLTFTest {
         // const string localSampleSetJsonPath = "local.json";
         
         [Test]
-        public void CheckFiles()
-        {
-#if UNITY_EDITOR
-            var sampleSet = AssetDatabase.LoadAssetAtPath<SampleSet>(glTFSampleSetAssetPath);
-            Assert.IsNotNull(sampleSet,"SampleSet not found");
-            Assert.AreEqual(212, sampleSet.itemCount);
-
-            foreach (var item in sampleSet.GetItemsPrefixed()) {
-                CheckFileExists(item.path);
-            }
-#else
-            Debug.Log("Editor only test");
-#endif
-        }
-
-        internal static void CheckFileExists(string path) {
-#if !(UNITY_ANDROID && !UNITY_EDITOR)
-            Assert.IsTrue(
-                File.Exists(path)
-                , "file {0} not found"
-                , path
-            );
-#else
-		    // See https://docs.unity3d.com/Manual/StreamingAssets.html
-		    Debug.Log("File access doesn't work on Android");
-#endif
+        public void CheckFiles() {
+            Utils.CheckFiles(glTFSampleSetAssetPath, 212);
         }
 
         [UnityTest]
