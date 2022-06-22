@@ -48,15 +48,16 @@ namespace GLTFTest {
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
             var logger = new ConsoleLogger();
-            var gltf = new GltfImport(deferAgent:deferAgent,logger:logger);
-            var task = gltf.Load($"file://{testCase.path}");
-            yield return Utils.WaitForTask(task);
-            var success = task.Result;
-            Assert.IsTrue(success);
-            var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-            success = gltf.InstantiateMainScene(instantiator);
-            Assert.IsTrue(success);
-            Object.Destroy(go);
+            using (var gltf = new GltfImport(deferAgent: deferAgent, logger: logger)) { 
+                var task = gltf.Load($"file://{testCase.path}");
+                yield return Utils.WaitForTask(task);
+                var success = task.Result;
+                Assert.IsTrue(success);
+                var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
+                success = gltf.InstantiateMainScene(instantiator);
+                Assert.IsTrue(success);
+                Object.Destroy(go);
+            }
         }
         
         [UnityTest]
@@ -68,15 +69,16 @@ namespace GLTFTest {
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
             var logger = new ConsoleLogger();
-            var gltf = new GltfImport(deferAgent:deferAgent,logger:logger);
-            var task = gltf.Load(data, new Uri(testCase.path));
-            yield return Utils.WaitForTask(task);
-            var success = task.Result;
-            Assert.IsTrue(success);
-            var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-            success = gltf.InstantiateMainScene(instantiator);
-            Assert.IsTrue(success);
-            Object.Destroy(go);
+            using (var gltf = new GltfImport(deferAgent: deferAgent, logger: logger)) { 
+                var task = gltf.Load(data, new Uri(testCase.path));
+                yield return Utils.WaitForTask(task);
+                var success = task.Result;
+                Assert.IsTrue(success);
+                var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
+                success = gltf.InstantiateMainScene(instantiator);
+                Assert.IsTrue(success);
+                Object.Destroy(go);
+            }
         }
         
         [UnityTest]
@@ -87,15 +89,16 @@ namespace GLTFTest {
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
             var logger = new ConsoleLogger();
-            var gltf = new GltfImport(deferAgent:deferAgent,logger:logger);
-            var task = gltf.LoadFile(testCase.path, new Uri(testCase.path));
-            yield return Utils.WaitForTask(task);
-            var success = task.Result;
-            Assert.IsTrue(success);
-            var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-            success = gltf.InstantiateMainScene(instantiator);
-            Assert.IsTrue(success);
-            Object.Destroy(go);
+            using (var gltf = new GltfImport(deferAgent: deferAgent, logger: logger)) { 
+                var task = gltf.LoadFile(testCase.path, new Uri(testCase.path));
+                yield return Utils.WaitForTask(task);
+                var success = task.Result;
+                Assert.IsTrue(success);
+                var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
+                success = gltf.InstantiateMainScene(instantiator);
+                Assert.IsTrue(success);
+                Object.Destroy(go);
+            }
         }
         
         [UnityTest]
@@ -110,15 +113,16 @@ namespace GLTFTest {
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
             var logger = new ConsoleLogger();
-            var gltf = new GltfImport(deferAgent:deferAgent,logger:logger);
-            var task = gltf.LoadGltfBinary(data, new Uri(testCase.path));
-            yield return Utils.WaitForTask(task);
-            var success = task.Result;
-            Assert.IsTrue(success);
-            var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-            success = gltf.InstantiateMainScene(instantiator);
-            Assert.IsTrue(success);
-            Object.Destroy(go);
+            using (var gltf = new GltfImport(deferAgent: deferAgent, logger: logger)) { 
+                var task = gltf.LoadGltfBinary(data, new Uri(testCase.path));
+                yield return Utils.WaitForTask(task);
+                var success = task.Result;
+                Assert.IsTrue(success);
+                var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
+                success = gltf.InstantiateMainScene(instantiator);
+                Assert.IsTrue(success);
+                Object.Destroy(go);
+            }
         }
         
         [UnityTest]
@@ -133,15 +137,16 @@ namespace GLTFTest {
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
             var logger = new ConsoleLogger();
-            var gltf = new GltfImport(deferAgent:deferAgent,logger:logger);
-            var task = gltf.LoadGltfJson(json, new Uri(testCase.path));
-            yield return Utils.WaitForTask(task);
-            var success = task.Result;
-            Assert.IsTrue(success);
-            var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-            success = gltf.InstantiateMainScene(instantiator);
-            Assert.IsTrue(success);
-            Object.Destroy(go);
+            using (var gltf = new GltfImport(deferAgent: deferAgent, logger: logger)) { 
+                var task = gltf.LoadGltfJson(json, new Uri(testCase.path));
+                yield return Utils.WaitForTask(task);
+                var success = task.Result;
+                Assert.IsTrue(success);
+                var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
+                success = gltf.InstantiateMainScene(instantiator);
+                Assert.IsTrue(success);
+                Object.Destroy(go);
+            }
         }
     }
 }
