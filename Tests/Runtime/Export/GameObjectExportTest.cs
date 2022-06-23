@@ -284,6 +284,11 @@ namespace GLTFTest {
             logger.LogAll();
             if (logger.Count > 0) {
                 foreach (var item in logger.Items) {
+#if !UNITY_IMAGECONVERSION
+                    if (item.type == LogType.Warning && item.code == LogCode.ImageConversionNotEnabled) {
+                        continue;
+                    }
+#endif
                     Assert.AreEqual(LogType.Log, item.type, item.ToString());
                 }
             }
