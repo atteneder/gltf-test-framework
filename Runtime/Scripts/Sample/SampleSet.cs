@@ -20,10 +20,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+
+[assembly:InternalsVisibleTo("glTFTests")]
 
 namespace GLTFTest.Sample {
 
@@ -214,8 +217,8 @@ namespace GLTFTest.Sample {
         /// Get assets path from the root level of the glTF Test repository
         /// Can be overriden via GLTF_TEST_ASSET_DIR environment variable
         /// </summary>
-        /// <returns></returns>
-        static string GetAssetsPath() {
+        /// <returns>Path to glTFastTest project specific assets folder</returns>
+        internal static string GetAssetsPath() {
             var assetDir = Environment.GetEnvironmentVariable("GLTF_TEST_ASSET_DIR");
             if (!string.IsNullOrEmpty(assetDir) && Directory.Exists(assetDir)) {
                 return assetDir;
