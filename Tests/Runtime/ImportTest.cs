@@ -54,7 +54,9 @@ namespace GLTFTest {
                 var success = task.Result;
                 Assert.IsTrue(success);
                 var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-                success = gltf.InstantiateMainScene(instantiator);
+                task = gltf.InstantiateMainScene(instantiator);
+                yield return Utils.WaitForTask(task);
+                success = task.Result;
                 Assert.IsTrue(success);
                 Object.Destroy(go);
             }
@@ -75,7 +77,9 @@ namespace GLTFTest {
                 var success = task.Result;
                 Assert.IsTrue(success);
                 var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-                success = gltf.InstantiateMainScene(instantiator);
+                task = gltf.InstantiateMainScene(instantiator);
+                yield return Utils.WaitForTask(task);
+                success = task.Result;
                 Assert.IsTrue(success);
                 Object.Destroy(go);
             }
@@ -95,7 +99,9 @@ namespace GLTFTest {
                 var success = task.Result;
                 Assert.IsTrue(success);
                 var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-                success = gltf.InstantiateMainScene(instantiator);
+                task = gltf.InstantiateMainScene(instantiator);
+                yield return Utils.WaitForTask(task);
+                success = task.Result;
                 Assert.IsTrue(success);
                 Object.Destroy(go);
             }
@@ -119,7 +125,9 @@ namespace GLTFTest {
                 var success = task.Result;
                 Assert.IsTrue(success);
                 var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-                success = gltf.InstantiateMainScene(instantiator);
+                task = gltf.InstantiateMainScene(instantiator);
+                yield return Utils.WaitForTask(task);
+                success = task.Result;
                 Assert.IsTrue(success);
                 Object.Destroy(go);
             }
@@ -143,7 +151,9 @@ namespace GLTFTest {
                 var success = task.Result;
                 Assert.IsTrue(success);
                 var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-                success = gltf.InstantiateMainScene(instantiator);
+                task = gltf.InstantiateMainScene(instantiator);
+                yield return Utils.WaitForTask(task);
+                success = task.Result;
                 Assert.IsTrue(success);
                 Object.Destroy(go);
             }
