@@ -27,11 +27,11 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 0
       - keywords: 
         passType: 8
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 8
   - first: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
       type: 3}
@@ -45,7 +45,7 @@ ShaderVariantCollection:
         passType: 8
       - keywords: EMISSION _ALPHATEST_ON
         passType: 8
-      - keywords: EMISSION _UV_ROTATION
+      - keywords: EMISSION _TEXTURE_TRANSFORM
         passType: 8
       - keywords: OCCLUSION
         passType: 8
@@ -55,7 +55,7 @@ ShaderVariantCollection:
         passType: 8
       - keywords: OCCLUSION _ALPHATEST_ON
         passType: 8
-      - keywords: OCCLUSION _UV_ROTATION
+      - keywords: OCCLUSION _TEXTURE_TRANSFORM
         passType: 8
       - keywords: TRANSMISSION
         passType: 8
@@ -63,7 +63,7 @@ ShaderVariantCollection:
         passType: 8
       - keywords: _ALPHATEST_ON
         passType: 8
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 8
       - keywords: EMISSION OCCLUSION _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS
           _MAIN_LIGHT_SHADOWS
@@ -74,7 +74,7 @@ ShaderVariantCollection:
       - keywords: EMISSION _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS
         passType: 13
       - keywords: EMISSION _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS
-          _UV_ROTATION
+          _TEXTURE_TRANSFORM
         passType: 13
       - keywords: OCCLUSION TRANSMISSION _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS
           _ALPHATEST_ON _MAIN_LIGHT_SHADOWS _SURFACE_TYPE_TRANSPARENT
@@ -91,7 +91,7 @@ ShaderVariantCollection:
       - keywords: OCCLUSION _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS
         passType: 13
       - keywords: OCCLUSION _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS
-          _UV_ROTATION
+          _TEXTURE_TRANSFORM
         passType: 13
       - keywords: TRANSMISSION _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _ALPHATEST_ON
           _MAIN_LIGHT_SHADOWS _SURFACE_TYPE_TRANSPARENT
@@ -106,5 +106,5 @@ ShaderVariantCollection:
       - keywords: _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS
         passType: 13
       - keywords: _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS
-          _UV_ROTATION
+          _TEXTURE_TRANSFORM
         passType: 13

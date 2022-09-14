@@ -355,11 +355,11 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 8
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 8
       - keywords: 
         passType: 13
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 13
   - first: {fileID: -6465566751694194690, guid: 90c26dfde11bf4ff69ef936c6e6b1ed1,
       type: 3}
@@ -373,11 +373,11 @@ ShaderVariantCollection:
         passType: 8
       - keywords: EMISSION OCCLUSION
         passType: 8
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 8
-      - keywords: EMISSION _UV_ROTATION
+      - keywords: EMISSION _TEXTURE_TRANSFORM
         passType: 8
-      - keywords: OCCLUSION _UV_ROTATION
+      - keywords: OCCLUSION _TEXTURE_TRANSFORM
         passType: 8
       - keywords: 
         passType: 12
@@ -398,17 +398,17 @@ ShaderVariantCollection:
         passType: 13
       - keywords: DECALS_3RT EMISSION OCCLUSION
         passType: 13
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 13
-      - keywords: DECALS_3RT _UV_ROTATION
+      - keywords: DECALS_3RT _TEXTURE_TRANSFORM
         passType: 13
-      - keywords: EMISSION _UV_ROTATION
+      - keywords: EMISSION _TEXTURE_TRANSFORM
         passType: 13
-      - keywords: DECALS_3RT EMISSION _UV_ROTATION
+      - keywords: DECALS_3RT EMISSION _TEXTURE_TRANSFORM
         passType: 13
-      - keywords: OCCLUSION _UV_ROTATION
+      - keywords: OCCLUSION _TEXTURE_TRANSFORM
         passType: 13
-      - keywords: DECALS_3RT OCCLUSION _UV_ROTATION
+      - keywords: DECALS_3RT OCCLUSION _TEXTURE_TRANSFORM
         passType: 13
   - first: {fileID: 4800000, guid: 9bd32a6ece529fd4f9408b8d7e00c10d, type: 3}
     second:

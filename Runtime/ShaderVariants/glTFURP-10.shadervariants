@@ -88,15 +88,15 @@ ShaderVariantCollection:
         passType: 0
       - keywords: BILLBOARD_FACE_CAMERA_POS _DEPTH_NO_MSAA
         passType: 0
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 0
-      - keywords: BILLBOARD_FACE_CAMERA_POS _DEPTH_NO_MSAA _UV_ROTATION
+      - keywords: BILLBOARD_FACE_CAMERA_POS _DEPTH_NO_MSAA _TEXTURE_TRANSFORM
         passType: 0
-      - keywords: BILLBOARD_FACE_CAMERA_POS _DEPTH_NO_MSAA _UV_CHANNEL_SELECT _UV_ROTATION
+      - keywords: BILLBOARD_FACE_CAMERA_POS _DEPTH_NO_MSAA _UV_CHANNEL_SELECT _TEXTURE_TRANSFORM
         passType: 0
       - keywords: 
         passType: 8
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 8
   - first: {fileID: -6465566751694194690, guid: 90c26dfde11bf4ff69ef936c6e6b1ed1,
       type: 3}
@@ -110,11 +110,11 @@ ShaderVariantCollection:
         passType: 8
       - keywords: EMISSION OCCLUSION
         passType: 8
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 8
-      - keywords: EMISSION _UV_ROTATION
+      - keywords: EMISSION _TEXTURE_TRANSFORM
         passType: 8
-      - keywords: OCCLUSION _UV_ROTATION
+      - keywords: OCCLUSION _TEXTURE_TRANSFORM
         passType: 8
       - keywords: BILLBOARD_FACE_CAMERA_POS _DEPTH_NO_MSAA
         passType: 13
@@ -130,19 +130,19 @@ ShaderVariantCollection:
         passType: 13
       - keywords: BILLBOARD_FACE_CAMERA_POS EMISSION OCCLUSION _DEPTH_NO_MSAA
         passType: 13
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 13
-      - keywords: BILLBOARD_FACE_CAMERA_POS _DEPTH_NO_MSAA _UV_CHANNEL_SELECT _UV_ROTATION
+      - keywords: BILLBOARD_FACE_CAMERA_POS _DEPTH_NO_MSAA _UV_CHANNEL_SELECT _TEXTURE_TRANSFORM
         passType: 13
-      - keywords: EMISSION _UV_ROTATION
+      - keywords: EMISSION _TEXTURE_TRANSFORM
         passType: 13
       - keywords: BILLBOARD_FACE_CAMERA_POS EMISSION _DEPTH_NO_MSAA _UV_CHANNEL_SELECT
-          _UV_ROTATION
+          _TEXTURE_TRANSFORM
         passType: 13
-      - keywords: BILLBOARD_FACE_CAMERA_POS OCCLUSION _DEPTH_NO_MSAA _UV_ROTATION
+      - keywords: BILLBOARD_FACE_CAMERA_POS OCCLUSION _DEPTH_NO_MSAA _TEXTURE_TRANSFORM
         passType: 13
       - keywords: BILLBOARD_FACE_CAMERA_POS OCCLUSION _DEPTH_NO_MSAA _UV_CHANNEL_SELECT
-          _UV_ROTATION
+          _TEXTURE_TRANSFORM
         passType: 13
   - first: {fileID: -6465566751694194690, guid: c9ba521fe23b44d6db1017a2d9d47a17,
       type: 3}

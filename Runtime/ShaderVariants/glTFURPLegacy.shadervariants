@@ -102,11 +102,11 @@ ShaderVariantCollection:
         passType: 0
       - keywords: BILLBOARD_FACE_CAMERA_POS _DEPTH_NO_MSAA
         passType: 0
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 0
       - keywords: 
         passType: 8
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 8
       - keywords: 
         passType: 13
@@ -126,13 +126,13 @@ ShaderVariantCollection:
         passType: 8
       - keywords: EMISSION OCCLUSION
         passType: 8
-      - keywords: _UV_ROTATION
+      - keywords: _TEXTURE_TRANSFORM
         passType: 8
-      - keywords: EMISSION _UV_ROTATION
+      - keywords: EMISSION _TEXTURE_TRANSFORM
         passType: 8
-      - keywords: OCCLUSION _UV_ROTATION
+      - keywords: OCCLUSION _TEXTURE_TRANSFORM
         passType: 8
-      - keywords: OCCLUSION _UV_CHANNEL_SELECT _UV_ROTATION
+      - keywords: OCCLUSION _UV_CHANNEL_SELECT _TEXTURE_TRANSFORM
         passType: 8
       - keywords: BILLBOARD_FACE_CAMERA_POS UNITY_HDR_ON _DEPTH_NO_MSAA
         passType: 13
@@ -144,11 +144,11 @@ ShaderVariantCollection:
         passType: 13
       - keywords: EMISSION OCCLUSION _ADDITIONAL_LIGHTS_VERTEX
         passType: 13
-      - keywords: _ADDITIONAL_LIGHTS_VERTEX _UV_ROTATION
+      - keywords: _ADDITIONAL_LIGHTS_VERTEX _TEXTURE_TRANSFORM
         passType: 13
-      - keywords: EMISSION _ADDITIONAL_LIGHTS_VERTEX _UV_ROTATION
+      - keywords: EMISSION _ADDITIONAL_LIGHTS_VERTEX _TEXTURE_TRANSFORM
         passType: 13
-      - keywords: OCCLUSION _ADDITIONAL_LIGHTS_VERTEX _UV_ROTATION
+      - keywords: OCCLUSION _ADDITIONAL_LIGHTS_VERTEX _TEXTURE_TRANSFORM
         passType: 13
   - first: {fileID: -6465566751694194690, guid: c9ba521fe23b44d6db1017a2d9d47a17,
       type: 3}
