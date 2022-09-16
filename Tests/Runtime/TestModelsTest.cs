@@ -30,7 +30,7 @@ namespace GLTFTest {
 
         [Test]
         public void CheckFiles() {
-            Utils.CheckFiles(k_AssetPath, 9);
+            Utils.CheckFiles(k_AssetPath, 19);
         }
 
         [UnityTest]
