@@ -25,9 +25,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-#if GLTF_VALIDATOR && UNITY_EDITOR
+#if UNITY_EDITOR
+using System.Text;
+using UnityEditor;
+#if GLTF_VALIDATOR
 using Unity.glTF.Validator;
-#endif
+#endif // GLTF_VALIDATOR
+#endif // UNITY_EDITOR
 
 namespace GLTFTest {
     
@@ -212,7 +216,8 @@ namespace GLTFTest {
                 );
                 export.AddScene(new []{gameObject}, gameObject.name);
                 var extension = binary ? GltfGlobals.glbExt : GltfGlobals.gltfExt;
-                var path = Path.Combine(Application.persistentDataPath, $"{gameObject.name}{extension}");
+                var fileName = $"{gameObject.name}{extension}";
+                var path = Path.Combine(Application.persistentDataPath, fileName);
 
                 bool success;
                 if (toStream) {
@@ -226,6 +231,17 @@ namespace GLTFTest {
                 }
                 Assert.IsTrue(success);
                 AssertLogger(logger);
+
+#if UNITY_EDITOR
+                if (!binary) {
+                    var targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>($"Packages/com.atteneder.gltf-test-framework/Tests/Resources/Target/{fileName}.txt");
+                    Assert.NotNull(targetJsonAsset, $"Target glTF JSON for {fileName} was not found");
+                    var actualJson = GltfJsonSetGenerator(File.ReadAllText(path));
+                    var targetJson = GltfJsonSetGenerator(targetJsonAsset.text);
+                    Assert.AreEqual(targetJson,actualJson);
+                }
+#endif
+
 #if GLTF_VALIDATOR && UNITY_EDITOR
                 ValidateGltf(path, new [] {
                     MessageCode.ACCESSOR_MAX_MISMATCH,
@@ -347,6 +363,28 @@ namespace GLTFTest {
                 default:
                     return "ExportSceneBuiltIn";
             }
+        }
+        
+        /// <summary>
+        /// Takes the JSON portion of a glTF file and sets/replaces the
+        /// `asset.generator` property (if found) by another string.
+        /// </summary>
+        /// <param name="json">glTF JSON</param>
+        /// <param name="newGenerator">New generator value.</param>
+        /// <returns>glTF JSON with replaced asset.generator property.</returns>
+        static string GltfJsonSetGenerator(string json, string newGenerator="") {
+            const string searchKey = "\"generator\"";
+            var start= json.IndexOf(searchKey);
+            if (start < 0) return json;
+            start += searchKey.Length;
+            start = json.IndexOf('"', start);
+            start++;
+            var end = json.IndexOf('"', start);
+            var sb = new StringBuilder();
+            sb.Append(json, 0, start);
+            sb.Append(newGenerator);
+            sb.Append(json, end, json.Length-end);
+            return sb.ToString();
         }
     }
 }
