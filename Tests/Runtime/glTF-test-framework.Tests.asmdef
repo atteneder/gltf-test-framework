@@ -1,6 +1,5 @@
 {
     "name": "glTF-test-framework.Tests",
-    "rootNamespace": "",
     "references": [
         "glTFast",
         "glTFastSchema",
@@ -16,7 +15,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Unity.RenderPipelines.HighDefinition.Runtime",
-        "Unity.RenderPipelines.Universal.Runtime"
+        "Unity.RenderPipelines.Universal.Runtime",
+        "com.unity.formats.gltf.validator.Editor"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -54,6 +54,11 @@
             "name": "com.unity.modules.imageconversion",
             "expression": "",
             "define": "UNITY_IMAGECONVERSION"
+        },
+        {
+            "name": "com.unity.formats.gltf.validator",
+            "expression": "",
+            "define": "GLTF_VALIDATOR"
         }
     ],
     "noEngineReferences": false
