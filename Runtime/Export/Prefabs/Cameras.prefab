@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1445058240995300828}
   - component: {fileID: 1445058240995300826}
-  - component: {fileID: 1445058240995300829}
   m_Layer: 0
   m_Name: PerspectiveCamera
   m_TagString: Untagged
@@ -75,14 +74,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &1445058240995300829
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1445058240995300831}
-  m_Enabled: 1
 --- !u!1 &1445058241156919917
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,7 +84,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1445058241156919914}
   - component: {fileID: 1445058241156919912}
-  - component: {fileID: 1445058241156919915}
   m_Layer: 0
   m_Name: OrthogonalCamera
   m_TagString: Untagged
@@ -158,14 +148,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &1445058241156919915
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1445058241156919917}
-  m_Enabled: 1
 --- !u!1 &1445058241322456620
 GameObject:
   m_ObjectHideFlags: 0
