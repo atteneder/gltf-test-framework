@@ -17,6 +17,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using GLTFast;
 using GLTFast.Export;
@@ -26,7 +27,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 #if UNITY_EDITOR
-using System.Text;
 using UnityEditor;
 #if GLTF_VALIDATOR
 using Unity.glTF.Validator;
