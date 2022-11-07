@@ -238,7 +238,7 @@ namespace GLTFTest {
                     Assert.NotNull(targetJsonAsset, $"Target glTF JSON for {fileName} was not found");
                     var actualJson = GltfJsonSetGenerator(File.ReadAllText(path));
                     var targetJson = GltfJsonSetGenerator(targetJsonAsset.text);
-                    Assert.AreEqual(targetJson,actualJson);
+                    Assert.AreEqual(targetJson,actualJson,$"JSON did not match for {fileName}");
                 }
 #endif
 
