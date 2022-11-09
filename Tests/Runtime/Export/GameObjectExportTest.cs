@@ -234,7 +234,25 @@ namespace GLTFTest {
 
 #if UNITY_EDITOR
                 if (!binary) {
-                    var targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>($"Packages/com.atteneder.gltf-test-framework/Tests/Resources/Target/{fileName}.txt");
+                    var renderPipeline = RenderPipelineUtils.DetectRenderPipeline();
+                    string rpSubfolder;
+                    switch (renderPipeline) {
+                        case RenderPipeline.Universal:
+                            rpSubfolder = "/URP";
+                            break;
+                        case RenderPipeline.HighDefinition:
+                            rpSubfolder = "/HDRP";
+                            break;
+                        default:
+                            rpSubfolder = "";
+                            break;
+                    }
+                    var assetPath = $"Packages/com.atteneder.gltf-test-framework/Tests/Resources/Target{rpSubfolder}/{fileName}.txt";
+                    var targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath);
+                    if (targetJsonAsset == null) {
+                        assetPath = $"Packages/com.atteneder.gltf-test-framework/Tests/Resources/Target/{fileName}.txt";
+                        targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath);
+                    }
                     Assert.NotNull(targetJsonAsset, $"Target glTF JSON for {fileName} was not found");
                     var actualJson = GltfJsonSetGenerator(File.ReadAllText(path));
                     var targetJson = GltfJsonSetGenerator(targetJsonAsset.text);
