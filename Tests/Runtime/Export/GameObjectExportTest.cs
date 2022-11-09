@@ -234,6 +234,14 @@ namespace GLTFTest {
 
 #if UNITY_EDITOR
                 if (!binary) {
+
+                    const string pathPrefix = "Packages/com.atteneder.gltf-test-framework/Tests/Resources/ExportTargets";
+#if UNITY_2020_2_OR_NEWER
+                    const string targetFolder = "Default";
+#else
+                    const string targetFolder = "Legacy";
+#endif
+                    
                     var renderPipeline = RenderPipelineUtils.DetectRenderPipeline();
                     string rpSubfolder;
                     switch (renderPipeline) {
@@ -247,10 +255,10 @@ namespace GLTFTest {
                             rpSubfolder = "";
                             break;
                     }
-                    var assetPath = $"Packages/com.atteneder.gltf-test-framework/Tests/Resources/Target{rpSubfolder}/{fileName}.txt";
+                    var assetPath = $"{pathPrefix}/{targetFolder}{rpSubfolder}/{fileName}.txt";
                     var targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath);
                     if (targetJsonAsset == null) {
-                        assetPath = $"Packages/com.atteneder.gltf-test-framework/Tests/Resources/Target/{fileName}.txt";
+                        assetPath = $"{pathPrefix}/{targetFolder}/{fileName}.txt";
                         targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath);
                     }
                     Assert.NotNull(targetJsonAsset, $"Target glTF JSON for {fileName} was not found");
