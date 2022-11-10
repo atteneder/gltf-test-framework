@@ -149,16 +149,19 @@ namespace GLTFTest {
             // Debug.LogFormat("Testing {0}", path);
             
             var gltfAsset = go.AddComponent<GltfAsset>();
-            var stopWatch = go.AddComponent<StopWatch>();
-            stopWatch.StartTime();
+
+            StopWatch stopWatch = null;
+            if (loadTime != null) {
+                stopWatch = go.AddComponent<StopWatch>();
+                stopWatch.StartTime();
+            }
 
             gltfAsset.loadOnStartup = false;
             var success = await gltfAsset.Load(path,null,deferAgent);
             Assert.IsTrue(success);
             
-            stopWatch.StopTime();
-
             if (loadTime != null) {
+                stopWatch.StopTime();
                 Measure.Custom(loadTime, stopWatch.lastDuration);
             }
         }
