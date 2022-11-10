@@ -409,8 +409,8 @@ namespace GLTFTest {
                     if (expectedMessages.Contains(message.codeEnum)) {
                         continue;
                     }
-                    Assert.Less(1, message.severity, $"Error {message} (path {Path.GetFileName(path)})");
-                    Assert.Less(2, message.severity, $"Warning {message} (path {Path.GetFileName(path)})");
+                    Assert.Greater(message.severity, 0, $"Error {message} (path {Path.GetFileName(path)})");
+                    Assert.Greater(message.severity, 1, $"Warning {message} (path {Path.GetFileName(path)})");
                 }
             }
         }
