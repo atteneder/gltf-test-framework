@@ -96,30 +96,14 @@ namespace GLTFTest {
         
         [UnityTest,SceneRootObjectTestCase(k_NamesFile)]
         public IEnumerator ExportSceneJson(int index, string objectName) {
-            var scene = SceneManager.GetActiveScene();
-            var gameObject = scene.GetRootGameObjects()[index];
-            Assert.AreEqual(objectName,gameObject.name);
+            var gameObject = GetGameObject(index, objectName);
             var task = ExportSceneGameObject(gameObject, false);
             yield return Utils.WaitForTask(task);
         }
 
         [UnityTest,SceneRootObjectTestCase(k_NamesFile)]
         public IEnumerator ExportSceneBinary(int index, string objectName) {
-            var scene = SceneManager.GetActiveScene();
-            var objects = scene.GetRootGameObjects();
-            var gameObject = objects[index];
-            if (gameObject.name != objectName) {
-                // GameObject order is not deterministic in builds, so here we
-                // search by traversing all root objects.
-                foreach (var obj in objects) {
-                    if (obj.name == objectName) {
-                        gameObject = obj;
-                        break;
-                    }
-                }
-            }
-            Assert.NotNull(gameObject);
-            Assert.AreEqual(objectName,gameObject.name);
+            var gameObject = GetGameObject(index, objectName);
             var task = ExportSceneGameObject(gameObject, true);
             yield return Utils.WaitForTask(task);
         }
@@ -140,9 +124,7 @@ namespace GLTFTest {
         
         [UnityTest,SceneRootObjectTestCase(k_NamesFile)]
         public IEnumerator ExportSceneBinaryStream(int index, string objectName) {
-            var scene = SceneManager.GetActiveScene();
-            var gameObject = scene.GetRootGameObjects()[index];
-            Assert.AreEqual(objectName,gameObject.name);
+            var gameObject = GetGameObject(index, objectName);
             var task = ExportSceneGameObject(gameObject, true, true);
             yield return Utils.WaitForTask(task);
         }
@@ -241,6 +223,26 @@ namespace GLTFTest {
             AssertThrowsAsync<InvalidOperationException>(async () => await export.SaveToFileAndDispose(path));
         }
 
+        static GameObject GetGameObject(int index, string objectName) {
+            var scene = SceneManager.GetActiveScene();
+            var objects = scene.GetRootGameObjects();
+            var gameObject = objects[index];
+            if (gameObject.name != objectName) {
+                // GameObject order is not deterministic in builds, so here we
+                // search by traversing all root objects.
+                foreach (var obj in objects) {
+                    if (obj.name == objectName) {
+                        gameObject = obj;
+                        break;
+                    }
+                }
+            }
+
+            Assert.NotNull(gameObject);
+            Assert.AreEqual(objectName, gameObject.name);
+            return gameObject;
+        }
+        
         static async Task ExportSceneGameObject(GameObject gameObject, bool binary, bool toStream = false) {
             var logger = new CollectingLogger();
             var export = new GameObjectExport(
