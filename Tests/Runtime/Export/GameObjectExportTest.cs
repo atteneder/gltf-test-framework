@@ -59,6 +59,7 @@ namespace GLTFTest {
             var path = Path.Combine(Application.streamingAssetsPath, k_NamesFile);
             File.WriteAllLines(path,names);
             AssetDatabase.Refresh();
+            AssetDatabase.ImportAsset($"{k_PackagePath}Tests/Runtime/glTF-test-framework.Tests.asmdef", ImportAssetOptions.ForceUpdate);
         }
 #endif
         
