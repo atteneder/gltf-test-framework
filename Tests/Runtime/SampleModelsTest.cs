@@ -80,7 +80,7 @@ namespace GLTFTest {
         // }
 
         internal static IEnumerator UninterruptedLoadingTemplate(SampleSetItem testCase) {
-            Debug.Log($"Testing {testCase.path}");
+            // Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
             var task = LoadGltfSampleSetItem(testCase, go, deferAgent);
@@ -92,7 +92,7 @@ namespace GLTFTest {
         [UseGltfSampleSetTestCase(glTFSampleSetJsonPath)]
         public IEnumerator SmoothLoading(SampleSetItem testCase)
         {
-            Debug.Log($"Testing {testCase.path}");
+            // Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
             var deferAgent = go.AddComponent<TimeBudgetPerFrameDeferAgent>();
             var task = LoadGltfSampleSetItem(testCase, go, deferAgent);
@@ -107,7 +107,7 @@ namespace GLTFTest {
         [UseGltfSampleSetTestCase(glTFSampleSetBinaryJsonPath,"-Mem")]
         public IEnumerator LoadGlbFromMemory(SampleSetItem testCase)
         {
-            Debug.Log($"Testing {testCase.path}");
+            // Debug.Log($"Testing {testCase.path}");
             var data = File.ReadAllBytes(testCase.path);
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
