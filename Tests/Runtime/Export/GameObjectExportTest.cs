@@ -106,7 +106,19 @@ namespace GLTFTest {
         [UnityTest,SceneRootObjectTestCase(k_NamesFile)]
         public IEnumerator ExportSceneBinary(int index, string objectName) {
             var scene = SceneManager.GetActiveScene();
-            var gameObject = scene.GetRootGameObjects()[index];
+            var objects = scene.GetRootGameObjects();
+            var gameObject = objects[index];
+            if (gameObject.name != objectName) {
+                // GameObject order is not deterministic in builds, so here we
+                // search by traversing all root objects.
+                foreach (var obj in objects) {
+                    if (obj.name == objectName) {
+                        gameObject = obj;
+                        break;
+                    }
+                }
+            }
+            Assert.NotNull(gameObject);
             Assert.AreEqual(objectName,gameObject.name);
             var task = ExportSceneGameObject(gameObject, true);
             yield return Utils.WaitForTask(task);
