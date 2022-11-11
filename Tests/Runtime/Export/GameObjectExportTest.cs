@@ -28,6 +28,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 #if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 #if GLTF_VALIDATOR
@@ -49,16 +50,16 @@ namespace GLTFTest {
             var sceneName = GetExportSceneName();
             var scene = EditorSceneManager.OpenScene($"{k_PackagePath}Runtime/Export/Scenes/{sceneName}.unity");
             var rootObjects = scene.GetRootGameObjects();
-            Assert.AreEqual(43,rootObjects.Length);
-            var names = new string[rootObjects.Length];
+            var names = new List<string>();
             for (var i = 0; i < rootObjects.Length; i++) {
                 if (rootObjects[i].hideFlags != HideFlags.None) {
                     continue;
                 }
-                names[i] = rootObjects[i].name;
+                names.Add(rootObjects[i].name);
             }
+            Assert.AreEqual(43,names.Count);
             var path = Path.Combine(Application.streamingAssetsPath, k_NamesFile);
-            File.WriteAllLines(path,names);
+            File.WriteAllLines(path,names.ToArray());
             AssetDatabase.Refresh();
             AssetDatabase.ImportAsset($"{k_PackagePath}Tests/Runtime/glTF-test-framework.Tests.asmdef", ImportAssetOptions.ForceUpdate);
         }

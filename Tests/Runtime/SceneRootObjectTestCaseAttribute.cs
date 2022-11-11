@@ -41,6 +41,9 @@ namespace GLTFTest {
             try {
                 for (var i = 0; i < m_ObjectNames.Length; i++) {
                     var objectName = m_ObjectNames[i];
+                    if (string.IsNullOrEmpty(objectName)) {
+                        continue;
+                    }
                     var data = new TestCaseData(new object[] { i, objectName });
 
                     data.SetName(objectName);
