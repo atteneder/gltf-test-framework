@@ -11,9 +11,9 @@ ScriptedImporter:
   editorImportSettings:
     generateSecondaryUVSet: 0
   importSettings:
-    nodeNameMethod: 1
-    animationMethod: 2
-    generateMipMaps: 1
+    nodeNameMethod: 0
+    animationMethod: 1
+    generateMipMaps: 0
     defaultMinFilterMode: 9729
     defaultMagFilterMode: 9729
     anisotropicFilterLevel: 1
