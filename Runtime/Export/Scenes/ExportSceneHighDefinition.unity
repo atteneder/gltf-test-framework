@@ -151,7 +151,7 @@ PrefabInstance:
     - target: {fileID: 8237554354107154443, guid: 7792de72d326d48acb68c6159a3a9777,
         type: 3}
       propertyPath: m_Name
-      value: PointCloud Variant
+      value: PointCloud
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7792de72d326d48acb68c6159a3a9777, type: 3}
@@ -245,7 +245,7 @@ PrefabInstance:
     - target: {fileID: 4865895703870685759, guid: bceb870a5146b47b8a9aef4ea183308b,
         type: 3}
       propertyPath: m_Name
-      value: LightsDirectional
+      value: LightDirectional
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bceb870a5146b47b8a9aef4ea183308b, type: 3}
@@ -1542,7 +1542,17 @@ PrefabInstance:
     - target: {fileID: 5322191972096591205, guid: 7e0702104e34e4a68aeb6753eaa14b03,
         type: 3}
       propertyPath: m_Intensity
-      value: 47.746483
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322191972096591205, guid: 7e0702104e34e4a68aeb6753eaa14b03,
+        type: 3}
+      propertyPath: m_AreaSize.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322191972096591205, guid: 7e0702104e34e4a68aeb6753eaa14b03,
+        type: 3}
+      propertyPath: m_AreaSize.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5322191972096591205, guid: 7e0702104e34e4a68aeb6753eaa14b03,
         type: 3}
@@ -1552,7 +1562,17 @@ PrefabInstance:
     - target: {fileID: 5322191972504478433, guid: 7e0702104e34e4a68aeb6753eaa14b03,
         type: 3}
       propertyPath: m_Intensity
-      value: 47.746483
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322191972504478433, guid: 7e0702104e34e4a68aeb6753eaa14b03,
+        type: 3}
+      propertyPath: m_AreaSize.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322191972504478433, guid: 7e0702104e34e4a68aeb6753eaa14b03,
+        type: 3}
+      propertyPath: m_AreaSize.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5322191972504478433, guid: 7e0702104e34e4a68aeb6753eaa14b03,
         type: 3}
@@ -1562,7 +1582,17 @@ PrefabInstance:
     - target: {fileID: 5322191972531810460, guid: 7e0702104e34e4a68aeb6753eaa14b03,
         type: 3}
       propertyPath: m_Intensity
-      value: 47.746483
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322191972531810460, guid: 7e0702104e34e4a68aeb6753eaa14b03,
+        type: 3}
+      propertyPath: m_AreaSize.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322191972531810460, guid: 7e0702104e34e4a68aeb6753eaa14b03,
+        type: 3}
+      propertyPath: m_AreaSize.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5322191972531810460, guid: 7e0702104e34e4a68aeb6753eaa14b03,
         type: 3}
@@ -1614,13 +1644,13 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
-  m_Intensity: 600
+  m_Intensity: 50
   m_EnableSpotReflector: 0
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
   m_LightDimmer: 1
   m_VolumetricDimmer: 1
-  m_LightUnit: 0
+  m_LightUnit: 1
   m_FadeDistance: 10000
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
@@ -1725,13 +1755,13 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
-  m_Intensity: 600
+  m_Intensity: 50
   m_EnableSpotReflector: 0
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
   m_LightDimmer: 1
   m_VolumetricDimmer: 1
-  m_LightUnit: 0
+  m_LightUnit: 1
   m_FadeDistance: 10000
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
@@ -1836,13 +1866,13 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
-  m_Intensity: 600
+  m_Intensity: 50
   m_EnableSpotReflector: 0
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
   m_LightDimmer: 1
   m_VolumetricDimmer: 1
-  m_LightUnit: 0
+  m_LightUnit: 1
   m_FadeDistance: 10000
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
