@@ -16,6 +16,8 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using GLTFast;
 using GLTFast.Export;
@@ -26,8 +28,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 #if UNITY_EDITOR
-using System.Text;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 #if GLTF_VALIDATOR
 using Unity.glTF.Validator;
 #endif // GLTF_VALIDATOR
@@ -36,8 +38,32 @@ using Unity.glTF.Validator;
 namespace GLTFTest {
     
     [TestFixture, Category("Export")]
-    public class GameObjectExportTest {
+    class GameObjectExportTest {
+        
+        const string k_PackagePath = "Packages/com.atteneder.gltf-test-framework/";
+        const string k_NamesFile = "ExportScene.txt";
 
+#if UNITY_EDITOR
+        [MenuItem("Tools/Update glTF export object list")]
+        static void UpdateObjectList() {
+            var sceneName = GetExportSceneName();
+            var scene = EditorSceneManager.OpenScene($"{k_PackagePath}Runtime/Export/Scenes/{sceneName}.unity");
+            var rootObjects = scene.GetRootGameObjects();
+            Assert.AreEqual(43,rootObjects.Length);
+            var names = new string[rootObjects.Length];
+            for (var i = 0; i < rootObjects.Length; i++) {
+                if (rootObjects[i].hideFlags != HideFlags.None) {
+                    continue;
+                }
+                names[i] = rootObjects[i].name;
+            }
+            var path = Path.Combine(Application.streamingAssetsPath, k_NamesFile);
+            File.WriteAllLines(path,names);
+            AssetDatabase.Refresh();
+            AssetDatabase.ImportAsset($"{k_PackagePath}Tests/Runtime/glTF-test-framework.Tests.asmdef", ImportAssetOptions.ForceUpdate);
+        }
+#endif
+        
         [OneTimeSetUp]
         public void SetupTest() {
             SceneManager.LoadScene( GetExportSceneName(), LoadSceneMode.Single);
@@ -69,17 +95,17 @@ namespace GLTFTest {
 #endif
         }
         
-        [UnityTest]
-        public IEnumerator ExportSceneGameObjectsJson() {
-            yield return null;
-            var task = ExportSceneGameObjects(false);
+        [UnityTest,SceneRootObjectTestCase(k_NamesFile)]
+        public IEnumerator ExportSceneJson(int index, string objectName) {
+            var gameObject = GetGameObject(index, objectName);
+            var task = ExportSceneGameObject(gameObject, false);
             yield return Utils.WaitForTask(task);
         }
 
-        [UnityTest]
-        public IEnumerator ExportSceneGameObjectsBinary() {
-            yield return null;
-            var task = ExportSceneGameObjects(true);
+        [UnityTest,SceneRootObjectTestCase(k_NamesFile)]
+        public IEnumerator ExportSceneBinary(int index, string objectName) {
+            var gameObject = GetGameObject(index, objectName);
+            var task = ExportSceneGameObject(gameObject, true);
             yield return Utils.WaitForTask(task);
         }
 
@@ -97,10 +123,10 @@ namespace GLTFTest {
             yield return Utils.WaitForTask(task);
         }
         
-        [UnityTest]
-        public IEnumerator ExportSceneGameObjectsBinaryStream() {
-            yield return null;
-            var task = ExportSceneGameObjects(true, true);
+        [UnityTest,SceneRootObjectTestCase(k_NamesFile)]
+        public IEnumerator ExportSceneBinaryStream(int index, string objectName) {
+            var gameObject = GetGameObject(index, objectName);
+            var task = ExportSceneGameObject(gameObject, true, true);
             yield return Utils.WaitForTask(task);
         }
 
@@ -191,69 +217,107 @@ namespace GLTFTest {
 #if GLTF_VALIDATOR && UNITY_EDITOR
             ValidateGltf(path, MessageCode.UNUSED_OBJECT);
 #endif
-            Assert.Throws<InvalidOperationException>(delegate()
-            {
+            Assert.Throws<InvalidOperationException>(delegate {
                 export.AddScene(new []{childA});
             });
             path = Path.Combine(Application.persistentDataPath, "SavedTwice2.gltf");
             AssertThrowsAsync<InvalidOperationException>(async () => await export.SaveToFileAndDispose(path));
         }
 
-        async Task ExportSceneGameObjects(bool binary, bool toStream = false) {
+        static GameObject GetGameObject(int index, string objectName) {
             var scene = SceneManager.GetActiveScene();
-
-            var rootObjects = scene.GetRootGameObjects();
-
-            Assert.AreEqual(43,rootObjects.Length);
-            foreach (var gameObject in rootObjects) {
-                var logger = new CollectingLogger();
-                var export = new GameObjectExport(
-                    new ExportSettings {
-                        format = binary ? GltfFormat.Binary : GltfFormat.Json,
-                        fileConflictResolution = FileConflictResolution.Overwrite,
-                    },
-                    logger: logger
-                );
-                export.AddScene(new []{gameObject}, gameObject.name);
-                var extension = binary ? GltfGlobals.glbExt : GltfGlobals.gltfExt;
-                var fileName = $"{gameObject.name}{extension}";
-                var path = Path.Combine(Application.persistentDataPath, fileName);
-
-                bool success;
-                if (toStream) {
-                    var glbStream = new MemoryStream();
-                    success = await export.SaveToStreamAndDispose(glbStream);
-                    Assert.Greater(glbStream.Length,20);
-                    glbStream.Close();
+            var objects = scene.GetRootGameObjects();
+            var gameObject = objects[index];
+            if (gameObject.name != objectName) {
+                // GameObject order is not deterministic in builds, so here we
+                // search by traversing all root objects.
+                foreach (var obj in objects) {
+                    if (obj.name == objectName) {
+                        gameObject = obj;
+                        break;
+                    }
                 }
-                else {
-                    success = await export.SaveToFileAndDispose(path);
-                }
-                Assert.IsTrue(success);
-                AssertLogger(logger);
+            }
+
+            Assert.NotNull(gameObject);
+            Assert.AreEqual(objectName, gameObject.name);
+            return gameObject;
+        }
+        
+        static async Task ExportSceneGameObject(GameObject gameObject, bool binary, bool toStream = false) {
+            var logger = new CollectingLogger();
+            var export = new GameObjectExport(
+                new ExportSettings {
+                    format = binary ? GltfFormat.Binary : GltfFormat.Json,
+                    fileConflictResolution = FileConflictResolution.Overwrite,
+                },
+                logger: logger
+            );
+            export.AddScene(new []{gameObject}, gameObject.name);
+            var extension = binary ? GltfGlobals.glbExt : GltfGlobals.gltfExt;
+            var fileName = $"{gameObject.name}{extension}";
+            var path = Path.Combine(Application.persistentDataPath, fileName);
+
+            bool success;
+            if (toStream) {
+                var glbStream = new MemoryStream();
+                success = await export.SaveToStreamAndDispose(glbStream);
+                Assert.Greater(glbStream.Length,20);
+                glbStream.Close();
+            }
+            else {
+                success = await export.SaveToFileAndDispose(path);
+            }
+            Assert.IsTrue(success);
+            AssertLogger(logger);
 
 #if UNITY_EDITOR
-                if (!binary) {
-                    var targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>($"Packages/com.atteneder.gltf-test-framework/Tests/Resources/Target/{fileName}.txt");
-                    Assert.NotNull(targetJsonAsset, $"Target glTF JSON for {fileName} was not found");
-                    var actualJson = GltfJsonSetGenerator(File.ReadAllText(path));
-                    var targetJson = GltfJsonSetGenerator(targetJsonAsset.text);
-                    Assert.AreEqual(targetJson,actualJson);
+            if (!binary) {
+
+                var pathPrefix = $"{k_PackagePath}Tests/Resources/ExportTargets";
+#if UNITY_2020_2_OR_NEWER
+                const string targetFolder = "Default";
+#else
+                const string targetFolder = "Legacy";
+#endif
+
+                var renderPipeline = RenderPipelineUtils.renderPipeline;
+                string rpSubfolder;
+                switch (renderPipeline) {
+                    case RenderPipeline.Universal:
+                        rpSubfolder = "/URP";
+                        break;
+                    case RenderPipeline.HighDefinition:
+                        rpSubfolder = "/HDRP";
+                        break;
+                    default:
+                        rpSubfolder = "";
+                        break;
                 }
+                var assetPath = $"{pathPrefix}/{targetFolder}{rpSubfolder}/{fileName}.txt";
+                var targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath);
+                if (targetJsonAsset == null) {
+                    assetPath = $"{pathPrefix}/{targetFolder}/{fileName}.txt";
+                    targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath);
+                }
+                Assert.NotNull(targetJsonAsset, $"Target glTF JSON for {fileName} was not found");
+                var actualJson = GltfJsonSetGenerator(File.ReadAllText(path));
+                var targetJson = GltfJsonSetGenerator(targetJsonAsset.text);
+                Assert.AreEqual(targetJson,actualJson,$"JSON did not match for {fileName}");
+            }
 #endif
 
 #if GLTF_VALIDATOR && UNITY_EDITOR
-                ValidateGltf(path, new [] {
-                    MessageCode.ACCESSOR_MAX_MISMATCH,
-                    MessageCode.ACCESSOR_MIN_MISMATCH,
-                    MessageCode.NODE_EMPTY,
-                    MessageCode.UNUSED_OBJECT,
-                });
+            ValidateGltf(path, new [] {
+                MessageCode.ACCESSOR_MAX_MISMATCH,
+                MessageCode.ACCESSOR_MIN_MISMATCH,
+                MessageCode.NODE_EMPTY,
+                MessageCode.UNUSED_OBJECT,
+            });
 #endif
-            }
         }
 
-        async Task ExportSceneAll(bool binary, bool toStream = false) {
+        static async Task ExportSceneAll(bool binary, bool toStream = false) {
             var sceneName = GetExportSceneName();
             SceneManager.LoadScene( sceneName, LoadSceneMode.Single);
 
@@ -296,7 +360,7 @@ namespace GLTFTest {
 #endif
         }
 
-        void AssertLogger(CollectingLogger logger) {
+        static void AssertLogger(CollectingLogger logger) {
             logger.LogAll();
             if (logger.Count > 0) {
                 foreach (var item in logger.Items) {
@@ -309,7 +373,7 @@ namespace GLTFTest {
                 }
             }
         }
-        
+
         /// <summary>
         /// Fill-in for NUnit's Assert.ThrowsAsync
         /// Source: https://forum.unity.com/threads/can-i-replace-upgrade-unitys-nunit.488580/#post-6543523
@@ -320,9 +384,8 @@ namespace GLTFTest {
         /// <typeparam name="TActual"></typeparam>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static TActual AssertThrowsAsync<TActual>(AsyncTestDelegate code, string message = "", params object[] args) where TActual : Exception
-        {
-            return Assert.Throws<TActual>(() =>
+        static void AssertThrowsAsync<TActual>(AsyncTestDelegate code, string message = "", params object[] args) where TActual : Exception {
+            Assert.Throws<TActual>(() =>
             {
                 try
                 {
@@ -338,12 +401,12 @@ namespace GLTFTest {
                 }
             }, message, args);
         }
-     
-        public delegate Task AsyncTestDelegate();
+
+        delegate Task AsyncTestDelegate();
 
 
 #if GLTF_VALIDATOR && UNITY_EDITOR
-        void ValidateGltf(string path, params MessageCode[] expectedMessages) {
+        static void ValidateGltf(string path, params MessageCode[] expectedMessages) {
             var report = Validator.Validate(path);
             Assert.NotNull(report, $"Report null for {path}");
             // report.Log();
@@ -352,8 +415,8 @@ namespace GLTFTest {
                     if (((IList)expectedMessages).Contains(message.codeEnum)) {
                         continue;
                     }
-                    Assert.Less(1, message.severity, $"Error {message} (path {Path.GetFileName(path)})");
-                    Assert.Less(2, message.severity, $"Warning {message} (path {Path.GetFileName(path)})");
+                    Assert.Greater(message.severity, 0, $"Error {message} (path {Path.GetFileName(path)})");
+                    Assert.Greater(message.severity, 1, $"Warning {message} (path {Path.GetFileName(path)})");
                 }
             }
         }

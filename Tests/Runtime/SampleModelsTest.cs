@@ -35,6 +35,23 @@ namespace GLTFTest {
 
         // const string localSampleSetJsonPath = "local.json";
         
+        static UninterruptedDeferAgent s_UninterruptedDeferAgent;
+        static TimeBudgetPerFrameDeferAgent s_TimeBudgetPerFrameDeferAgent;
+        
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            s_UninterruptedDeferAgent = new UninterruptedDeferAgent();
+            var go = new GameObject("TimeBudgetPerFrameDeferAgent");
+            s_TimeBudgetPerFrameDeferAgent = go.AddComponent<TimeBudgetPerFrameDeferAgent>();
+        }
+
+        [OneTimeTearDown()]
+        public void OneTimeTearDown()
+        {
+            Object.Destroy(s_TimeBudgetPerFrameDeferAgent.gameObject);
+        }
+        
         [Test]
         public void CheckFiles() {
             Utils.CheckFiles(glTFSampleSetAssetPath, 212);
@@ -54,10 +71,9 @@ namespace GLTFTest {
         // }
 
         internal static IEnumerator UninterruptedLoadingTemplate(SampleSetItem testCase) {
-            Debug.Log($"Testing {testCase.path}");
+            // Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
-            var deferAgent = new UninterruptedDeferAgent();
-            var task = LoadGltfSampleSetItem(testCase, go, deferAgent);
+            var task = LoadGltfSampleSetItem(testCase, go, s_UninterruptedDeferAgent);
             yield return Utils.WaitForTask(task);
             Object.Destroy(go);
         }
@@ -66,10 +82,9 @@ namespace GLTFTest {
         [UseGltfSampleSetTestCase(glTFSampleSetJsonPath)]
         public IEnumerator SmoothLoading(SampleSetItem testCase)
         {
-            Debug.Log($"Testing {testCase.path}");
+            // Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
-            var deferAgent = go.AddComponent<TimeBudgetPerFrameDeferAgent>();
-            var task = LoadGltfSampleSetItem(testCase, go, deferAgent);
+            var task = LoadGltfSampleSetItem(testCase, go, s_TimeBudgetPerFrameDeferAgent);
             yield return Utils.WaitForTask(task);
             Object.Destroy(go);
         }
@@ -85,16 +100,19 @@ namespace GLTFTest {
             // Debug.LogFormat("Testing {0}", path);
             
             var gltfAsset = go.AddComponent<GltfAsset>();
-            var stopWatch = go.AddComponent<StopWatch>();
-            stopWatch.StartTime();
+
+            StopWatch stopWatch = null;
+            if (loadTime != null) {
+                stopWatch = go.AddComponent<StopWatch>();
+                stopWatch.StartTime();
+            }
 
             gltfAsset.loadOnStartup = false;
             var success = await gltfAsset.Load(path,null,deferAgent);
             Assert.IsTrue(success);
             
-            stopWatch.StopTime();
-
             if (loadTime != null) {
+                stopWatch.StopTime();
                 Measure.Custom(loadTime, stopWatch.lastDuration);
             }
         }
