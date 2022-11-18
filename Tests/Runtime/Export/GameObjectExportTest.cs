@@ -57,7 +57,7 @@ namespace GLTFTest {
                 }
                 names.Add(rootObjects[i].name);
             }
-            Assert.AreEqual(43,names.Count);
+            Assert.AreEqual(46,names.Count);
             var path = Path.Combine(Application.streamingAssetsPath, k_NamesFile);
             File.WriteAllLines(path,names.ToArray());
             AssetDatabase.Refresh();
@@ -198,8 +198,131 @@ namespace GLTFTest {
             ValidateGltf(path, MessageCode.UNUSED_OBJECT);
 #endif
         }
-        
-        
+
+        [UnityTest]
+        public IEnumerator ComponentMask() {
+
+            var root = new GameObject("Root");
+            
+            var meshGo = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            meshGo.name = "Mesh";
+            meshGo.transform.SetParent(root.transform);
+            meshGo.transform.localPosition = new Vector3(0, 0, 0);
+            
+            var lightGo = new GameObject("Light");
+            lightGo.transform.SetParent(root.transform);
+            lightGo.transform.localPosition = new Vector3(1, 0, 0);
+            lightGo.AddComponent<Light>();
+            
+            var cameraGo = new GameObject("Camera");
+            cameraGo.transform.SetParent(root.transform);
+            cameraGo.transform.localPosition = new Vector3(.5f, 0, -3);
+            cameraGo.AddComponent<Camera>();
+            
+            // Export no components
+            var task = ExportTest(
+                new[]{root},
+                "ComponentMaskNone",
+                new ExportSettings {
+                    componentMask = ComponentType.None
+                });
+            yield return Utils.WaitForTask(task);
+            
+            // Export mesh only
+            task = ExportTest(
+                new[]{root},
+                "ComponentMaskMesh",
+                new ExportSettings {
+                    componentMask = ComponentType.Mesh
+                });
+            yield return Utils.WaitForTask(task);
+            
+            // Export light only
+            task = ExportTest(
+                new[]{root},
+                "ComponentMaskLight",
+                new ExportSettings {
+                    componentMask = ComponentType.Light
+                });
+            yield return Utils.WaitForTask(task);
+            
+            // Export Camera only
+            task = ExportTest(
+                new[]{root},
+                "ComponentMaskCamera",
+                new ExportSettings {
+                    componentMask = ComponentType.Camera
+                });
+            yield return Utils.WaitForTask(task);
+            
+            // Clean up
+            GameObject.Destroy(root);
+        }
+
+        [UnityTest]
+        public IEnumerator LayerMask() {
+
+            var root = new GameObject("Root");
+            
+            var childA = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            childA.name = "a";
+            childA.transform.SetParent(root.transform);
+            childA.transform.localPosition = new Vector3(0, 0, 0);
+            
+            var childB = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            childB.name = "b";
+            childB.transform.SetParent(childA.transform);
+            childB.transform.localPosition = new Vector3(1, 0, 0);
+            
+            var childC = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            childC.name = "c";
+            childC.transform.SetParent(childB.transform);
+            childC.transform.localPosition = new Vector3(1, 0, 0);
+
+            childA.layer = 1; // On layer 0
+            childB.layer = 1; // On layer 0
+            childC.layer = 2; // On layer 1
+
+            // Export all layers
+            var task = ExportTest(
+                new[]{root},
+                "LayerMaskAll",
+                gameObjectExportSettings: new GameObjectExportSettings {
+                    layerMask = ~0
+                });
+            yield return Utils.WaitForTask(task);
+            
+            // Export layer 1
+            task = ExportTest(
+                new[]{root},
+                "LayerMaskOne",
+                gameObjectExportSettings: new GameObjectExportSettings {
+                    layerMask = 1
+                });
+            yield return Utils.WaitForTask(task);
+            
+            // Export layer 2
+            task = ExportTest(
+                new[]{root},
+                "LayerMaskTwo",
+                gameObjectExportSettings: new GameObjectExportSettings {
+                    layerMask = 2
+                });
+            yield return Utils.WaitForTask(task);
+            
+            // Export no layer
+            task = ExportTest(
+                new[]{root},
+                "LayerMaskNone",
+                gameObjectExportSettings: new GameObjectExportSettings {
+                    layerMask = 0
+                });
+            yield return Utils.WaitForTask(task);
+            
+            // Clean up
+            GameObject.Destroy(root);
+        }
+
         [UnityTest]
         public IEnumerator SavedTwice() {
 
@@ -223,6 +346,30 @@ namespace GLTFTest {
             });
             path = Path.Combine(Application.persistentDataPath, "SavedTwice2.gltf");
             AssertThrowsAsync<InvalidOperationException>(async () => await export.SaveToFileAndDispose(path));
+        }
+
+        static async Task ExportTest(
+            GameObject[] objects,
+            string testName,
+            ExportSettings exportSettings = null,
+            GameObjectExportSettings gameObjectExportSettings = null
+            )
+        {
+            var logger = new CollectingLogger();
+            var export = new GameObjectExport(
+                exportSettings: exportSettings,
+                gameObjectExportSettings: gameObjectExportSettings,
+                logger: logger
+                );
+            export.AddScene(objects);
+            var resultPath = Path.Combine(Application.persistentDataPath, $"{testName}.gltf");
+            var success = await export.SaveToFileAndDispose(resultPath);
+            Assert.IsTrue(success);
+            AssertLogger(logger);
+#if GLTF_VALIDATOR && UNITY_EDITOR
+            ValidateGltf(resultPath, MessageCode.UNUSED_OBJECT);
+#endif
+            // AssertGltfJson($"{testName}.gltf", resultPath);
         }
 
         static GameObject GetGameObject(int index, string objectName) {
@@ -274,37 +421,7 @@ namespace GLTFTest {
 
 #if UNITY_EDITOR
             if (!binary) {
-
-                var pathPrefix = $"{k_PackagePath}Tests/Resources/ExportTargets";
-#if UNITY_2020_2_OR_NEWER
-                const string targetFolder = "Default";
-#else
-                const string targetFolder = "Legacy";
-#endif
-
-                var renderPipeline = RenderPipelineUtils.renderPipeline;
-                string rpSubfolder;
-                switch (renderPipeline) {
-                    case RenderPipeline.Universal:
-                        rpSubfolder = "/URP";
-                        break;
-                    case RenderPipeline.HighDefinition:
-                        rpSubfolder = "/HDRP";
-                        break;
-                    default:
-                        rpSubfolder = "";
-                        break;
-                }
-                var assetPath = $"{pathPrefix}/{targetFolder}{rpSubfolder}/{fileName}.txt";
-                var targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath);
-                if (targetJsonAsset == null) {
-                    assetPath = $"{pathPrefix}/{targetFolder}/{fileName}.txt";
-                    targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath);
-                }
-                Assert.NotNull(targetJsonAsset, $"Target glTF JSON for {fileName} was not found");
-                var actualJson = GltfJsonSetGenerator(File.ReadAllText(path));
-                var targetJson = GltfJsonSetGenerator(targetJsonAsset.text);
-                Assert.AreEqual(targetJson,actualJson,$"JSON did not match for {fileName}");
+                AssertGltfJson(fileName, path);
             }
 #endif
 
@@ -316,6 +433,41 @@ namespace GLTFTest {
                 MessageCode.UNUSED_OBJECT,
             });
 #endif
+        }
+
+        static void AssertGltfJson(string testName, string resultPath) {
+            var pathPrefix = $"{k_PackagePath}Tests/Resources/ExportTargets";
+#if UNITY_2020_2_OR_NEWER
+            const string targetFolder = "Default";
+#else
+                const string targetFolder = "Legacy";
+#endif
+
+            var renderPipeline = RenderPipelineUtils.renderPipeline;
+            string rpSubfolder;
+            switch (renderPipeline) {
+                case RenderPipeline.Universal:
+                    rpSubfolder = "/URP";
+                    break;
+                case RenderPipeline.HighDefinition:
+                    rpSubfolder = "/HDRP";
+                    break;
+                default:
+                    rpSubfolder = "";
+                    break;
+            }
+
+            var assetPath = $"{pathPrefix}/{targetFolder}{rpSubfolder}/{testName}.txt";
+            var targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath);
+            if (targetJsonAsset == null) {
+                assetPath = $"{pathPrefix}/{targetFolder}/{testName}.txt";
+                targetJsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath);
+            }
+
+            Assert.NotNull(targetJsonAsset, $"Target glTF JSON for {testName} was not found");
+            var actualJson = GltfJsonSetGenerator(File.ReadAllText(resultPath));
+            var targetJson = GltfJsonSetGenerator(targetJsonAsset.text);
+            Assert.AreEqual(targetJson, actualJson, $"JSON did not match for {testName}");
         }
 
         static async Task ExportSceneAll(bool binary, bool toStream = false) {
