@@ -54,7 +54,7 @@ namespace GLTFTest {
                 var success = task.Result;
                 Assert.IsTrue(success);
                 var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-                task = gltf.InstantiateMainScene(instantiator);
+                task = gltf.InstantiateMainSceneAsync(instantiator);
                 yield return Utils.WaitForTask(task);
                 success = task.Result;
                 Assert.IsTrue(success);
@@ -77,7 +77,7 @@ namespace GLTFTest {
                 var success = task.Result;
                 Assert.IsTrue(success);
                 var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-                task = gltf.InstantiateMainScene(instantiator);
+                task = gltf.InstantiateMainSceneAsync(instantiator);
                 yield return Utils.WaitForTask(task);
                 success = task.Result;
                 Assert.IsTrue(success);
@@ -99,7 +99,7 @@ namespace GLTFTest {
                 var success = task.Result;
                 Assert.IsTrue(success);
                 var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-                task = gltf.InstantiateMainScene(instantiator);
+                task = gltf.InstantiateMainSceneAsync(instantiator);
                 yield return Utils.WaitForTask(task);
                 success = task.Result;
                 Assert.IsTrue(success);
@@ -125,7 +125,7 @@ namespace GLTFTest {
                 var success = task.Result;
                 Assert.IsTrue(success);
                 var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-                task = gltf.InstantiateMainScene(instantiator);
+                task = gltf.InstantiateMainSceneAsync(instantiator);
                 yield return Utils.WaitForTask(task);
                 success = task.Result;
                 Assert.IsTrue(success);
@@ -151,7 +151,7 @@ namespace GLTFTest {
                 var success = task.Result;
                 Assert.IsTrue(success);
                 var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
-                task = gltf.InstantiateMainScene(instantiator);
+                task = gltf.InstantiateMainSceneAsync(instantiator);
                 yield return Utils.WaitForTask(task);
                 success = task.Result;
                 Assert.IsTrue(success);
