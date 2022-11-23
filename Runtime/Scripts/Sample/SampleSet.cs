@@ -118,6 +118,20 @@ namespace GLTFTest.Sample {
         }
 
         /// <summary>
+        /// Deserializes a sample set from a JSON file stored in the
+        /// StreamingAssets path.
+        /// </summary>
+        /// <param name="path">JSON file path relative to
+        /// the StreamingAssets folder</param>
+        /// <returns>Deserialized sample set</returns>
+        public static SampleSet FromStreamingAssets(string path) {
+            var json = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, path));
+            var sampleSet = CreateInstance<SampleSet>();
+            JsonUtility.FromJsonOverwrite(json,sampleSet);
+            return sampleSet;
+        }
+        
+        /// <summary>
         /// Source directory
         /// </summary>
         /// <returns>Absolute path to source directory, either within "assets" or absolute baseLocalPath</returns>
@@ -168,6 +182,26 @@ namespace GLTFTest.Sample {
                     yield return new SampleSetItem(entry.item.name, p);
                 }
             }
+        }
+
+        public bool TryGetTestItem(string itemName, out SampleSetItem item, bool local = true) {
+            foreach (var x in items) {
+                if (!x.active) continue;
+                if (x.item.name == itemName) {
+                    var prefix = local ? localFilePath : remoteUri;
+                    if (!string.IsNullOrEmpty(prefix)) {
+                        item = new SampleSetItem {
+                            name = x.item.name,
+                            path = $"{prefix}/{x.item.path}" 
+                        };
+                        return true;
+                    }
+                    break;
+                }
+            }
+
+            item = new SampleSetItem();
+            return false;
         }
 
         public void LoadItemsFromPath(string searchPattern) {

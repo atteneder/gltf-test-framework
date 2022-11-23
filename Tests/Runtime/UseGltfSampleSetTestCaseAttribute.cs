@@ -33,10 +33,8 @@ namespace GLTFTest {
         NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
         public UseGltfSampleSetTestCaseAttribute(string sampleSetPath, string suffix = null) {
-            var json = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, sampleSetPath));
-            m_sampleSet = ScriptableObject.CreateInstance<SampleSet>();
+            m_sampleSet = SampleSet.FromStreamingAssets(sampleSetPath);
             m_Suffix = suffix;
-            JsonUtility.FromJsonOverwrite(json,m_sampleSet);
         }
 
         IEnumerable<TestMethod> ITestBuilder.BuildFrom(IMethodInfo method, Test suite) {

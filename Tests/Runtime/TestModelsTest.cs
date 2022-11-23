@@ -25,8 +25,8 @@ namespace GLTFTest {
     
     class TestModelsTest {
         
-        const string k_AssetPath = "Packages/com.atteneder.gltf-tests/Runtime/SampleSets/glTF-test-models.asset";
-        const string k_JsonPath = "glTF-test-models.json";
+        internal const string k_AssetPath = "Packages/com.atteneder.gltf-tests/Runtime/SampleSets/glTF-test-models.asset";
+        internal const string k_JsonPath = "glTF-test-models.json";
 
         [Test]
         public void CheckFiles() {
