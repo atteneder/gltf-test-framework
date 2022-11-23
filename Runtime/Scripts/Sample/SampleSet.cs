@@ -104,6 +104,18 @@ namespace GLTFTest.Sample {
                 return null;
             }
         }
+        
+        string remoteUri {
+            get {
+                string uriPrefix = string.IsNullOrEmpty(baseUrlWeb) ? "<baseUrlWeb not set!>" : baseUrlWeb;
+#if UNITY_EDITOR
+                if (!string.IsNullOrEmpty(baseUrlLocal)) {
+                    uriPrefix = baseUrlLocal;
+                }
+#endif
+                return uriPrefix;
+            }
+        }
 
         /// <summary>
         /// Source directory
@@ -116,18 +128,6 @@ namespace GLTFTest.Sample {
             }
 
             return baseLocalPath;
-        }
-
-        private string remoteUri {
-            get {
-                string uriPrefix = string.IsNullOrEmpty(baseUrlWeb) ? "<baseUrlWeb not set!>" : baseUrlWeb;
-#if UNITY_EDITOR
-                if (!string.IsNullOrEmpty(baseUrlLocal)) {
-                    uriPrefix = baseUrlLocal;
-                }
-#endif
-                return uriPrefix;
-            }
         }
 
         public IEnumerable<SampleSetItem> GetItems() {
