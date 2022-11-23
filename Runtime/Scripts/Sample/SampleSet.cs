@@ -26,7 +26,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-[assembly:InternalsVisibleTo("glTFTests")]
+[assembly:InternalsVisibleTo("glTF-tests")]
 
 namespace GLTFTest.Sample {
 

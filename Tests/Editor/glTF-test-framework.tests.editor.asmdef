@@ -1,5 +1,5 @@
 {
-    "name": "glTF-test-framework.tests.editor",
+    "name": "glTF-test-framework.Tests.Editor",
     "references": [
         "UnityEditor.TestRunner",
         "UnityEngine.TestRunner",

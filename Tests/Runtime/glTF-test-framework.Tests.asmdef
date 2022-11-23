@@ -2,10 +2,8 @@
     "name": "glTF-test-framework.Tests",
     "references": [
         "glTFast",
-        "glTFastSchema",
         "glTFast.Export",
         "glTF-test-framework",
-        "glTF-test-framework.Sample",
         "Unity.Mathematics",
         "Unity.Burst",
         "Unity.Collections",
