@@ -369,7 +369,9 @@ namespace GLTFTest {
 #if GLTF_VALIDATOR && UNITY_EDITOR
             ValidateGltf(resultPath, MessageCode.UNUSED_OBJECT);
 #endif
-            // AssertGltfJson($"{testName}.gltf", resultPath);
+// #if UNITY_EDITOR
+//             AssertGltfJson($"{testName}.gltf", resultPath);
+// #endif
         }
 
         static GameObject GetGameObject(int index, string objectName) {
@@ -435,6 +437,7 @@ namespace GLTFTest {
 #endif
         }
 
+#if UNITY_EDITOR
         static void AssertGltfJson(string testName, string resultPath) {
             var pathPrefix = $"{k_PackagePath}Tests/Resources/ExportTargets";
 #if UNITY_2020_2_OR_NEWER
@@ -469,6 +472,7 @@ namespace GLTFTest {
             var targetJson = GltfJsonSetGenerator(targetJsonAsset.text);
             Assert.AreEqual(targetJson, actualJson, $"JSON did not match for {testName}");
         }
+#endif
 
         static async Task ExportSceneAll(bool binary, bool toStream = false) {
             var sceneName = GetExportSceneName();
