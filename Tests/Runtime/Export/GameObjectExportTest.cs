@@ -27,6 +27,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
+#if USING_HDRP
+using UnityEngine.Rendering.HighDefinition;
+#endif
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEditor;
@@ -213,7 +216,9 @@ namespace GLTFTest {
             lightGo.transform.SetParent(root.transform);
             lightGo.transform.localPosition = new Vector3(1, 0, 0);
             lightGo.AddComponent<Light>();
-            
+#if USING_HDRP
+            lightGo.AddComponent<HDAdditionalLightData>();            
+#endif
             var cameraGo = new GameObject("Camera");
             cameraGo.transform.SetParent(root.transform);
             cameraGo.transform.localPosition = new Vector3(.5f, 0, -3);
