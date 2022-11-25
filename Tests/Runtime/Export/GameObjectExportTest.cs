@@ -453,7 +453,7 @@ namespace GLTFTest {
 #if UNITY_2020_2_OR_NEWER
             const string targetFolder = "Default";
 #else
-                const string targetFolder = "Legacy";
+            const string targetFolder = "Legacy";
 #endif
 
             var renderPipeline = RenderPipelineUtils.renderPipeline;
