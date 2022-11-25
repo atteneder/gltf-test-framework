@@ -69,8 +69,13 @@ namespace GLTFTest {
 #endif
         
         [OneTimeSetUp]
-        public void SetupTest() {
+        public void OneTimeSetUp() {
             SceneManager.LoadScene( GetExportSceneName(), LoadSceneMode.Single);
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown() {
+            SceneManager.UnloadSceneAsync(GetExportSceneName());
         }
 
         [UnityTest]
