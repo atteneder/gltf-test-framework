@@ -23,5 +23,8 @@ ScriptedImporter:
     skinUpdateWhenOffscreen: 1
     lightIntensityFactor: 1
     sceneObjectCreation: 2
-  assetDependencies: []
+  assetDependencies:
+  - type: 0
+    originalUri: Packages/com.atteneder.gltf-test-framework/Runtime/Export/Models/PointCloud.bin
+    assetPath: Packages/com.atteneder.gltf-test-framework/Runtime/Export/Models/PointCloud.bin
   reportItems: []
