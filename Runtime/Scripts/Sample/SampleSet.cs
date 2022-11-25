@@ -63,6 +63,16 @@ namespace GLTFTest.Sample {
         private SampleSetItemEntry[] items;
 
         public int itemCount => items.Length;
+        
+        public int activeItemCount {
+            get {
+                var count = 0;
+                foreach (var item in items) {
+                    if (item.active) count++;
+                }
+                return count;
+            }
+        }
 
         /// <summary>
         /// Resolves to the absolute path in this order

@@ -117,7 +117,7 @@ namespace GLTFTest {
 #if UNITY_EDITOR
             var sampleSet = AssetDatabase.LoadAssetAtPath<SampleSet>(sampleSetAssetPath);
             Assert.IsNotNull(sampleSet,"SampleSet not found");
-            Assert.AreEqual(count, sampleSet.itemCount);
+            Assert.AreEqual(count, sampleSet.activeItemCount);
 
             foreach (var item in sampleSet.GetItemsPrefixed()) {
                 CheckFileExists(item.path);

@@ -54,7 +54,7 @@ namespace GLTFTest {
         
         [Test]
         public void CheckFiles() {
-            Utils.CheckFiles(glTFSampleSetAssetPath, 212);
+            Utils.CheckFiles(glTFSampleSetAssetPath, 211);
         }
 
         [UnityTest]
