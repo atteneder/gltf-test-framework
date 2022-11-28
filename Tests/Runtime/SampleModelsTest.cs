@@ -17,7 +17,6 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Unity.PerformanceTesting;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
@@ -63,13 +62,6 @@ namespace GLTFTest {
             yield return UninterruptedLoadingTemplate(testCase);
         }
         
-        // [UnityTest]
-        // [UseGltfSampleSetTestCase(localSampleSetJsonPath)]
-        // [Performance]
-        // public IEnumerator UninterruptedLoadingLocal(SampleSetItem testCase) {
-        //     yield return UninterruptedLoadingTemplate(testCase);
-        // }
-
         internal static IEnumerator UninterruptedLoadingTemplate(SampleSetItem testCase) {
             // Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
@@ -89,7 +81,7 @@ namespace GLTFTest {
             Object.Destroy(go);
         }
 
-        public static async Task LoadGltfSampleSetItem(SampleSetItem testCase, GameObject go, IDeferAgent deferAgent, SampleGroup loadTime = null)
+        internal static async Task LoadGltfSampleSetItem(SampleSetItem testCase, GameObject go, IDeferAgent deferAgent)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             var path = testCase.path;
@@ -101,20 +93,9 @@ namespace GLTFTest {
             
             var gltfAsset = go.AddComponent<GltfAsset>();
 
-            StopWatch stopWatch = null;
-            if (loadTime != null) {
-                stopWatch = go.AddComponent<StopWatch>();
-                stopWatch.StartTime();
-            }
-
             gltfAsset.loadOnStartup = false;
             var success = await gltfAsset.Load(path,null,deferAgent);
             Assert.IsTrue(success);
-            
-            if (loadTime != null) {
-                stopWatch.StopTime();
-                Measure.Custom(loadTime, stopWatch.lastDuration);
-            }
         }
     }
 }

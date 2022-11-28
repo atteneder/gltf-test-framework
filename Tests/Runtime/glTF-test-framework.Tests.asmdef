@@ -1,5 +1,6 @@
 {
     "name": "glTF-test-framework.Tests",
+    "rootNamespace": "",
     "references": [
         "glTFast",
         "glTFast.Export",
@@ -57,6 +58,11 @@
             "name": "com.unity.formats.gltf.validator",
             "expression": "",
             "define": "GLTF_VALIDATOR"
+        },
+        {
+            "name": "com.unity.test-framework.performance",
+            "expression": "",
+            "define": "UNITY_PERFORMANCE_TESTS"
         }
     ],
     "noEngineReferences": false

@@ -13,8 +13,11 @@
 // limitations under the License.
 //
 
+#if UNITY_PERFORMANCE_TESTS
+
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 using Unity.PerformanceTesting;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -50,11 +53,11 @@ namespace GLTFTest.Performance {
             var deferAgent = new UninterruptedDeferAgent();
             var loadTime = new SampleGroup("LoadTime");
             // First time without measuring
-            var task = SampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
+            var task = LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
             yield return Utils.WaitForTask(task);
             using (Measure.Frames().Scope()) {
                 for (int i = 0; i < k_Repetitions; i++) {
-                    task = SampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
+                    task = LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
                     yield return Utils.WaitForTask(task);
                 }
             }
@@ -76,7 +79,7 @@ namespace GLTFTest.Performance {
             yield return Utils.WaitForTask(task);
             using (Measure.Frames().Scope()) {
                 for (int i = 0; i < k_Repetitions; i++) {
-                    task = SampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
+                    task = LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
                     yield return Utils.WaitForTask(task);
                     // Wait one more frame. Usually some more action happens in this one.
                     yield return null;
@@ -84,5 +87,23 @@ namespace GLTFTest.Performance {
             }
             Object.Destroy(go);
         }
+        
+        internal static async Task LoadGltfSampleSetItem(
+            SampleSetItem testCase,
+            GameObject go,
+            IDeferAgent deferAgent,
+            SampleGroup loadTime
+            )
+        {
+            StopWatch stopWatch = go.AddComponent<StopWatch>();
+            stopWatch.StartTime();
+
+            await SampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent);
+
+            stopWatch.StopTime();
+            Measure.Custom(loadTime, stopWatch.lastDuration);
+        }
     }
 }
+
+#endif // UNITY_PERFORMANCE_TESTS

@@ -13,6 +13,8 @@
 // limitations under the License.
 //
 
+#if UNITY_PERFORMANCE_TESTS
+
 using System;
 using GLTFast;
 using GLTFast.Schema;
@@ -87,3 +89,5 @@ namespace GLTFTest.Performance {
         }
     }
 }
+
+#endif // UNITY_PERFORMANCE_TESTS

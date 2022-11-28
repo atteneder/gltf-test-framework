@@ -13,6 +13,8 @@
 // limitations under the License.
 //
 
+#if UNITY_PERFORMANCE_TESTS
+
 using System;
 using GLTFast.Schema;
 using NUnit.Framework;
@@ -1322,3 +1324,5 @@ namespace GLTFTest.Performance.Jobs {
         }
     }
 }
+
+#endif // UNITY_PERFORMANCE_TESTS
