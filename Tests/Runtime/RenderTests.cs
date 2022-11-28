@@ -77,7 +77,11 @@ namespace GLTFTest
             
             if (success && !gltf.currentSceneId.HasValue) {
                 // glTF has no default scene. Fallback to the first scene
-                success = gltf.InstantiateScene(0);
+                task = gltf.InstantiateScene(0);
+                while (!task.IsCompleted) {
+                    yield return null;
+                }
+                success = task.Result;
             }
 
             IEnumerable<Camera> cameras;
