@@ -43,7 +43,7 @@ namespace GLTFTest {
         
         [UnityTest]
         [UseGltfSampleSetTestCase(k_GltfJsonPath,"-LoadUri")]
-        public IEnumerator LoadUri(SampleSetItem testCase)
+        public IEnumerator LoadString(SampleSetItem testCase)
         {
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
@@ -58,6 +58,35 @@ namespace GLTFTest {
                 yield return Utils.WaitForTask(task);
                 success = task.Result;
                 Assert.IsTrue(success);
+                Object.Destroy(go);
+            }
+        }
+        
+        [UnityTest]
+        [UseGltfSampleSetTestCase(k_GltfJsonPath,"-LoadUri")]
+        public IEnumerator LoadUri(SampleSetItem testCase)
+        {
+            var go = new GameObject();
+            var deferAgent = new UninterruptedDeferAgent();
+            var logger = new ConsoleLogger();
+            using (var gltf = new GltfImport(deferAgent: deferAgent, logger: logger)) {
+                var uri = new Uri($"file://{testCase.path}", UriKind.RelativeOrAbsolute);
+                var task = gltf.Load(uri);
+                yield return Utils.WaitForTask(task);
+                var success = task.Result;
+                Assert.IsTrue(success);
+                
+                task = gltf.InstantiateMainSceneAsync(go.transform);
+                yield return Utils.WaitForTask(task);
+                success = task.Result;
+                Assert.IsTrue(success);
+
+                var firstSceneGameObject = new GameObject("firstScene");
+                task = gltf.InstantiateSceneAsync(firstSceneGameObject.transform);
+                yield return Utils.WaitForTask(task);
+                success = task.Result;
+                Assert.IsTrue(success);
+                
                 Object.Destroy(go);
             }
         }
