@@ -351,8 +351,8 @@ namespace GLTFTest.Performance.Jobs {
         
         [Test, Performance]
         public unsafe void ConvertPositionsSparseJob() {
-            const GLTFComponentType indexType = GLTFComponentType.UnsignedInt;
-            const GLTFComponentType valueType = GLTFComponentType.Float;
+            const GltfComponentType indexType = GltfComponentType.UnsignedInt;
+            const GltfComponentType valueType = GltfComponentType.Float;
             const bool normalized = false;
 
             var job = new GLTFast.Jobs.ConvertVector3SparseJob {
@@ -881,7 +881,7 @@ namespace GLTFTest.Performance.Jobs {
         
         [Test, Performance]
         public unsafe void ConvertColorsRGBUInt8ToRGBAFloatJob() {
-            var job = new GLTFast.Jobs.ConvertColorsRGBUInt8ToRGBAFloatJob {
+            var job = new GLTFast.Jobs.ConvertColorsRgbUInt8ToRGBAFloatJob {
                 input = (byte*)m_InputUInt8.GetUnsafeReadOnlyPtr(),
                 inputByteStride = 3,
                 result = m_ColorOutput
@@ -895,7 +895,7 @@ namespace GLTFTest.Performance.Jobs {
         
         [Test, Performance]
         public unsafe void ConvertColorsRGBUInt16ToRGBAFloatJob() {
-            var job = new GLTFast.Jobs.ConvertColorsRGBUInt16ToRGBAFloatJob {
+            var job = new GLTFast.Jobs.ConvertColorsRgbUInt16ToRGBAFloatJob {
                 input = (ushort*)m_InputUInt16.GetUnsafeReadOnlyPtr(),
                 inputByteStride = 6,
                 result = m_ColorOutput
@@ -909,7 +909,7 @@ namespace GLTFTest.Performance.Jobs {
         
         [Test, Performance]
         public unsafe void ConvertColorsRGBAUInt16ToRGBAFloatJob() {
-            var job = new GLTFast.Jobs.ConvertColorsRGBAUInt16ToRGBAFloatJob {
+            var job = new GLTFast.Jobs.ConvertColorsRgbaUInt16ToRGBAFloatJob {
                 input = (ushort*)m_InputUInt16.GetUnsafeReadOnlyPtr(),
                 inputByteStride = 8,
                 result = (float4*)m_ColorOutput.GetUnsafePtr()
@@ -949,7 +949,7 @@ namespace GLTFTest.Performance.Jobs {
         
         [Test, Performance]
         public unsafe void ConvertColorsRGBAUInt8ToRGBAFloatJob() {
-            var job = new GLTFast.Jobs.ConvertColorsRGBAUInt8ToRGBAFloatJob {
+            var job = new GLTFast.Jobs.ConvertColorsRgbaUInt8ToRGBAFloatJob {
                 input = (byte*)m_InputUInt8.GetUnsafeReadOnlyPtr(),
                 inputByteStride = 4,
                 result = m_ColorOutput
