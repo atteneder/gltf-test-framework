@@ -34,7 +34,7 @@ namespace GLTFTest.Performance {
         const int k_Repetitions = 10;
 
         [UnityTest]
-        [UseGltfSampleSetTestCase(SampleModelsTest.glTFSampleSetJsonPath, "-Uninterrupted")]
+        [UseGltfSampleSetTestCase(ImportSampleModelsTest.glTFSampleSetJsonPath, "-Uninterrupted")]
         [Performance]
         public IEnumerator UninterruptedLoading(SampleSetItem testCase) {
             yield return UninterruptedLoadingTemplate(testCase);
@@ -66,7 +66,7 @@ namespace GLTFTest.Performance {
         }
 
         [UnityTest]
-        [UseGltfSampleSetTestCase(SampleModelsTest.glTFSampleSetJsonPath)]
+        [UseGltfSampleSetTestCase(ImportSampleModelsTest.glTFSampleSetJsonPath)]
         [Performance]
         public IEnumerator SmoothLoading(SampleSetItem testCase)
         {
@@ -75,7 +75,7 @@ namespace GLTFTest.Performance {
             var deferAgent = go.AddComponent<TimeBudgetPerFrameDeferAgent>();
             SampleGroup loadTime = new SampleGroup("LoadTime");
             // First time without measuring
-            var task = SampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent);
+            var task = ImportSampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent);
             yield return Utils.WaitForTask(task);
             using (Measure.Frames().Scope()) {
                 for (int i = 0; i < k_Repetitions; i++) {
@@ -98,7 +98,7 @@ namespace GLTFTest.Performance {
             StopWatch stopWatch = go.AddComponent<StopWatch>();
             stopWatch.StartTime();
 
-            await SampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent);
+            await ImportSampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent);
 
             stopWatch.StopTime();
             Measure.Custom(loadTime, stopWatch.lastDuration);

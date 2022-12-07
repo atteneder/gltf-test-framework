@@ -30,6 +30,7 @@ namespace GLTFTest {
     /// <summary>
     /// Tests all of <see cref="GltfImport"/>'s load methods. 
     /// </summary>
+    [Category("Import")]
     class ImportTest {
         
         const string k_GltfAssetPath = "Packages/com.atteneder.gltf-tests/Runtime/SampleSets/ImportTest.asset";

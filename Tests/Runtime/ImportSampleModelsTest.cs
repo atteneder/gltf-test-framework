@@ -26,7 +26,8 @@ namespace GLTFTest {
 
     using Sample;
     
-    class SampleModelsTest {
+    [Category("Import")]
+    class ImportSampleModelsTest {
         
         public const string glTFSampleSetAssetPath = "Packages/com.atteneder.gltf-tests/Runtime/SampleSets/glTF-Sample-Models.asset";
         public const string glTFSampleSetJsonPath = "glTF-Sample-Models.json";

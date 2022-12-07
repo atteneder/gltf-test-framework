@@ -24,15 +24,15 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Assert = UnityEngine.Assertions.Assert;
 
-namespace GLTFTest.Import {
+namespace GLTFTest {
 
-    class CancellationTest {
+    [Category("Import")]
+    class ImportCancellationTest {
         
         [UnityTest]
-        // [UseGltfSampleSetTestCase(TestModelsTest.k_AssetPath)]
         public IEnumerator CancelImmediately() {
 
-            var sampleSet = SampleSet.FromStreamingAssets(SampleModelsTest.glTFSampleSetJsonPath);
+            var sampleSet = SampleSet.FromStreamingAssets(ImportSampleModelsTest.glTFSampleSetJsonPath);
             const string itemName = "Avocado.glb";
             if (sampleSet.TryGetTestItem( itemName, out var item)) {
                 var tokenSrc = new CancellationTokenSource();

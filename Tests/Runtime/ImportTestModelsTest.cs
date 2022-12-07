@@ -23,7 +23,8 @@ namespace GLTFTest {
 
     using Sample;
     
-    class TestModelsTest {
+    [Category("Import")]
+    class ImportTestModelsTest {
         
         internal const string k_AssetPath = "Packages/com.atteneder.gltf-tests/Runtime/SampleSets/glTF-test-models.asset";
         internal const string k_JsonPath = "glTF-test-models.json";
@@ -36,7 +37,7 @@ namespace GLTFTest {
         [UnityTest]
         [UseGltfSampleSetTestCase(k_JsonPath)]
         public IEnumerator TestModels(SampleSetItem testCase) {
-            yield return SampleModelsTest.UninterruptedLoadingTemplate(testCase);
+            yield return ImportSampleModelsTest.UninterruptedLoadingTemplate(testCase);
         }
     }
 }
