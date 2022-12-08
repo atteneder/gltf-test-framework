@@ -82,7 +82,12 @@ namespace GLTFTest {
             Object.Destroy(go);
         }
 
-        internal static async Task LoadGltfSampleSetItem(SampleSetItem testCase, GameObject go, IDeferAgent deferAgent)
+        internal static async Task LoadGltfSampleSetItem(
+            SampleSetItem testCase,
+            GameObject go,
+            IDeferAgent deferAgent,
+            InstantiationSettings instantiationSettings = null
+            )
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             var path = testCase.path;
@@ -94,6 +99,7 @@ namespace GLTFTest {
             
             var gltfAsset = go.AddComponent<GltfAsset>();
 
+            gltfAsset.instantiationSettings = instantiationSettings;
             gltfAsset.loadOnStartup = false;
             var success = await gltfAsset.Load(path,null,deferAgent);
             Assert.IsTrue(success);

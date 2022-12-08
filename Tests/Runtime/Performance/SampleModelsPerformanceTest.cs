@@ -23,13 +23,11 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 using GLTFast;
-using NUnit.Framework;
 
 namespace GLTFTest.Performance {
 
     using Sample;
     
-    [Category("Performance")]
     public class SampleModelsPerformanceTest {
         const int k_Repetitions = 10;
 
@@ -52,12 +50,16 @@ namespace GLTFTest.Performance {
             var go = new GameObject();
             var deferAgent = new UninterruptedDeferAgent();
             var loadTime = new SampleGroup("LoadTime");
+            var instantiationSettings = new InstantiationSettings {
+                // Make sure go is never re-used as scene root
+                sceneObjectCreation = InstantiationSettings.SceneObjectCreation.Always
+            };
             // First time without measuring
-            var task = LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
+            var task = ImportSampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent, instantiationSettings);
             yield return Utils.WaitForTask(task);
             using (Measure.Frames().Scope()) {
                 for (int i = 0; i < k_Repetitions; i++) {
-                    task = LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
+                    task = LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime, instantiationSettings);
                     yield return Utils.WaitForTask(task);
                 }
             }
@@ -70,16 +72,20 @@ namespace GLTFTest.Performance {
         [Performance]
         public IEnumerator SmoothLoading(SampleSetItem testCase)
         {
-            Debug.Log($"Testing {testCase.path}");
+            // Debug.Log($"Testing {testCase.path}");
             var go = new GameObject();
             var deferAgent = go.AddComponent<TimeBudgetPerFrameDeferAgent>();
             SampleGroup loadTime = new SampleGroup("LoadTime");
+            var instantiationSettings = new InstantiationSettings {
+                // Make sure go is never re-used as scene root
+                sceneObjectCreation = InstantiationSettings.SceneObjectCreation.Always
+            };
             // First time without measuring
-            var task = ImportSampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent);
+            var task = ImportSampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent, instantiationSettings);
             yield return Utils.WaitForTask(task);
             using (Measure.Frames().Scope()) {
                 for (int i = 0; i < k_Repetitions; i++) {
-                    task = LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime);
+                    task = LoadGltfSampleSetItem(testCase, go, deferAgent, loadTime, instantiationSettings);
                     yield return Utils.WaitForTask(task);
                     // Wait one more frame. Usually some more action happens in this one.
                     yield return null;
@@ -87,18 +93,19 @@ namespace GLTFTest.Performance {
             }
             Object.Destroy(go);
         }
-        
-        internal static async Task LoadGltfSampleSetItem(
+
+        static async Task LoadGltfSampleSetItem(
             SampleSetItem testCase,
             GameObject go,
             IDeferAgent deferAgent,
-            SampleGroup loadTime
+            SampleGroup loadTime,
+            InstantiationSettings instantiationSettings = null
             )
         {
-            StopWatch stopWatch = go.AddComponent<StopWatch>();
+            var stopWatch = go.AddComponent<StopWatch>();
             stopWatch.StartTime();
 
-            await ImportSampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent);
+            await ImportSampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent, instantiationSettings);
 
             stopWatch.StopTime();
             Measure.Custom(loadTime, stopWatch.lastDuration);
