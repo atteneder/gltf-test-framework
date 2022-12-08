@@ -76,18 +76,21 @@ namespace GLTFTest
 
             var success = task.Result;
             
-            if (success && !gltf.currentSceneId.HasValue) {
+            Assert.IsTrue(success,"Loading glTF failed");
+            
+            if (!gltf.currentSceneId.HasValue) {
                 // glTF has no default scene. Fallback to the first scene
                 task = gltf.InstantiateScene(0);
                 while (!task.IsCompleted) {
                     yield return null;
                 }
                 success = task.Result;
+                Assert.IsTrue(success,"Instantiating first scene failed");
             }
 
             IEnumerable<Camera> cameras;
             Camera testCamera = null;
-            if (success && gltf.sceneInstance?.cameras != null && gltf.sceneInstance.cameras.Count > 0) {
+            if (gltf.sceneInstance?.cameras != null && gltf.sceneInstance.cameras.Count > 0) {
                 // Look for glTF cameras
                 cameras = gltf.sceneInstance.cameras;
                 foreach (var cam in cameras) {
