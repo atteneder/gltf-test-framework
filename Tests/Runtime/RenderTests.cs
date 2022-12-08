@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using GLTFast;
+using GLTFast.Logging;
 using NUnit.Framework;
 using UnityEngine;
 #if USING_HDRP
@@ -67,7 +68,7 @@ namespace GLTFTest
             var gltf = Object.FindObjectOfType<GltfBoundsAsset>();
             Assert.IsNotNull(gltf, "Invalid test scene, couldn't find GltfAsset");
 
-            var task = gltf.Load(gltf.FullUrl);
+            var task = gltf.Load(gltf.FullUrl, logger:new ConsoleLogger());
 
             while (!task.IsCompleted) {
                 yield return null;
