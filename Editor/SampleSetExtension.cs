@@ -19,7 +19,7 @@ namespace GLTFTest.Editor {
             // Texture2D dummyReference = null;
             var setName = sampleSet.name;
 
-            var renderPipeline = RenderPipelineUtils.renderPipeline;
+            var renderPipeline = RenderPipelineUtils.RenderPipeline;
             
             foreach (var item in sampleSet.GetItems())
             {
@@ -33,13 +33,13 @@ namespace GLTFTest.Editor {
                 var gltfAsset = go.AddComponent<GltfBoundsAsset>();
                 
                 if(string.IsNullOrEmpty(sampleSet.streamingAssetsPath)) {
-                    gltfAsset.url = Path.Combine(sampleSet.baseLocalPath, item.path);
+                    gltfAsset.Url = Path.Combine(sampleSet.baseLocalPath, item.path);
                 } else {
-                    gltfAsset.url = Path.Combine(sampleSet.streamingAssetsPath, item.path);
-                    gltfAsset.streamingAsset = true;
+                    gltfAsset.Url = Path.Combine(sampleSet.streamingAssetsPath, item.path);
+                    gltfAsset.StreamingAsset = true;
                 }
-                gltfAsset.loadOnStartup = false;
-                gltfAsset.createBoxCollider = false;
+                gltfAsset.LoadOnStartup = false;
+                gltfAsset.CreateBoxCollider = false;
                 
                 var sceneDirectory = CertifyDirectory(item.directoryParts, string.Format("Assets/Scenes/{0}", setName));
                 var scenePath = Path.Combine(sceneDirectory, item.name+".unity");
@@ -88,13 +88,13 @@ namespace GLTFTest.Editor {
                 var gltfAsset = go.AddComponent<GltfBoundsAsset>();
                     
                 if(string.IsNullOrEmpty(sampleSet.streamingAssetsPath)) {
-                    gltfAsset.url = Path.Combine(sampleSet.baseLocalPath, item.path);
+                    gltfAsset.Url = Path.Combine(sampleSet.baseLocalPath, item.path);
                 } else {
-                    gltfAsset.url = Path.Combine(sampleSet.streamingAssetsPath, item.path);
-                    gltfAsset.streamingAsset = true;
+                    gltfAsset.Url = Path.Combine(sampleSet.streamingAssetsPath, item.path);
+                    gltfAsset.StreamingAsset = true;
                 }
-                gltfAsset.loadOnStartup = true;
-                gltfAsset.createBoxCollider = false;
+                gltfAsset.LoadOnStartup = true;
+                gltfAsset.CreateBoxCollider = false;
             }
             var scenePath = string.Format("Assets/Scenes/{0}.unity", sampleSet.name);
             EditorSceneManager.SaveScene(testScene,scenePath);

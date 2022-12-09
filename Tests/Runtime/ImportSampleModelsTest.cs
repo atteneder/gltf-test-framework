@@ -98,9 +98,8 @@ namespace GLTFTest {
             // Debug.LogFormat("Testing {0}", path);
             
             var gltfAsset = go.AddComponent<GltfAsset>();
-
-            gltfAsset.instantiationSettings = instantiationSettings;
-            gltfAsset.loadOnStartup = false;
+            gltfAsset.InstantiationSettings = instantiationSettings;
+            gltfAsset.LoadOnStartup = false;
             var success = await gltfAsset.Load(path,null,deferAgent);
             Assert.IsTrue(success);
         }

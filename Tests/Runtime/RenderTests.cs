@@ -78,7 +78,7 @@ namespace GLTFTest
             
             Assert.IsTrue(success,"Loading glTF failed");
             
-            if (!gltf.currentSceneId.HasValue) {
+            if (!gltf.CurrentSceneId.HasValue) {
                 // glTF has no default scene. Fallback to the first scene
                 task = gltf.InstantiateScene(0);
                 while (!task.IsCompleted) {
@@ -90,9 +90,9 @@ namespace GLTFTest
 
             IEnumerable<Camera> cameras;
             Camera testCamera = null;
-            if (gltf.sceneInstance?.cameras != null && gltf.sceneInstance.cameras.Count > 0) {
+            if (gltf.SceneInstance?.Cameras != null && gltf.SceneInstance.Cameras.Count > 0) {
                 // Look for glTF cameras
-                cameras = gltf.sceneInstance.cameras;
+                cameras = gltf.SceneInstance.Cameras;
                 foreach (var cam in cameras) {
                     if (testCamera == null) {
                         testCamera = cam;
@@ -111,10 +111,10 @@ namespace GLTFTest
                 // position main camera based on AABB
                 cameras = GameObject.FindGameObjectsWithTag("MainCamera").Select(x=>x.GetComponent<Camera>()).Where(x => x != null);
                 testCamera = cameras.First();
-                FrameBoundsCamera.FrameBounds(testCamera,gltf.transform,gltf.bounds);
+                FrameBoundsCamera.FrameBounds(testCamera,gltf.transform,gltf.Bounds);
             }
 
-            var animation = gltf.sceneInstance?.legacyAnimation;
+            var animation = gltf.SceneInstance?.LegacyAnimation;
             if (animation != null && animation.clip!=null) {
                 animation.Stop();
                 var clip = animation.clip;

@@ -52,7 +52,7 @@ namespace GLTFTest.Performance {
             var loadTime = new SampleGroup("LoadTime");
             var instantiationSettings = new InstantiationSettings {
                 // Make sure go is never re-used as scene root
-                sceneObjectCreation = InstantiationSettings.SceneObjectCreation.Always
+                SceneObjectCreation = SceneObjectCreation.Always
             };
             // First time without measuring
             var task = ImportSampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent, instantiationSettings);
@@ -78,7 +78,7 @@ namespace GLTFTest.Performance {
             SampleGroup loadTime = new SampleGroup("LoadTime");
             var instantiationSettings = new InstantiationSettings {
                 // Make sure go is never re-used as scene root
-                sceneObjectCreation = InstantiationSettings.SceneObjectCreation.Always
+                SceneObjectCreation = SceneObjectCreation.Always
             };
             // First time without measuring
             var task = ImportSampleModelsTest.LoadGltfSampleSetItem(testCase, go, deferAgent, instantiationSettings);

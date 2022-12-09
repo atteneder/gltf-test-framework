@@ -234,7 +234,7 @@ namespace GLTFTest {
                 new[]{root},
                 "ComponentMaskNone",
                 new ExportSettings {
-                    componentMask = ComponentType.None
+                    ComponentMask = ComponentType.None
                 });
             yield return Utils.WaitForTask(task);
             
@@ -243,7 +243,7 @@ namespace GLTFTest {
                 new[]{root},
                 "ComponentMaskMesh",
                 new ExportSettings {
-                    componentMask = ComponentType.Mesh
+                    ComponentMask = ComponentType.Mesh
                 });
             yield return Utils.WaitForTask(task);
             
@@ -252,7 +252,7 @@ namespace GLTFTest {
                 new[]{root},
                 "ComponentMaskLight",
                 new ExportSettings {
-                    componentMask = ComponentType.Light
+                    ComponentMask = ComponentType.Light
                 });
             yield return Utils.WaitForTask(task);
             
@@ -261,7 +261,7 @@ namespace GLTFTest {
                 new[]{root},
                 "ComponentMaskCamera",
                 new ExportSettings {
-                    componentMask = ComponentType.Camera
+                    ComponentMask = ComponentType.Camera
                 });
             yield return Utils.WaitForTask(task);
             
@@ -298,7 +298,7 @@ namespace GLTFTest {
                 new[]{root},
                 "LayerMaskAll",
                 gameObjectExportSettings: new GameObjectExportSettings {
-                    layerMask = ~0
+                    LayerMask = ~0
                 });
             yield return Utils.WaitForTask(task);
             
@@ -307,7 +307,7 @@ namespace GLTFTest {
                 new[]{root},
                 "LayerMaskOne",
                 gameObjectExportSettings: new GameObjectExportSettings {
-                    layerMask = 1
+                    LayerMask = 1
                 });
             yield return Utils.WaitForTask(task);
             
@@ -316,7 +316,7 @@ namespace GLTFTest {
                 new[]{root},
                 "LayerMaskTwo",
                 gameObjectExportSettings: new GameObjectExportSettings {
-                    layerMask = 2
+                    LayerMask = 2
                 });
             yield return Utils.WaitForTask(task);
             
@@ -325,7 +325,7 @@ namespace GLTFTest {
                 new[]{root},
                 "LayerMaskNone",
                 gameObjectExportSettings: new GameObjectExportSettings {
-                    layerMask = 0
+                    LayerMask = 0
                 });
             yield return Utils.WaitForTask(task);
             
@@ -408,13 +408,13 @@ namespace GLTFTest {
             var logger = new CollectingLogger();
             var export = new GameObjectExport(
                 new ExportSettings {
-                    format = binary ? GltfFormat.Binary : GltfFormat.Json,
-                    fileConflictResolution = FileConflictResolution.Overwrite,
+                    Format = binary ? GltfFormat.Binary : GltfFormat.Json,
+                    FileConflictResolution = FileConflictResolution.Overwrite,
                 },
                 logger: logger
             );
             export.AddScene(new []{gameObject}, gameObject.name);
-            var extension = binary ? GltfGlobals.glbExt : GltfGlobals.gltfExt;
+            var extension = binary ? GltfGlobals.GlbExt : GltfGlobals.GltfExt;
             var fileName = $"{gameObject.name}{extension}";
             var path = Path.Combine(Application.persistentDataPath, fileName);
 
@@ -456,7 +456,7 @@ namespace GLTFTest {
             const string targetFolder = "Legacy";
 #endif
 
-            var renderPipeline = RenderPipelineUtils.renderPipeline;
+            var renderPipeline = RenderPipelineUtils.RenderPipeline;
             string rpSubfolder;
             switch (renderPipeline) {
                 case RenderPipeline.Universal:
@@ -495,13 +495,13 @@ namespace GLTFTest {
             var logger = new CollectingLogger();
             var export = new GameObjectExport(
                 new ExportSettings {
-                    format = binary ? GltfFormat.Binary : GltfFormat.Json,
-                    fileConflictResolution = FileConflictResolution.Overwrite,
+                    Format = binary ? GltfFormat.Binary : GltfFormat.Json,
+                    FileConflictResolution = FileConflictResolution.Overwrite,
                 },
                 logger: logger
             );
             export.AddScene(rootObjects, sceneName);
-            var extension = binary ? GltfGlobals.glbExt : GltfGlobals.gltfExt;
+            var extension = binary ? GltfGlobals.GlbExt : GltfGlobals.GltfExt;
             var path = Path.Combine(Application.persistentDataPath, $"ExportScene{extension}");
 
             bool success;
@@ -536,7 +536,7 @@ namespace GLTFTest {
                         continue;
                     }
 #endif
-                    Assert.AreEqual(LogType.Log, item.type, item.ToString());
+                    Assert.AreEqual(LogType.Log, item.Type, item.ToString());
                 }
             }
         }
@@ -590,7 +590,7 @@ namespace GLTFTest {
 #endif
 
         static string GetExportSceneName() {
-            switch (RenderPipelineUtils.renderPipeline) {
+            switch (RenderPipelineUtils.RenderPipeline) {
                 case RenderPipeline.HighDefinition:
                     return "ExportSceneHighDefinition";
                 case RenderPipeline.Universal:
