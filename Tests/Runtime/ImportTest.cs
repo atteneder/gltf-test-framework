@@ -116,6 +116,28 @@ namespace GLTFTest {
         }
         
         [UnityTest]
+        [UseGltfSampleSetTestCase(k_GltfJsonPath,"-Load")]
+        public IEnumerator LoadSyncInstantiation(SampleSetItem testCase)
+        {
+            Debug.Log($"Testing {testCase.path}");
+            var data = File.ReadAllBytes(testCase.path);
+            var go = new GameObject();
+            var deferAgent = new UninterruptedDeferAgent();
+            var logger = new ConsoleLogger();
+            using var gltf = new GltfImport(deferAgent: deferAgent, logger: logger);
+            var task = gltf.Load(data, new Uri(testCase.path));
+            yield return Utils.WaitForTask(task);
+            var success = task.Result;
+            Assert.IsTrue(success);
+            var instantiator = new GameObjectInstantiator(gltf,go.transform,logger);
+#pragma warning disable CS0618
+            success = gltf.InstantiateMainScene(instantiator);
+#pragma warning restore CS0618
+            Assert.IsTrue(success);
+            Object.Destroy(go);
+        }
+        
+        [UnityTest]
         [UseGltfSampleSetTestCase(k_GltfJsonPath,"-LoadFile")]
         public IEnumerator LoadFile(SampleSetItem testCase)
         {
