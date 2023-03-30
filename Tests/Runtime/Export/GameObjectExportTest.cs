@@ -17,15 +17,19 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+
 using GLTFast;
 using GLTFast.Export;
 using GLTFast.Logging;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+
+using Object = UnityEngine.Object;
 
 #if USING_HDRP
 using UnityEngine.Rendering.HighDefinition;
@@ -266,7 +270,7 @@ namespace GLTFTest {
             yield return Utils.WaitForTask(task);
             
             // Clean up
-            GameObject.Destroy(root);
+            Object.Destroy(root);
         }
 
         [UnityTest]
@@ -330,7 +334,7 @@ namespace GLTFTest {
             yield return Utils.WaitForTask(task);
             
             // Clean up
-            GameObject.Destroy(root);
+            Object.Destroy(root);
         }
 
         [UnityTest]
@@ -478,9 +482,46 @@ namespace GLTFTest {
             }
 
             Assert.NotNull(targetJsonAsset, $"Target glTF JSON for {testName} was not found");
-            var actualJson = GltfJsonSetGenerator(File.ReadAllText(resultPath));
-            var targetJson = GltfJsonSetGenerator(targetJsonAsset.text);
-            Assert.AreEqual(targetJson, actualJson, $"JSON did not match for {testName}");
+            CompareGltfJsonTokenRecursively(
+                JToken.Parse(targetJsonAsset.text),
+                JToken.Parse(File.ReadAllText(resultPath))
+                );
+        }
+
+        static void CompareGltfJsonTokenRecursively(JToken tokenA, JToken tokenB) {
+
+            foreach(var (a, b) in tokenA.Zip(tokenB, Tuple.Create))
+            {
+                Assert.AreEqual(a.Path,b.Path, $"Path mismatch ({a.Path} != {b.Path}");
+                // Assert.AreEqual(a.Type,b.Type, $"Type mismatch at {a.Path} ({a.Type} != {b.Type}");
+                if (a.Type != b.Type) {
+                    if (
+                        (a.Type == JTokenType.Float && b.Type != JTokenType.Integer)
+                        || (a.Type == JTokenType.Integer && b.Type != JTokenType.Float)
+                    ) {
+                        throw new AssertionException($"Type mismatch at {a.Path} ({a.Type} != {b.Type}");
+                    }
+                }
+                if (a is JValue && b is JValue) {
+                    switch (a.Type) {
+                        case JTokenType.Float:
+                        case JTokenType.Integer:
+                            Assert.Less(
+                                math.abs(a.Value<double>() - b.Value<double>()), 
+                                6E-08f, // epsilon 
+                                $"Float value mismatch at {a.Path} ({a.Value<double>()} != {b.Value<double>()}"); 
+                            break;
+                        default:
+                            Assert.IsTrue(a.Equals(b));
+                            break;
+                    }
+                }
+                
+                // asset.generator usually contains differing Unity and glTFast versions, so we ignore its value 
+                if(a.Path == "asset.generator") continue;
+                
+                CompareGltfJsonTokenRecursively(a, b);
+            }
         }
 #endif
 
@@ -598,28 +639,6 @@ namespace GLTFTest {
                 default:
                     return "ExportSceneBuiltIn";
             }
-        }
-        
-        /// <summary>
-        /// Takes the JSON portion of a glTF file and sets/replaces the
-        /// `asset.generator` property (if found) by another string.
-        /// </summary>
-        /// <param name="json">glTF JSON</param>
-        /// <param name="newGenerator">New generator value.</param>
-        /// <returns>glTF JSON with replaced asset.generator property.</returns>
-        static string GltfJsonSetGenerator(string json, string newGenerator="") {
-            const string searchKey = "\"generator\"";
-            var start= json.IndexOf(searchKey);
-            if (start < 0) return json;
-            start += searchKey.Length;
-            start = json.IndexOf('"', start);
-            start++;
-            var end = json.IndexOf('"', start);
-            var sb = new StringBuilder();
-            sb.Append(json, 0, start);
-            sb.Append(newGenerator);
-            sb.Append(json, end, json.Length-end);
-            return sb.ToString();
         }
     }
 }

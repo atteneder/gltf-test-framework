@@ -20,5 +20,8 @@
     "email": "andreas.atteneder@gmail.com",
     "url": "https://pixel.engineer"
   },
-  "type": "library"
+  "type": "library",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.1.0"
+  }
 }
